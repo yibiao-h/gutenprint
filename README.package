@@ -203,6 +203,12 @@ end-user use.
      not versioned, but are not linked against libgutenprint and do
      not have any other dependencies on Gutenprint.
 
+   * Gutenprint includes a custom CUPS backend is necessary to print 
+     with many USB-attached dye-sublimation printer models. Strictly 
+     speaking this is optional, but without it, many printer models will 
+     not function correctly, and as such we recommend it be packaged
+     with the Gutenprint CUPS driver.
+
 7) Packaging the Enhanced Print Plugin for GIMP
 
    * The enhanced Print plugin for GIMP, unlike the core library and
