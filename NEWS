@@ -120,13 +120,16 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
   3) Added CUPS Command filter support for most dyesub models.  This allows
      querying printer status and media information at any time.
 
-  4) Added support for the followin inkjet printer models:
+  4) Added support for the following inkjet printer models:
 
      Epson SureLab D700
      Fujifilm DX100
+
+  5) Added support for the following laser printer models:
+
      Sharp MX-2600N
 
-  5) Various minor fixes and enhancements
+  6) Various minor fixes and enhancements
 
 * Changes from Gutenprint 5.3.3
 
