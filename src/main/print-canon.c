@@ -2951,8 +2951,8 @@ canon_parameters(const stp_vars_t *v, const char *name,
 	   strcmp(name, "CDYAdjustment") == 0)
     {
       const char* input_slot = stp_get_string_parameter(v, "InputSlot");
-      description->bounds.dimension.lower = -15;
-      description->bounds.dimension.upper = 15;
+      description->bounds.dimension.lower = -250;
+      description->bounds.dimension.upper = 250;
       description->deflt.dimension = 0;
       if (!input_slot || !strcmp(input_slot,"CD"))
 	description->is_active = 1;
