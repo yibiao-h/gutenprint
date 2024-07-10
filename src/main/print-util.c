@@ -621,6 +621,9 @@ stp_strlen(const char *s)
 char *
 stp_strndup(const char *s, int n)
 {
+#if HAVE_DECL_STRNDUP
+    return strndup(s, n);
+#else
   char *ret;
   if (!s || n < 0)
     {
@@ -635,11 +638,15 @@ stp_strndup(const char *s, int n)
       ret[n] = 0;
       return ret;
     }
+#endif
 }
 
 char *
 stp_strdup(const char *s)
 {
+#if HAVE_DECL_STRDUP
+    return strdup(s);
+#else
   char *ret;
   if (!s)
     {
@@ -649,6 +656,7 @@ stp_strdup(const char *s)
     }
   else
     return stp_strndup(s, stp_strlen(s));
+#endif
 }
 
 const char *

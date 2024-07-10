@@ -841,6 +841,8 @@ AC_CHECK_FUNCS([nanosleep poll usleep])
 AC_CHECK_FUNCS([getopt_long])
 AC_CHECK_FUNCS([setenv getuid waitpid])
 
+AC_CHECK_DECLS([strdup, strndup])
+
 dnl finite() is non-standard, isfinite() is ISO-standard, figure out
 dnl which to use...
 AC_SEARCH_LIBS(finite, m, CFLAGS="-Disfinite=finite $CFLAGS")
