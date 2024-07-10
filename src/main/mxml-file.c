@@ -35,6 +35,7 @@
  * Include necessary headers...
  */
 
+#include <gutenprint/util.h>
 #include <gutenprint/mxml.h>
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -172,7 +173,7 @@ stp_mxmlSaveAllocString(stp_mxml_node_t *node,	/* I - Node to write */
     * return...
     */
 
-    return (strdup(buffer));
+    return (stp_strdup(buffer));
   }
 
  /*

@@ -23,6 +23,7 @@
  * Include necessary headers...
  */
 
+#include <gutenprint/util.h>
 #include <gutenprint/mxml.h>
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -109,7 +110,7 @@ stp_mxmlElementSetAttr(stp_mxml_node_t *node,	/* I - Element node */
 
       free(attr->value);
 
-      attr->value = strdup(value);
+      attr->value = stp_strdup(value);
 
       return;
     }
@@ -134,8 +135,8 @@ stp_mxmlElementSetAttr(stp_mxml_node_t *node,	/* I - Element node */
   node->value.element.attrs = attr;
   attr += node->value.element.num_attrs;
 
-  attr->name  = strdup(name);
-  attr->value = strdup(value);
+  attr->name  = stp_strdup(name);
+  attr->value = stp_strdup(value);
 
   if (!attr->name || !attr->value)
   {

@@ -31,6 +31,7 @@
  * Include necessary headers...
  */
 
+#include <gutenprint/util.h>
 #include <gutenprint/mxml.h>
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -279,7 +280,7 @@ stp_mxmlNewElement(stp_mxml_node_t *parent,	/* I - Parent node or STP_MXML_NO_PA
   */
 
   if ((node = mxml_new(parent, STP_MXML_ELEMENT)) != NULL)
-    node->value.element.name = strdup(name);
+    node->value.element.name = stp_strdup(name);
 
   return (node);
 }
@@ -346,7 +347,7 @@ stp_mxmlNewOpaque(stp_mxml_node_t *parent,	/* I - Parent node or STP_MXML_NO_PAR
   */
 
   if ((node = mxml_new(parent, STP_MXML_OPAQUE)) != NULL)
-    node->value.opaque = strdup(opaque);
+    node->value.opaque = stp_strdup(opaque);
 
   return (node);
 }
@@ -424,7 +425,7 @@ stp_mxmlNewText(stp_mxml_node_t *parent,	/* I - Parent node or STP_MXML_NO_PAREN
   if ((node = mxml_new(parent, STP_MXML_TEXT)) != NULL)
   {
     node->value.text.whitespace = whitespace;
-    node->value.text.string     = strdup(string);
+    node->value.text.string     = stp_strdup(string);
   }
 
   return (node);
