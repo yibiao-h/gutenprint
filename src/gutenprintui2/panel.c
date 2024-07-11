@@ -1300,6 +1300,7 @@ set_options_active(const char *omit)
 	      gtk_widget_hide(GTK_WIDGET(opt->info.curve.button));
 	      gtk_widget_hide(GTK_WIDGET(opt->info.curve.dialog));
 	    }
+          break;
 	case STP_PARAMETER_TYPE_BOOLEAN:
 	  if (opt->is_active && desc->p_level <= MAXIMUM_PARAMETER_LEVEL)
 	    {
