@@ -685,9 +685,11 @@ PKGMODULEDIR="${PACKAGE_LIB_DIR}/${GUTENPRINT_RELEASE_VERSION}/modules"
 
 dnl Compiler flags
 if test x$ac_compiler_gnu = "xyes"; then
-  STP_ADD_COMPILER_ARGS([-Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -Werror-implicit-function-declaration -Winline -Wformat=2 -finline-limit=131072 -Wformat -Werror=format-security] -D_POSIX_C_SOURCE=200809L -std=c99,, [GNUCFLAGS])
+  STP_ADD_COMPILER_ARGS([-Wall -Wextra -Wcast-align -Wmissing-prototypes -Wmissing-declarations -Wwrite-strings -Werror-implicit-function-declaration -Winline -Wformat=2 -Werror=format-security],, [GNUCFLAGS])
   if test x${USE_MAINTAINER_MODE} = xyes ; then
-    STP_ADD_COMPILER_ARGS([ -pedantic -Waggregate-return -Wcast-qual -Wshadow -Wredundant-decls],, [GNUCFLAGS])
+    STP_ADD_COMPILER_ARGS([ -pedantic -Waggregate-return -Wcast-qual -Wshadow -Wredundant-decls -Wstrict-prototypes],, [GNUCFLAGS])
+  else
+    STP_ADD_COMPILER_ARGS([ -Wno-deprecated-declarations],, [GNUCFLAGS])
   fi
   if test x$ENABLE_DEBUG = xyes ; then
     STP_ADD_COMPILER_ARG([-g])
@@ -706,6 +708,10 @@ fi
 if test x$ENABLE_PROFILE = xyes ; then
   STP_ADD_COMPILER_ARG([-pg])
 fi
+
+# C99 + POSIX extras
+STP_ADD_COMPILER_ARGS([-D_POSIX_C_SOURCE=200809L -std=c99],, [GNUCFLAGS])
+
 AC_SUBST(GNUCFLAGS)
 
 AH_TEMPLATE([HAVE_GCC_ATTRIBUTES],
