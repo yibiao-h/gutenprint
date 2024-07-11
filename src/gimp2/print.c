@@ -112,10 +112,13 @@ static guchar *
 stpui_get_thumbnail_data_function(void *image_ID, gint *width, gint *height,
 				  gint *bpp, gint page)
 {
-  if (gimp_thumbnail_data)
-    g_free(gimp_thumbnail_data);
   gint x = gimp_image_width(p2gint(image_ID));
   gint y = gimp_image_height(p2gint(image_ID));
+
+  (void)page;
+
+  if (gimp_thumbnail_data)
+    g_free(gimp_thumbnail_data);
 
   /* GIMP limits thumbnails to 1024px! */
   if (*width > 1024)
@@ -485,6 +488,7 @@ run (const char        *name,		/* I - Name of print program. */
               break;
             }
 
+            /* Intentional fallthrough */
           default:
             values[0].data.d_status = GIMP_PDB_CALLING_ERROR;
             fprintf(stderr,"Parameter unsupported in gimp2 plugin for parameter %s\n", key);
@@ -562,6 +566,8 @@ gimp_errfunc(void *file, const char *buf, size_t bytes)
   char formatbuf[32];
   snprintf(formatbuf, 31, "%%%lus", (unsigned long) bytes);
   g_message(formatbuf, buf);
+
+  (void)file;
 }
 #pragma GCC diagnostic pop
 
@@ -579,5 +585,8 @@ do_print_dialog (const gchar *proc_name,
     stpui_set_errfunc(gimp_errfunc);
   stpui_set_thumbnail_func(stpui_get_thumbnail_data_function);
   stpui_set_thumbnail_data(gint2p(image_ID));
+
+  (void) proc_name;
+
   return stpui_do_print_dialog();
 }

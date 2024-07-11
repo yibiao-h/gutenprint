@@ -29,6 +29,8 @@
 int
 main(int argc, char **argv)
 {
+  (void)argc;
+  (void)argv;
   if (getenv("STP_TEST_LOG_PREFIX"))
     {
       char path[PATH_MAX+1];

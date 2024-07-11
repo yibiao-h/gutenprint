@@ -301,7 +301,7 @@ stp_i18n_load(const char *locale)	/* I - Locale name */
     }
     else if (line[0] == '\"' && in_str)
     {
-      int	str_len = strlen(str),
+      unsigned	str_len = strlen(str),
 		ptr_len = strlen(ptr);
 
 
@@ -316,7 +316,7 @@ stp_i18n_load(const char *locale)	/* I - Locale name */
     }
     else if (line[0] == '\"' && in_id)
     {
-      int	id_len = strlen(id),
+      unsigned	id_len = strlen(id),
 		ptr_len = strlen(ptr);
 
 

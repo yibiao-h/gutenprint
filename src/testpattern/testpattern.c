@@ -593,7 +593,7 @@ main(int argc, char **argv)
 static void
 invert_data(unsigned char *data, size_t byte_depth)
 {
-  int i;
+  size_t i;
   size_t total_bytes;
   total_bytes = global_printer_width * global_channel_depth * byte_depth;
   for (i = 0; i < total_bytes; i++)
@@ -608,8 +608,8 @@ invert_data(unsigned char *data, size_t byte_depth)
 static void								\
 fill_channels_##bits(unsigned char *data, size_t len, size_t scount)	\
 {									\
-  int i;								\
-  int c;								\
+  unsigned i;								\
+  size_t c;								\
   scount = global_channel_depth;					\
   T *s_data = (T *) data;						\
   unsigned black_val = global_ink_limit * ((1 << bits) - 1);		\
@@ -652,7 +652,7 @@ fill_channels(unsigned char *data, size_t len, size_t scount, size_t bytes)
 static void								\
 fill_black_##bits(unsigned char *data, size_t len, size_t scount)	\
 {									\
-  int i;								\
+  size_t i;								\
   T *s_data = (T *) data;						\
   unsigned black_val = global_ink_limit * ((1 << bits) - 1);		\
   unsigned blocks = (len / scount) * scount;				\
@@ -766,8 +766,9 @@ fill_black(unsigned char *data, size_t len, size_t scount, size_t bytes)
 #define FILL_WHITE_FUNCTION(T, bits)					\
 static void								\
 fill_white_##bits(unsigned char *data, size_t len, size_t scount)	\
-{									\
-  int i;								\
+{                                                                       \
+  (void)scount;                                                         \
+  unsigned int i;							\
   T *s_data = (T *) data;						\
   if (strcmp(global_image_type, "Raw") == 0)				\
     {									\
@@ -907,7 +908,7 @@ fill_colors_extended_##bits(unsigned char *data, size_t len,		\
   double mins[STP_CHANNEL_LIMIT];					\
   double vals[STP_CHANNEL_LIMIT];					\
   double gammas[STP_CHANNEL_LIMIT];					\
-  int i;								\
+  size_t i;								\
   int j;								\
   int k;								\
   int pixels;								\
@@ -1026,7 +1027,7 @@ fill_colors_##bits(unsigned char *data, size_t len, size_t scount,	\
   double levels[4];							\
   double lower = p->d.pattern.lower;					\
   double upper = p->d.pattern.upper;					\
-  int i;								\
+  size_t i;                                                             \
   int j;								\
   int pixels;								\
   T *s_data = (T *) data;						\
@@ -1183,6 +1184,8 @@ static stp_image_status_t
 Image_get_row(stp_image_t *image, unsigned char *data,
 	      size_t byte_limit, int row)
 {
+  (void)image;
+  (void)byte_limit;
   int depth = global_channel_depth;
   if (! Image_is_valid)
     {
@@ -1253,6 +1256,7 @@ check_valid_image(const char *s)
 static int
 Image_width(stp_image_t *image)
 {
+  (void)image;
   check_valid_image("Calling Image_width with invalid image!\n");
   if (static_testpatterns[0].type == E_IMAGE)
     return static_testpatterns[0].d.image.x;
@@ -1263,6 +1267,7 @@ Image_width(stp_image_t *image)
 static int
 Image_height(stp_image_t *image)
 {
+  (void)image;
   check_valid_image("Calling Image_height with invalid image!\n");
   if (static_testpatterns[0].type == E_IMAGE)
     return static_testpatterns[0].d.image.y;
@@ -1273,6 +1278,7 @@ Image_height(stp_image_t *image)
 static void
 Image_init(stp_image_t *image)
 {
+  (void)image;
   if (Image_is_valid)
     {
       fputs("Calling Image_init with already valid image!\n", stderr);
@@ -1285,6 +1291,7 @@ Image_init(stp_image_t *image)
 static void
 Image_reset(stp_image_t *image)
 {
+  (void)image;
   check_valid_image("Calling Image_reset with invalid image!\n");
  /* dummy function */
 }
@@ -1292,6 +1299,7 @@ Image_reset(stp_image_t *image)
 static void
 Image_conclude(stp_image_t *image)
 {
+  (void)image;
   check_valid_image("Calling Image_conclude with invalid image!\n");
   Image_is_valid = 0;
 }
@@ -1299,6 +1307,7 @@ Image_conclude(stp_image_t *image)
 static const char *
 Image_get_appname(stp_image_t *image)
 {
+  (void)image;
   check_valid_image("Calling Image_get_appname with invalid image!\n");
   return "Test Pattern";
 }

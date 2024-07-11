@@ -300,6 +300,7 @@ int SafeWrite(int fd, const void *data, int len)
 
 static void sigAlarm(int code)
 {
+   (void)code;
    timeoutGot = -1;
 }
 
@@ -652,6 +653,8 @@ static int _readData(int fd, unsigned char *buf, int len)
    struct timeval beg, end;
    long dt;
    struct itimerval ti, oti;
+
+   (void)len;
 
    /* set errno to 0 in order to get correct informations */
    /* in case of error                                    */
