@@ -50,7 +50,7 @@ typedef struct {
 
 typedef struct {
   const char *name;
-  const short count;
+  const unsigned short count;
   const canon_modeuse_t *modeuses;
 } canon_modeuselist_t;
 
@@ -8381,7 +8381,7 @@ static const canon_modeuse_t canon_MULTIPASS_MP810_modeuses[] = {
  { "Coated",		canon_MULTIPASS_MP810_modeuses_PPmatte, 0 },
  { "InkJetHagaki", 	canon_MULTIPASS_MP810_modeuses_inkjetHagaki, 0 },
  { "Hagaki", 	        canon_MULTIPASS_MP810_modeuses_Hagaki, DUPLEX_SUPPORT },
- { "CD",   	        canon_MULTIPASS_MP810_modeuses_plain,  },/*NOTE:option*/
+ { "CD",   	        canon_MULTIPASS_MP810_modeuses_plain, 0 },/*NOTE:option*/
  { "DiscCompat",	canon_MULTIPASS_MP810_modeuses_disc, 0 },
  { "DiscOthers",	canon_MULTIPASS_MP810_modeuses_disc, 0 },
  { "TShirt",		canon_MULTIPASS_MP810_modeuses_TShirt, 0 },

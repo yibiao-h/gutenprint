@@ -287,61 +287,61 @@ static const stp_parameter_t the_parameters[] =
     "PageSize", N_("Page Size"), "Color=No,Category=Basic Printer Setup",
     N_("Size of the paper being printed to"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
   },
   {
     "MediaType", N_("Media Type"), "Color=Yes,Category=Basic Printer Setup",
     N_("Type of media (plain paper, photo paper, etc.)"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
   },
   {
     "InputSlot", N_("Media Source"), "Color=No,Category=Basic Printer Setup",
     N_("Source (input slot) of the media"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
   },
   {
     "CassetteTray", N_("Cassette Tray"), "Color=No,Category=Basic Printer Setup",
     N_("Tray selection for cassette media source"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
   },
   {
     "CDInnerRadius", N_("CD Hub Size"), "Color=No,Category=Basic Printer Setup",
     N_("Print only outside of the hub of the CD, or all the way to the hole"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
   },
   {
     "CDOuterDiameter", N_("CD Size (Custom)"), "Color=No,Category=Basic Printer Setup",
     N_("Variable adjustment for the outer diameter of CD"),
     STP_PARAMETER_TYPE_DIMENSION, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
   },
   {
     "CDInnerDiameter", N_("CD Hub Size (Custom)"), "Color=No,Category=Basic Printer Setup",
     N_("Variable adjustment to the inner hub of the CD"),
     STP_PARAMETER_TYPE_DIMENSION, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
   },
   {
     "CDXAdjustment", N_("CD Horizontal Fine Adjustment"), "Color=No,Category=Advanced Printer Setup",
     N_("Fine adjustment to horizontal position for CD printing"),
     STP_PARAMETER_TYPE_DIMENSION, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
   },
   {
     "CDYAdjustment", N_("CD Vertical Fine Adjustment"), "Color=No,Category=Advanced Printer Setup",
     N_("Fine adjustment to horizontal position for CD printing"),
     STP_PARAMETER_TYPE_DIMENSION, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
   },
   {
     "Resolution", N_("Resolution"), "Color=Yes,Category=Basic Printer Setup",
     N_("Resolution and quality of the print"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
   },
   /*
    * Don't check this parameter.  We may offer different settings for
@@ -352,13 +352,13 @@ static const stp_parameter_t the_parameters[] =
     "InkType", N_("Ink Type"), "Color=Yes,Category=Advanced Printer Setup",
     N_("Type of ink in the printer"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 0, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 0, 0, {NULL}, {NULL}
   },
   {
     "InkChannels", N_("Ink Channels"), "Color=Yes,Category=Advanced Printer Functionality",
     N_("Ink Channels"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, STP_CHANNEL_NONE, 0, 0
+    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, STP_CHANNEL_NONE, 0, 0, {NULL}, {NULL}
   },
   /*
    * Don't check this parameter.  We may offer different settings for
@@ -369,7 +369,7 @@ static const stp_parameter_t the_parameters[] =
     "PrintingMode", N_("Printing Mode"), "Color=Yes,Category=Core Parameter",
     N_("Printing Output Mode"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 0, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 0, 0, {NULL}, {NULL}
   },
   /*
    * Don't check this parameter.  We may offer different settings for
@@ -380,31 +380,31 @@ static const stp_parameter_t the_parameters[] =
     "InkSet", N_("Ink Set"), "Color=Yes,Category=Basic Printer Setup",
     N_("Type of inkset in the printer"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 0, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 0, 0, {NULL}, {NULL}
   },
   {
     "FullBleed", N_("Borderless"), "Color=No,Category=Basic Printer Setup",
     N_("Print without borders"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
   },
   {
     "Duplex", N_("Double-Sided Printing"), "Color=No,Category=Basic Printer Setup",
     N_("Duplex/Tumble Setting"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
   },
   {
     "Quality", N_("Print Quality"), "Color=Yes,Category=Basic Output Adjustment",
     N_("Print Quality"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 0, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 0, 0, {NULL}, {NULL}
   },
   {
     "Orientation", N_("Orientation"), "Color=No,Category=Basic Printer Setup",
     N_("Orientation, Portrait, Landscape, Upside Down, Seascape"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
   },
 };
 
@@ -427,7 +427,7 @@ static const float_param_t float_parameters[] =
       "CyanDensity", N_("Cyan Density"), "Color=Yes,Category=Output Level Adjustment",
       N_("Adjust the cyan density"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 1, 1, 0, {NULL}, {NULL}
     }, 0.0, 2.0, 1.0, 1
   },
   {
@@ -435,7 +435,7 @@ static const float_param_t float_parameters[] =
       "MagentaDensity", N_("Magenta Density"), "Color=Yes,Category=Output Level Adjustment",
       N_("Adjust the magenta density"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 2, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 2, 1, 0, {NULL}, {NULL}
     }, 0.0, 2.0, 1.0, 1
   },
   {
@@ -443,7 +443,7 @@ static const float_param_t float_parameters[] =
       "YellowDensity", N_("Yellow Density"), "Color=Yes,Category=Output Level Adjustment",
       N_("Adjust the yellow density"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 3, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 3, 1, 0, {NULL}, {NULL}
     }, 0.0, 2.0, 1.0, 1
   },
   {
@@ -451,7 +451,7 @@ static const float_param_t float_parameters[] =
       "BlackDensity", N_("Black Density"), "Color=Yes,Category=Output Level Adjustment",
       N_("Adjust the black density"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 0, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 0, 1, 0, {NULL}, {NULL}
     }, 0.0, 2.0, 1.0, 1
   },
   {
@@ -459,7 +459,7 @@ static const float_param_t float_parameters[] =
       "LightCyanTrans", N_("Light Cyan Transition"), "Color=Yes,Category=Advanced Ink Adjustment",
       N_("Light Cyan Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -467,7 +467,7 @@ static const float_param_t float_parameters[] =
       "LightMagentaTrans", N_("Light Magenta Transition"), "Color=Yes,Category=Advanced Ink Adjustment",
       N_("Light Magenta Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
     }, 0.0, 5.0, 1.0, 1
   },
  {
@@ -475,7 +475,7 @@ static const float_param_t float_parameters[] =
       "LightYellowTrans", N_("Light Yellow Transition"), "Color=Yes,Category=Advanced Ink Adjustment",
       N_("Light Yellow Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
     }, 0.0, 5.0, 1.0, 1
   },
 };
@@ -971,7 +971,7 @@ const canon_mode_t* suitable_mode_general(stp_vars_t *v,const canon_modeuse_t* m
 #endif
 
 const char* find_ink_type(stp_vars_t *v,const canon_mode_t* mode,const char *printing_mode) {
-  int i,inkfound;
+  unsigned i,inkfound;
   const char *ink_type = stp_get_string_parameter(v, "InkType");
 
   stp_dprintf(STP_DBG_CANON, v,"DEBUG: Entered find_ink_type\n");
@@ -2457,7 +2457,7 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 static unsigned int
 canon_printhead_colors(const stp_vars_t*v)
 {
-  int i,j;
+  unsigned int i,j;
   const canon_mode_t* mode;
   const canon_cap_t * caps = canon_get_model_capabilities(v);
   const char *print_mode = stp_get_string_parameter(v, "PrintingMode");
@@ -2814,7 +2814,7 @@ canon_list_parameters(const stp_vars_t *v)
   stp_parameter_list_t *ret = stp_parameter_list_create();
   stp_parameter_list_t *tmp_list;
 
-  int i;
+  unsigned int i;
 
   /* Set up dithering */
   tmp_list = stp_dither_list_parameters(v);
@@ -2832,7 +2832,7 @@ static void
 canon_parameters(const stp_vars_t *v, const char *name,
 		 stp_parameter_t *description)
 {
-  int		i,j;
+  unsigned int i,j;
 
   const canon_cap_t * caps=
     canon_get_model_capabilities(v);

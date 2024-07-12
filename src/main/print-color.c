@@ -195,7 +195,7 @@ typedef struct
       "GammaCh" #channel, N_("Channel " #channel " Gamma"), "Color=Yes,Category=Gamma", \
       N_("Gamma for raw channel " #channel),				\
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,		\
-      STP_PARAMETER_LEVEL_INTERNAL, 0, 1, channel, 1, 0			\
+      STP_PARAMETER_LEVEL_INTERNAL, 0, 1, channel, 1, 0, {NULL}, {NULL} \
     }, 0.1, 4.0, 1.0, CMASK_RAW, 0, -1					\
   }
 
@@ -206,7 +206,7 @@ static const float_param_t float_parameters[] =
       "ColorCorrection", N_("Color Correction"), "Color=Yes,Category=Basic Image Adjustment",
       N_("Color correction to be applied"),
       STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0, {NULL}, {NULL}
     }, 0.0, 0.0, 0.0, CMASK_EVERY, 0, -1
   },
   {
@@ -214,7 +214,7 @@ static const float_param_t float_parameters[] =
       "ChannelBitDepth", N_("Channel Bit Depth"), "Color=Yes,Category=Core Parameter",
       N_("Bit depth per channel"),
       STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
-      STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0, {NULL}, {NULL}
     }, 0.0, 0.0, 0.0, CMASK_EVERY, 0, -1
   },
   {
@@ -222,7 +222,7 @@ static const float_param_t float_parameters[] =
       "InputImageType", N_("Input Image Type"), "Color=Yes,Category=Core Parameter",
       N_("Input image type"),
       STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
-      STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0, {NULL}, {NULL}
     }, 0.0, 0.0, 0.0, CMASK_EVERY, 0, -1
   },
   {
@@ -230,7 +230,7 @@ static const float_param_t float_parameters[] =
       "STPIOutputType", N_("Output Image Type"), "Color=Yes,Category=Core Parameter",
       N_("Output image type"),
       STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
-      STP_PARAMETER_LEVEL_INTERNAL, 1, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_INTERNAL, 1, 1, -1, 1, 0, {NULL}, {NULL}
     }, 0.0, 0.0, 0.0, CMASK_EVERY, 0, -1
   },
   {
@@ -238,7 +238,7 @@ static const float_param_t float_parameters[] =
       "STPIRawChannels", N_("Raw Channels"), "Color=Yes,Category=Core Parameter",
       N_("Raw Channels"),
       STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_CORE,
-      STP_PARAMETER_LEVEL_INTERNAL, 1, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_INTERNAL, 1, 1, -1, 1, 0, {NULL}, {NULL}
     }, 1.0, STP_CHANNEL_LIMIT, 1.0, CMASK_EVERY, 0, -1
   },
   {
@@ -246,7 +246,7 @@ static const float_param_t float_parameters[] =
       "SimpleGamma", N_("SimpleGamma"), "Color=Yes,Category=Gamma",
       N_("Do not correct for screen gamma"),
       STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_INTERNAL, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_INTERNAL, 0, 1, -1, 1, 0, {NULL}, {NULL}
     }, 0.0, 1.0, 0.0, CMASK_EVERY, 0, -1
   },
   {
@@ -254,7 +254,7 @@ static const float_param_t float_parameters[] =
       "Brightness", N_("Brightness"), "Color=Yes,Category=Basic Image Adjustment",
       N_("Brightness of the print"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0, {NULL}, {NULL}
     }, 0.0, 2.0, 1.0, CMASK_ALL, 0, -1
   },
   {
@@ -262,7 +262,7 @@ static const float_param_t float_parameters[] =
       "Contrast", N_("Contrast"), "Color=Yes,Category=Basic Image Adjustment",
       N_("Contrast of the print (0 is solid gray)"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0, {NULL}, {NULL}
     }, 0.0, 4.0, 1.0, CMASK_ALL, 0, -1
   },
   {
@@ -270,7 +270,7 @@ static const float_param_t float_parameters[] =
       "LinearContrast", N_("Linear Contrast Adjustment"), "Color=Yes,Category=Advanced Image Control",
       N_("Use linear vs. fixed end point contrast adjustment"),
       STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED3, 1, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED3, 1, 1, -1, 1, 0, {NULL}, {NULL}
     }, 0.0, 0.0, 0.0, CMASK_ALL, 0, -1
   },
   {
@@ -280,7 +280,7 @@ static const float_param_t float_parameters[] =
 	 "produce a generally brighter print, while smaller "
 	 "values will produce a generally darker print. "),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, -1, 1, 0, {NULL}, {NULL}
     }, 0.1, 4.0, 1.0, CMASK_EVERY, 0, -1
   },
   {
@@ -288,7 +288,7 @@ static const float_param_t float_parameters[] =
       "AppGamma", N_("AppGamma"), "Color=Yes,Category=Gamma",
       N_("Gamma value assumed by application"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_INTERNAL, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_INTERNAL, 0, 1, -1, 1, 0, {NULL}, {NULL}
     }, 0.1, 4.0, 1.0, CMASK_EVERY, 0, -1
   },
   {
@@ -296,7 +296,7 @@ static const float_param_t float_parameters[] =
       "CyanGamma", N_("Cyan"), "Color=Yes,Category=Gamma",
       N_("Adjust the cyan gamma"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 1, 1, 0, {NULL}, {NULL}
     }, 0.0, 4.0, 1.0, CMASK_C, 1, 0
   },
   {
@@ -304,7 +304,7 @@ static const float_param_t float_parameters[] =
       "MagentaGamma", N_("Magenta"), "Color=Yes,Category=Gamma",
       N_("Adjust the magenta gamma"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 2, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 2, 1, 0, {NULL}, {NULL}
     }, 0.0, 4.0, 1.0, CMASK_M, 1, 0
   },
   {
@@ -312,7 +312,7 @@ static const float_param_t float_parameters[] =
       "YellowGamma", N_("Yellow"), "Color=Yes,Category=Gamma",
       N_("Adjust the yellow gamma"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 3, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 3, 1, 0, {NULL}, {NULL}
     }, 0.0, 4.0, 1.0, CMASK_Y, 1, 0
   },
   {
@@ -320,7 +320,7 @@ static const float_param_t float_parameters[] =
       "RedGamma", N_("Red"), "Color=Yes,Category=Gamma",
       N_("Adjust the red gamma"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 1, 1, 0, {NULL}, {NULL}
     }, 0.0, 4.0, 1.0, CMASK_C, 1, 1
   },
   {
@@ -328,7 +328,7 @@ static const float_param_t float_parameters[] =
       "GreenGamma", N_("Green"), "Color=Yes,Category=Gamma",
       N_("Adjust the green gamma"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 2, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 2, 1, 0, {NULL}, {NULL}
     }, 0.0, 4.0, 1.0, CMASK_M, 1, 1
   },
   {
@@ -336,7 +336,7 @@ static const float_param_t float_parameters[] =
       "BlueGamma", N_("Blue"), "Color=Yes,Category=Gamma",
       N_("Adjust the blue gamma"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 3, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 3, 1, 0, {NULL}, {NULL}
     }, 0.0, 4.0, 1.0, CMASK_Y, 1, 1
   },
   {
@@ -344,7 +344,7 @@ static const float_param_t float_parameters[] =
       "BlackGamma", N_("Black"), "Color=Yes,Category=Gamma",
       N_("Adjust the black gamma"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 3, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 3, 1, 0, {NULL}, {NULL}
     }, 0.0, 4.0, 1.0, CMASK_K, 1, 0
   },
   {
@@ -352,7 +352,7 @@ static const float_param_t float_parameters[] =
       "CyanBalance", N_("Cyan Balance"), "Color=Yes,Category=GrayBalance",
       N_("Adjust the cyan gray balance"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 1, 1, 0, {NULL}, {NULL}
     }, 0.0, 1.0, 1.0, CMASK_C, 1, 0
   },
   {
@@ -360,7 +360,7 @@ static const float_param_t float_parameters[] =
       "MagentaBalance", N_("Magenta Balance"), "Color=Yes,Category=GrayBalance",
       N_("Adjust the magenta gray balance"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 2, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 2, 1, 0, {NULL}, {NULL}
     }, 0.0, 1.0, 1.0, CMASK_M, 1, 0
   },
   {
@@ -368,7 +368,7 @@ static const float_param_t float_parameters[] =
       "YellowBalance", N_("Yellow Balance"), "Color=Yes,Category=GrayBalance",
       N_("Adjust the yellow gray balance"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 3, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 3, 1, 0, {NULL}, {NULL}
     }, 0.0, 1.0, 1.0, CMASK_Y, 1, 0
   },
   {
@@ -378,7 +378,7 @@ static const float_param_t float_parameters[] =
 	 "Use zero saturation to produce grayscale output "
 	 "using color and black inks"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0, {NULL}, {NULL}
     }, 0.0, 9.0, 1.0, CMASK_CMY | CMASK_RGB, 1, 0
   },
   /* Need to think this through a bit more -- rlk 20030712 */
@@ -387,7 +387,7 @@ static const float_param_t float_parameters[] =
       "InkLimit", N_("Ink Limit"), "Color=Yes,Category=Advanced Output Control",
       N_("Limit the total ink printed to the page"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 0, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 0, 0, {NULL}, {NULL}
     }, 0.0, STP_CHANNEL_LIMIT, STP_CHANNEL_LIMIT, CMASK_CMY, 0, -1
   },
   {
@@ -395,7 +395,7 @@ static const float_param_t float_parameters[] =
       "BlackTrans", N_("GCR Transition"), "Color=Yes,Category=Advanced Output Control",
       N_("Adjust the gray component transition rate"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, 0, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, 0, 1, 0, {NULL}, {NULL}
     }, 0.0, 1.0, 1.0, CMASK_K, 1, 0
   },
   {
@@ -403,7 +403,7 @@ static const float_param_t float_parameters[] =
       "GCRLower", N_("GCR Lower Bound"), "Color=Yes,Category=Advanced Output Control",
       N_("Lower bound of gray component reduction"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, 0, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, 0, 1, 0, {NULL}, {NULL}
     }, 0.0, 1.0, 0.2, CMASK_K, 1, 0
   },
   {
@@ -411,7 +411,7 @@ static const float_param_t float_parameters[] =
       "GCRUpper", N_("GCR Upper Bound"), "Color=Yes,Category=Advanced Output Control",
       N_("Upper bound of gray component reduction"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, 0, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, 0, 1, 0, {NULL}, {NULL}
     }, 0.0, 5.0, 0.5, CMASK_K, 1, 0
   },
   RAW_GAMMA_CHANNEL(0),
@@ -483,7 +483,7 @@ static const float_param_t float_parameters[] =
       "LUTDumpFile", N_("LUT dump file"), N_("Advanced Output Control"),
       N_("Dump file for LUT for external color adjustment"),
       STP_PARAMETER_TYPE_FILE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0, {NULL}, {NULL}
     }, 0.0, 0.0, 0.0, CMASK_EVERY, 0, -1
   },
 };
@@ -517,7 +517,7 @@ static stp_curve_t *gcr_curve_bounds = NULL;
       "Color=Yes,Category=Output Curves",			\
       N_("Curve for raw channel " #channel),			\
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,	\
-      STP_PARAMETER_LEVEL_INTERNAL, 0, 1, channel, 1, 0		\
+      STP_PARAMETER_LEVEL_INTERNAL, 0, 1, channel, 1, 0, {NULL}, {NULL}	\
     }, &color_curve_bounds, CMASK_RAW, 0, 0, -1			\
   }
 
@@ -528,7 +528,7 @@ static curve_param_t curve_parameters[] =
       "CyanCurve", N_("Cyan Curve"), "Color=Yes,Category=Output Curves",
       N_("Cyan curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED2, 0, 1, 1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED2, 0, 1, 1, 1, 0, {NULL}, {NULL}
     }, &color_curve_bounds, CMASK_C, 0, 1, 0
   },
   {
@@ -536,7 +536,7 @@ static curve_param_t curve_parameters[] =
       "MagentaCurve", N_("Magenta Curve"), "Color=Yes,Category=Output Curves",
       N_("Magenta curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED2, 0, 1, 2, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED2, 0, 1, 2, 1, 0, {NULL}, {NULL}
     }, &color_curve_bounds, CMASK_M, 0, 1, 0
   },
   {
@@ -544,7 +544,7 @@ static curve_param_t curve_parameters[] =
       "YellowCurve", N_("Yellow Curve"), "Color=Yes,Category=Output Curves",
       N_("Yellow curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED2, 0, 1, 3, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED2, 0, 1, 3, 1, 0, {NULL}, {NULL}
     }, &color_curve_bounds, CMASK_Y, 0, 1, 0
   },
   {
@@ -552,7 +552,7 @@ static curve_param_t curve_parameters[] =
       "BlackCurve", N_("Black Curve"), "Color=Yes,Category=Output Curves",
       N_("Black curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED2, 0, 1, 0, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED2, 0, 1, 0, 1, 0, {NULL}, {NULL}
     }, &color_curve_bounds, CMASK_K, 0, 0, 0
   },
   {
@@ -560,7 +560,7 @@ static curve_param_t curve_parameters[] =
       "RedCurve", N_("Red Curve"), "Color=Yes,Category=Output Curves",
       N_("Red curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED2, 0, 1, 1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED2, 0, 1, 1, 1, 0, {NULL}, {NULL}
     }, &color_curve_bounds, CMASK_C, 0, 1, 1
   },
   {
@@ -568,7 +568,7 @@ static curve_param_t curve_parameters[] =
       "GreenCurve", N_("Green Curve"), "Color=Yes,Category=Output Curves",
       N_("Green curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED2, 0, 1, 2, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED2, 0, 1, 2, 1, 0, {NULL}, {NULL}
     }, &color_curve_bounds, CMASK_M, 0, 1, 1
   },
   {
@@ -576,7 +576,7 @@ static curve_param_t curve_parameters[] =
       "BlueCurve", N_("Blue Curve"), "Color=Yes,Category=Output Curves",
       N_("Blue curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED2, 0, 1, 3, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED2, 0, 1, 3, 1, 0, {NULL}, {NULL}
     }, &color_curve_bounds, CMASK_Y, 0, 1, 1
   },
   {
@@ -584,7 +584,7 @@ static curve_param_t curve_parameters[] =
       "WhiteCurve", N_("White Curve"), "Color=Yes,Category=Output Curves",
       N_("White curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED2, 0, 1, 1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED2, 0, 1, 1, 1, 0, {NULL}, {NULL}
     }, &color_curve_bounds, CMASK_W, 0, 0, 1
   },
   {
@@ -592,7 +592,7 @@ static curve_param_t curve_parameters[] =
       "HueMap", N_("Hue Map"), "Color=Yes,Category=Advanced HSL Curves",
       N_("Hue adjustment curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, -1, 1, 0, {NULL}, {NULL}
     }, &hue_map_bounds, CMASK_CMY | CMASK_RGB, 1, 1, -1
   },
   {
@@ -600,7 +600,7 @@ static curve_param_t curve_parameters[] =
       "SatMap", N_("Saturation Map"), "Color=Yes,Category=Advanced HSL Curves",
       N_("Saturation adjustment curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, -1, 1, 0, {NULL}, {NULL}
     }, &sat_map_bounds, CMASK_CMY | CMASK_RGB, 1, 1, -1
   },
   {
@@ -608,7 +608,7 @@ static curve_param_t curve_parameters[] =
       "LumMap", N_("Luminosity Map"), "Color=Yes,Category=Advanced HSL Curves",
       N_("Luminosity adjustment curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, -1, 1, 0, {NULL}, {NULL}
     }, &lum_map_bounds, CMASK_CMY | CMASK_RGB, 1, 1, -1
   },
   {
@@ -616,7 +616,7 @@ static curve_param_t curve_parameters[] =
       "GCRCurve", N_("Gray Component Reduction"), "Color=Yes,Category=Advanced Output Control",
       N_("Gray component reduction curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, 0, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, 0, 1, 0, {NULL}, {NULL}
     }, &gcr_curve_bounds, CMASK_K, 0, 1, -1
   },
   RAW_CURVE_CHANNEL(0),
@@ -878,7 +878,7 @@ compute_gcr_curve(const stp_vars_t *vars)
   double k_trans = 1.0;
   double i_k_trans = 1.0;
   double *tmp_data = stp_malloc(sizeof(double) * lut->steps);
-  int i;
+  unsigned int i;
 
   if (stp_check_float_parameter(vars, "GCRUpper", STP_PARAMETER_DEFAULTED))
     k_upper = stp_get_float_parameter(vars, "GCRUpper");
@@ -941,7 +941,7 @@ initialize_gcr_curve(stp_vars_t *vars)
     {
       double data;
       size_t count;
-      int i;
+      size_t i;
       curve = stp_curve_create_copy(stp_get_curve_parameter(vars, "GCRCurve"));
       stp_curve_resample(curve, lut->steps);
       count = stp_curve_count_points(curve);
@@ -1024,8 +1024,8 @@ compute_user_correction(lut_t *lut)
   stp_curve_t *contrast_curve =
     stp_curve_cache_get_curve(&(lut->contrast_correction));
   double brightness = lut->brightness;
-  int i;
-  int isteps = lut->steps;
+  unsigned int i;
+  unsigned int isteps = lut->steps;
   if (isteps > 256)
     isteps = 256;
   tmp = stp_malloc(sizeof(double) * lut->steps);
@@ -1123,8 +1123,8 @@ compute_a_curve_full(lut_t *lut, int channel)
   double ipivot2 = 1.0 - pivot2;
   double xgamma2 = pow(pivot2, print_gamma);
   stp_curve_t *curve = stp_curve_cache_get_curve(&(lut->channel_curves[channel]));
-  int i;
-  int isteps = lut->steps;
+  unsigned int i;
+  unsigned int isteps = lut->steps;
   if (isteps > 256)
     isteps = 256;
   tmp = stp_malloc(sizeof(double) * lut->steps);
@@ -1183,8 +1183,8 @@ compute_a_curve_fast(lut_t *lut, int channel)
 {
   double *tmp;
   stp_curve_t *curve = stp_curve_cache_get_curve(&(lut->channel_curves[channel]));
-  int i;
-  int isteps = lut->steps;
+  unsigned int i;
+  unsigned int isteps = lut->steps;
   if (isteps > 256)
     isteps = 256;
   tmp = stp_malloc(sizeof(double) * lut->steps);
@@ -1205,8 +1205,8 @@ compute_a_curve_simple(lut_t *lut, int channel)
 {
   double *tmp;
   stp_curve_t *curve = stp_curve_cache_get_curve(&(lut->channel_curves[channel]));
-  int i;
-  int isteps = lut->steps;
+  unsigned int i;
+  unsigned int isteps = lut->steps;
   double gamma = 1.0 / (lut->gamma_values[channel] * lut->print_gamma);
   if (isteps > 256)
     isteps = 256;
@@ -1247,7 +1247,7 @@ static void
 invert_curve(stp_curve_t *curve, int invert_output)
 {
   double lo, hi;
-  int i;
+  size_t i;
   size_t count;
   const double *data = stp_curve_get_data(curve, &count);
   double f_gamma = stp_curve_get_gamma(curve);
@@ -1650,6 +1650,8 @@ stpi_color_traditional_list_parameters(const stp_vars_t *v)
     stp_parameter_list_add_param(ret, &(float_parameters[i].param));
   for (i = 0; i < curve_parameter_count; i++)
     stp_parameter_list_add_param(ret, &(curve_parameters[i].param));
+
+  (void)v;
   return ret;
 }
 

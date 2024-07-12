@@ -148,34 +148,34 @@ static const stp_shade_t photo_dither_shades[] =
 
 static const pcl_t pcl_media_sizes[] =
 {
-    { "Executive", "notused", PCL_PAPERSIZE_EXECUTIVE},			/* US Exec (7.25 x 10.5 in) */
-    { "Letter", "notused", PCL_PAPERSIZE_LETTER},			/* US Letter (8.5 x 11 in) */
-    { "Legal", "notused", PCL_PAPERSIZE_LEGAL},				/* US Legal (8.5 x 14 in) */
-    { "Tabloid", "notused", PCL_PAPERSIZE_TABLOID},			/* US Tabloid (11 x 17 in) */
-    { "Statement", "notused", PCL_PAPERSIZE_STATEMENT},			/* US Manual/Statement (5.5 x 8.5 in) */
-    { "SuperB", "notused", PCL_PAPERSIZE_SUPER_B},			/* US 13x19/Super B (13 x 19 in) */
-    { "A5", "notused", PCL_PAPERSIZE_A5},				/* ISO/JIS A5 (148 x 210 mm) */
-    { "A4", "notused", PCL_PAPERSIZE_A4},				/* ISO/JIS A4 (210 x 297 mm) */
-    { "A3", "notused", PCL_PAPERSIZE_A3},				/* ISO/JIS A3 (297 x 420 mm) */
-    { "B5", "notused", PCL_PAPERSIZE_JIS_B5},				/* JIS B5 (182 x 257 mm). */
-    { "B4", "notused", PCL_PAPERSIZE_JIS_B4},				/* JIS B4 (257 x 364 mm). */
-    { "w283h420", "notused", PCL_PAPERSIZE_HAGAKI_CARD},		/* Japanese Hagaki Card (100 x 148 mm) */
-    { "w420h567", "notused", PCL_PAPERSIZE_OUFUKU_CARD},		/* Japanese Oufuku Card (148 x 200 mm) */
-    { "A6", "notused", PCL_PAPERSIZE_A6_CARD},				/* ISO/JIS A6 card */
-    { "w288h432", "notused", PCL_PAPERSIZE_4x6},			/* US Index card (4 x 6 in) */
-    { "w360h576", "notused", PCL_PAPERSIZE_5x8},			/* US Index card (5 x 8 in) */
-    { "w216h360", "notused", PCL_PAPERSIZE_3x5},			/* US Index card (3 x 5 in) */
-    { "Monarch", "notused", PCL_PAPERSIZE_MONARCH_ENV},			/* Monarch Envelope (3 7/8 x 7 1/2 in) */
-    { "COM10", "notused", PCL_PAPERSIZE_COMMERCIAL10_ENV},		/* US Commercial 10 Envelope (4.125 x 9.5 in) Portrait */
-    { "DL", "notused", PCL_PAPERSIZE_DL_ENV},				/* DL envelope (110 x 220 mm) Portrait */
-    { "C5", "notused", PCL_PAPERSIZE_C5_ENV},				/* C5 envelope (162 x 229 mm) */
-    { "C6", "notused", PCL_PAPERSIZE_C6_ENV},				/* C6 envelope (114 x 162 mm) */
-    { "w315h414", "notused", PCL_PAPERSIZE_INVITATION_ENV},		/* US A2 Invitation envelope (4 3/8 x 5 3/4 in) */
-    { "w340h666", "notused", PCL_PAPERSIZE_JAPANESE_3_ENV},		/* Japanese Long Envelope #3 (120 x 235 mm) */
-    { "w255h581", "notused", PCL_PAPERSIZE_JAPANESE_4_ENV},		/* Japanese Long Envelope #4 (90 x 205 mm) */
-    { "w680h941", "notused", PCL_PAPERSIZE_KAKU_ENV},			/* Japanese Kaku Envelope (240 x 332.1 mm) */
+    { "Executive", "notused", PCL_PAPERSIZE_EXECUTIVE, 0, 0},		/* US Exec (7.25 x 10.5 in) */
+    { "Letter", "notused", PCL_PAPERSIZE_LETTER, 0, 0},			/* US Letter (8.5 x 11 in) */
+    { "Legal", "notused", PCL_PAPERSIZE_LEGAL, 0, 0},			/* US Legal (8.5 x 14 in) */
+    { "Tabloid", "notused", PCL_PAPERSIZE_TABLOID, 0, 0},		/* US Tabloid (11 x 17 in) */
+    { "Statement", "notused", PCL_PAPERSIZE_STATEMENT, 0, 0},		/* US Manual/Statement (5.5 x 8.5 in) */
+    { "SuperB", "notused", PCL_PAPERSIZE_SUPER_B, 0, 0},		/* US 13x19/Super B (13 x 19 in) */
+    { "A5", "notused", PCL_PAPERSIZE_A5, 0, 0},				/* ISO/JIS A5 (148 x 210 mm) */
+    { "A4", "notused", PCL_PAPERSIZE_A4, 0, 0},				/* ISO/JIS A4 (210 x 297 mm) */
+    { "A3", "notused", PCL_PAPERSIZE_A3, 0, 0},				/* ISO/JIS A3 (297 x 420 mm) */
+    { "B5", "notused", PCL_PAPERSIZE_JIS_B5, 0, 0},			/* JIS B5 (182 x 257 mm). */
+    { "B4", "notused", PCL_PAPERSIZE_JIS_B4, 0, 0},			/* JIS B4 (257 x 364 mm). */
+    { "w283h420", "notused", PCL_PAPERSIZE_HAGAKI_CARD, 0, 0},		/* Japanese Hagaki Card (100 x 148 mm) */
+    { "w420h567", "notused", PCL_PAPERSIZE_OUFUKU_CARD, 0, 0},		/* Japanese Oufuku Card (148 x 200 mm) */
+    { "A6", "notused", PCL_PAPERSIZE_A6_CARD, 0, 0},			/* ISO/JIS A6 card */
+    { "w288h432", "notused", PCL_PAPERSIZE_4x6, 0, 0},			/* US Index card (4 x 6 in) */
+    { "w360h576", "notused", PCL_PAPERSIZE_5x8, 0, 0},			/* US Index card (5 x 8 in) */
+    { "w216h360", "notused", PCL_PAPERSIZE_3x5, 0, 0},			/* US Index card (3 x 5 in) */
+    { "Monarch", "notused", PCL_PAPERSIZE_MONARCH_ENV, 0, 0},		/* Monarch Envelope (3 7/8 x 7 1/2 in) */
+    { "COM10", "notused", PCL_PAPERSIZE_COMMERCIAL10_ENV, 0, 0},	/* US Commercial 10 Envelope (4.125 x 9.5 in) Portrait */
+    { "DL", "notused", PCL_PAPERSIZE_DL_ENV, 0, 0},			/* DL envelope (110 x 220 mm) Portrait */
+    { "C5", "notused", PCL_PAPERSIZE_C5_ENV, 0, 0},			/* C5 envelope (162 x 229 mm) */
+    { "C6", "notused", PCL_PAPERSIZE_C6_ENV, 0, 0},			/* C6 envelope (114 x 162 mm) */
+    { "w315h414", "notused", PCL_PAPERSIZE_INVITATION_ENV, 0, 0},	/* US A2 Invitation envelope (4 3/8 x 5 3/4 in) */
+    { "w340h666", "notused", PCL_PAPERSIZE_JAPANESE_3_ENV, 0, 0},	/* Japanese Long Envelope #3 (120 x 235 mm) */
+    { "w255h581", "notused", PCL_PAPERSIZE_JAPANESE_4_ENV, 0, 0},	/* Japanese Long Envelope #4 (90 x 205 mm) */
+    { "w680h941", "notused", PCL_PAPERSIZE_KAKU_ENV, 0, 0},		/* Japanese Kaku Envelope (240 x 332.1 mm) */
 /**** MRS: this size not supported by print-util funcs! ****/
-    { "w612h792", "notused", PCL_PAPERSIZE_HP_CARD}, 			/* Hp greeting card */
+    { "w612h792", "notused", PCL_PAPERSIZE_HP_CARD, 0, 0}, 		/* Hp greeting card */
 };
 #define NUM_PRINTER_PAPER_SIZES	(sizeof(pcl_media_sizes) / sizeof(pcl_t))
 
@@ -193,13 +193,13 @@ static const pcl_t pcl_media_sizes[] =
 
 static const pcl_t pcl_media_types[] =
 {
-    { "Plain", N_ ("Plain"), PCL_PAPERTYPE_PLAIN},
-    { "Bond", N_ ("Bond"), PCL_PAPERTYPE_BOND},
-    { "Premium", N_ ("Premium"), PCL_PAPERTYPE_PREMIUM},
-    { "Glossy", N_ ("Glossy Photo"), PCL_PAPERTYPE_GLOSSY},
-    { "Transparency", N_ ("Transparency"), PCL_PAPERTYPE_TRANS},
-    { "GlossyQD", N_ ("Quick-dry Photo"), PCL_PAPERTYPE_QPHOTO},
-    { "TransparencyQD", N_ ("Quick-dry Transparency"), PCL_PAPERTYPE_QTRANS},
+    { "Plain", N_ ("Plain"), PCL_PAPERTYPE_PLAIN, 0, 0},
+    { "Bond", N_ ("Bond"), PCL_PAPERTYPE_BOND, 0, 0},
+    { "Premium", N_ ("Premium"), PCL_PAPERTYPE_PREMIUM, 0, 0},
+    { "Glossy", N_ ("Glossy Photo"), PCL_PAPERTYPE_GLOSSY, 0, 0},
+    { "Transparency", N_ ("Transparency"), PCL_PAPERTYPE_TRANS, 0, 0},
+    { "GlossyQD", N_ ("Quick-dry Photo"), PCL_PAPERTYPE_QPHOTO, 0, 0},
+    { "TransparencyQD", N_ ("Quick-dry Transparency"), PCL_PAPERTYPE_QTRANS, 0, 0},
 };
 #define NUM_PRINTER_PAPER_TYPES	(sizeof(pcl_media_types) / sizeof(pcl_t))
 
@@ -246,24 +246,24 @@ static const pcl_t pcl_media_types[] =
 
 static const pcl_t pcl_media_sources[] =
 {
-    { "Standard", N_ ("Standard"), PCL_PAPERSOURCE_STANDARD},
-    { "Manual", N_ ("Manual"), PCL_PAPERSOURCE_MANUAL},
-    { "ManualAdj", N_ ("Manual - Movable Guides"), PCL_PAPERSOURCE_MANUAL_ADJ},
+    { "Standard", N_ ("Standard"), PCL_PAPERSOURCE_STANDARD, 0, 0},
+    { "Manual", N_ ("Manual"), PCL_PAPERSOURCE_MANUAL, 0, 0},
+    { "ManualAdj", N_ ("Manual - Movable Guides"), PCL_PAPERSOURCE_MANUAL_ADJ, 0, 0},
 /*  {"Envelope", PCL_PAPERSOURCE_ENVELOPE}, */
-    { "MultiPurposeAdj", N_ ("Tray 1 - Movable Guides"), PCL_PAPERSOURCE_LJ_TRAY1_ADJ},
-    { "MultiPurpose", N_ ("Tray 1"), PCL_PAPERSOURCE_LJ_TRAY1},
-    { "UpperAdj", N_ ("Tray 2 - Movable Guides"), PCL_PAPERSOURCE_LJ_TRAY2_ADJ},
-    { "Upper", N_ ("Tray 2"), PCL_PAPERSOURCE_LJ_TRAY2},
-    { "LowerAdj", N_ ("Tray 3 - Movable Guides"), PCL_PAPERSOURCE_LJ_TRAY3_ADJ},
-    { "Lower", N_ ("Tray 3"), PCL_PAPERSOURCE_LJ_TRAY3},
-    { "LargeCapacityAdj", N_ ("Tray 4 - Movable Guides"), PCL_PAPERSOURCE_LJ_TRAY4_ADJ},
-    { "LargeCapacity", N_ ("Tray 4"), PCL_PAPERSOURCE_LJ_TRAY4},
-    { "Portable", N_ ("Portable Sheet Feeder"), PCL_PAPERSOURCE_340_PCSF},
-    { "Desktop", N_ ("Desktop Sheet Feeder"), PCL_PAPERSOURCE_340_DCSF},
-    { "Tray", N_ ("Tray"), PCL_PAPERSOURCE_DJ_TRAY},
-    { "Tray2", N_ ("Tray 2"), PCL_PAPERSOURCE_DJ_TRAY2},
-    { "Optional", N_ ("Optional Source"), PCL_PAPERSOURCE_DJ_OPTIONAL},
-    { "Auto", N_ ("Autoselect"), PCL_PAPERSOURCE_DJ_AUTO},
+    { "MultiPurposeAdj", N_ ("Tray 1 - Movable Guides"), PCL_PAPERSOURCE_LJ_TRAY1_ADJ, 0, 0},
+    { "MultiPurpose", N_ ("Tray 1"), PCL_PAPERSOURCE_LJ_TRAY1, 0, 0},
+    { "UpperAdj", N_ ("Tray 2 - Movable Guides"), PCL_PAPERSOURCE_LJ_TRAY2_ADJ, 0, 0},
+    { "Upper", N_ ("Tray 2"), PCL_PAPERSOURCE_LJ_TRAY2, 0, 0},
+    { "LowerAdj", N_ ("Tray 3 - Movable Guides"), PCL_PAPERSOURCE_LJ_TRAY3_ADJ, 0, 0},
+    { "Lower", N_ ("Tray 3"), PCL_PAPERSOURCE_LJ_TRAY3, 0, 0},
+    { "LargeCapacityAdj", N_ ("Tray 4 - Movable Guides"), PCL_PAPERSOURCE_LJ_TRAY4_ADJ, 0, 0},
+    { "LargeCapacity", N_ ("Tray 4"), PCL_PAPERSOURCE_LJ_TRAY4, 0, 0},
+    { "Portable", N_ ("Portable Sheet Feeder"), PCL_PAPERSOURCE_340_PCSF, 0, 0},
+    { "Desktop", N_ ("Desktop Sheet Feeder"), PCL_PAPERSOURCE_340_DCSF, 0, 0},
+    { "Tray", N_ ("Tray"), PCL_PAPERSOURCE_DJ_TRAY, 0, 0},
+    { "Tray2", N_ ("Tray 2"), PCL_PAPERSOURCE_DJ_TRAY, 0, 02},
+    { "Optional", N_ ("Optional Source"), PCL_PAPERSOURCE_DJ_OPTIONAL, 0, 0},
+    { "Auto", N_ ("Autoselect"), PCL_PAPERSOURCE_DJ_AUTO, 0, 0},
 };
 #define NUM_PRINTER_PAPER_SOURCES	(sizeof(pcl_media_sources) / sizeof(pcl_t))
 
@@ -1543,80 +1543,80 @@ static const stp_parameter_t the_parameters[] =
     "PageSize", N_("Page Size"), "Color=No,Category=Basic Printer Setup",
     N_("Size of the paper being printed to"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
   },
   {
     "MediaType", N_("Media Type"), "Color=Yes,Category=Basic Printer Setup",
     N_("Type of media (plain paper, photo paper, etc.)"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
   },
   {
     "InputSlot", N_("Media Source"), "Color=No,Category=Basic Printer Setup",
     N_("Source (input slot) of the media"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
   },
   {
     "Quality", N_("Print Quality"), "Color=Yes,Category=Basic Output Adjustment",
     N_("Print Quality"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 0, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 0, 0, {NULL}, {NULL}
   },
   {
     "Resolution", N_("Resolution"), "Color=Yes,Category=Basic Printer Setup",
     N_("Resolution of the print"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
   },
   {
     "InkType", N_("Ink Type"), "Color=Yes,Category=Advanced Printer Setup",
     N_("Type of ink in the printer"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
   },
   {
     "InkChannels", N_("Ink Channels"), "Color=Yes,Category=Advanced Printer Functionality",
     N_("Ink Channels"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, STP_CHANNEL_NONE, 0, 0
+    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, STP_CHANNEL_NONE, 0, 0, {NULL}, {NULL}
   },
   {
     "PrintingMode", N_("Printing Mode"), "Color=Yes,Category=Core Parameter",
     N_("Printing Output Mode"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
   },
   {
     "Duplex", N_("Double-Sided Printing"), "Color=No,Category=Basic Printer Setup",
     N_("Duplex/Tumble Setting"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
   },
  {
     "Orientation", N_("Orientation"), "Color=No,Category=Basic Printer Setup",
     N_("Orientation, Portrait, Landscape, Upside Down, Seascape"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
   },
  {
     "LabelSeparator", N_("Paper Sensor Type"),
     "Color=No,Category=Basic Printer Setup",
     N_("Gap, Mark on Top, Mark on Bottom, Notch, Continuous"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
   },
   {
     "Darkness", N_("Darkness"), "Color=No,Category=Basic Printer Setup",
     N_("Darkness Adjust, from -20 to 20"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 0, 1, STP_CHANNEL_NONE, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 0, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
   },
   {
     "NativeCopies", N_("Printer Generates Copies Natively"), "Color=No,Category=Job Mode",
     N_("Printer Generates Copies"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_INTERNAL, 1, 0, STP_CHANNEL_NONE, 0, 1
+    STP_PARAMETER_LEVEL_INTERNAL, 1, 0, STP_CHANNEL_NONE, 0, 1, {NULL}, {NULL}
   },
 };
 
@@ -1639,7 +1639,7 @@ static const float_param_t float_parameters[] =
       "CyanDensity", N_("Cyan Density"), "Color=Yes,Category=Output Level Adjustment",
       N_("Adjust the cyan density"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 1, 1, 0, {NULL}, {NULL}
     }, 0.0, 2.0, 1.0, 1
   },
   {
@@ -1647,7 +1647,7 @@ static const float_param_t float_parameters[] =
       "MagentaDensity", N_("Magenta Density"), "Color=Yes,Category=Output Level Adjustment",
       N_("Adjust the magenta density"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 2, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 2, 1, 0, {NULL}, {NULL}
     }, 0.0, 2.0, 1.0, 1
   },
   {
@@ -1655,7 +1655,7 @@ static const float_param_t float_parameters[] =
       "YellowDensity", N_("Yellow Density"), "Color=Yes,Category=Output Level Adjustment",
       N_("Adjust the yellow density"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 3, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 3, 1, 0, {NULL}, {NULL}
     }, 0.0, 2.0, 1.0, 1
   },
   {
@@ -1663,7 +1663,7 @@ static const float_param_t float_parameters[] =
       "RedDensity", N_("Red Density"), "Color=Yes,Category=Output Level Adjustment",
       N_("Adjust the red density"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 5, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 5, 1, 0, {NULL}, {NULL}
     }, 0.0, 1.0, 1.0, 1
   },
   {
@@ -1671,7 +1671,7 @@ static const float_param_t float_parameters[] =
       "GreenDensity", N_("Green Density"), "Color=Yes,Category=Output Level Adjustment",
       N_("Adjust the green density"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 5, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 5, 1, 0, {NULL}, {NULL}
     }, 0.0, 1.0, 1.0, 1
   },
   {
@@ -1679,7 +1679,7 @@ static const float_param_t float_parameters[] =
       "BlueDensity", N_("Blue Density"), "Color=Yes,Category=Output Level Adjustment",
       N_("Adjust the blue density"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 4, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 4, 1, 0, {NULL}, {NULL}
     }, 0.0, 1.0, 1.0, 1
   },
   {
@@ -1687,7 +1687,7 @@ static const float_param_t float_parameters[] =
       "BlackDensity", N_("Black Density"), "Color=Yes,Category=Output Level Adjustment",
       N_("Adjust the black density"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 0, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 0, 1, 0, {NULL}, {NULL}
     }, 0.0, 2.0, 1.0, 1
   },
   {
@@ -1695,7 +1695,7 @@ static const float_param_t float_parameters[] =
       "LightCyanTrans", N_("Light Cyan Transition"), "Color=Yes,Category=Advanced Ink Adjustment",
       N_("Light Cyan Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -1703,7 +1703,7 @@ static const float_param_t float_parameters[] =
       "LightMagentaTrans", N_("Light Magenta Transition"), "Color=Yes,Category=Advanced Ink Adjustment",
       N_("Light Magenta Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -1712,7 +1712,7 @@ static const float_param_t float_parameters[] =
       "Color=No,Category=Basic Output Adjustment",
       N_("Adjust horizontal position"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED3, 1, 1, STP_CHANNEL_NONE, 1, 0,
+      STP_PARAMETER_LEVEL_ADVANCED3, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
     }, 0.0, 4.0, 0.0, 0
   },
   {
@@ -1721,7 +1721,7 @@ static const float_param_t float_parameters[] =
       "Color=No,Category=Basic Output Adjustment",
       N_("Adjust vertical position"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED3, 1, 1, STP_CHANNEL_NONE, 1, 0,
+      STP_PARAMETER_LEVEL_ADVANCED3, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
     }, 0.0, 10.0, 0.0, 0
   },
 };
@@ -1854,7 +1854,7 @@ pcl_get_model_capabilities(const stp_vars_t *v)	/* I: Model */
 static void
 pcl_describe_resolution(const stp_vars_t *v, stp_resolution_t *x, stp_resolution_t *y)
 {
-  int i;
+  unsigned int i;
   const char *resolution = stp_get_string_parameter(v, "Resolution");
   const char *quality;
   const pcl_cap_t *caps = NULL;
@@ -1899,7 +1899,7 @@ static int pcl_convert_media_size(const stp_vars_t *v,
 				  const char *media_size)
 {
 
-  int i;
+  unsigned int i;
   int media_code = 0;
   const pcl_cap_t *caps;
 
@@ -2002,8 +2002,8 @@ pcl_papersize_valid(const stp_vars_t *v,
                      == PCL_PRINTER_CUSTOM_SIZE);
 #endif
 
-  unsigned int pwidth = pt->width;
-  unsigned int pheight = pt->height;
+  int pwidth = pt->width;
+  int pheight = pt->height;
 
 /*
  * This function decides whether a paper size is allowed for the
@@ -2101,7 +2101,7 @@ pcl_parameters(const stp_vars_t *v, const char *name,
 	       stp_parameter_t *description)
 {
   int		model = stp_get_model_id(v);
-  int		i;
+  unsigned int	i;
   const pcl_cap_t *caps;
   description->p_type = STP_PARAMETER_TYPE_INVALID;
 
@@ -2590,7 +2590,6 @@ pcl_printfunc(stp_vars_t *v)
 	      stp_zprintf(v, "\033*b%dY", pd->blank_lines);
 	      pd->blank_lines=0;
 	    }
-	  else;
 	}
       else
 	{
@@ -2735,7 +2734,7 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
   int		printing_color = 0;
   int		top = (int) stp_get_top(v) + .5;
   int		left = (int) stp_get_left(v) + .5;
-  int		y;		/* Looping vars */
+  unsigned int	y;		/* Looping vars */
   stp_resolution_t	xdpi, ydpi;	/* Resolution */
   unsigned char *black,		/* Black bitmap data */
 		*cyan,		/* Cyan bitmap data */
@@ -2747,7 +2746,7 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
 			page_top,
 			page_right,
 			page_bottom;
-  int		out_width,	/* Width of image on page */
+  unsigned int	out_width,	/* Width of image on page */
 		out_height,	/* Height of image on page */
 		errdiv,		/* Error dividend */
 		errmod,		/* Error modulus */
@@ -3548,7 +3547,7 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
 	    unsigned row_errcol = 0;
 	    unsigned short *output = stp_channel_get_output(v);
 	    unsigned char *optr = privdata.row_buf;
-	    int x;
+	    unsigned int x;
 	    for (x = 0; x < out_width; x++)
 	      {
 		if (row_errcol != row_errlast)

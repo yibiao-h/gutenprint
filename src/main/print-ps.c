@@ -67,25 +67,25 @@ static const stp_parameter_t the_parameters[] =
     "PPDFile", N_("PPDFile"), "Color=Yes,Category=Basic Printer Setup",
     N_("PPD File"),
     STP_PARAMETER_TYPE_FILE, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
   },
   {
     "PageSize", N_("Page Size"), "Color=No,Category=Basic Printer Setup",
     N_("Size of the paper being printed to"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
   },
   {
     "ModelName", N_("Model Name"), "Color=Yes,Category=Basic Printer Setup",
     N_("PPD File Model Name"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
-    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, STP_CHANNEL_NONE, 0, 0
+    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, STP_CHANNEL_NONE, 0, 0, {NULL}, {NULL}
   },
   {
     "PrintingMode", N_("Printing Mode"), "Color=Yes,Category=Core Parameter",
     N_("Printing Output Mode"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
   },
 };
 
@@ -190,6 +190,8 @@ ps_option_to_param(const stp_vars_t *v, stp_parameter_t *param,
 static int
 ppd_whitespace_callback(stp_mxml_node_t *node, int where)
 {
+  (void)node;
+  (void)where;
   return 0;
 }
 
@@ -663,6 +665,7 @@ ps_limit(const stp_vars_t *v,  		/* I */
   *height =	(stp_dimension_t) INT_MAX;
   *min_width =	1;
   *min_height =	1;
+  (void)v;
 }
 
 /*
@@ -723,7 +726,7 @@ ps_external_options(const stp_vars_t *v)
   stp_string_list_t *answer;
   char *tmp;
   char *ppd_name = NULL;
-  int i;
+  unsigned int i;
 #ifdef HAVE_LOCALE_H
   char *locale;
 #endif
@@ -854,7 +857,7 @@ ps_external_options(const stp_vars_t *v)
 static void
 ps_print_device_settings(stp_vars_t *v)
 {
-  int i;
+  unsigned int i;
   stp_parameter_list_t param_list = ps_list_parameters(v);
   if (! param_list)
     return;
