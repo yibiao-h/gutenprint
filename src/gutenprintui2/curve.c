@@ -65,8 +65,8 @@ static guint curve_type_changed_signal = 0;
 
 
 /* forward declarations: */
-static void stpui_curve_class_init   (StpuiCurveClass *class);
-static void stpui_curve_init         (StpuiCurve      *curve);
+static void stpui_curve_class_init   (StpuiCurveClass *class, void *classdata);
+static void stpui_curve_init         (StpuiCurve      *curve, gpointer g_class);
 static void stpui_curve_get_property (GObject    *object,
 				      guint       param_id,
 				      GValue     *value,
@@ -109,7 +109,7 @@ stpui_curve_get_type (void)
 }
 
 static void
-stpui_curve_class_init (StpuiCurveClass *class)
+stpui_curve_class_init (StpuiCurveClass *class, void *classdata)
 {
   GObjectClass *gobject_class = G_OBJECT_CLASS (class);
 
@@ -181,7 +181,7 @@ stpui_curve_class_init (StpuiCurveClass *class)
 }
 
 static void
-stpui_curve_init (StpuiCurve *curve)
+stpui_curve_init (StpuiCurve *curve, gpointer g_class)
 {
   gint old_mask;
 

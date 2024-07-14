@@ -41,8 +41,8 @@ static GtkVBoxClass *parent_class = NULL;
 
 
 /* forward declarations: */
-static void stpui_gamma_curve_class_init (StpuiGammaCurveClass *class);
-static void stpui_gamma_curve_init (StpuiGammaCurve *curve);
+static void stpui_gamma_curve_class_init (StpuiGammaCurveClass *class, void *classdata);
+static void stpui_gamma_curve_init (StpuiGammaCurve *curve, gpointer g_class);
 static void stpui_gamma_curve_destroy (GtkObject *object);
 
 static void curve_type_changed_callback (GtkWidget *w, gpointer data);
@@ -231,7 +231,7 @@ stpui_gamma_curve_get_type (void)
 }
 
 static void
-stpui_gamma_curve_class_init (StpuiGammaCurveClass *class)
+stpui_gamma_curve_class_init (StpuiGammaCurveClass *class, void *classdata)
 {
   GtkObjectClass *object_class;
 
@@ -242,7 +242,7 @@ stpui_gamma_curve_class_init (StpuiGammaCurveClass *class)
 }
 
 static void
-stpui_gamma_curve_init (StpuiGammaCurve *curve)
+stpui_gamma_curve_init (StpuiGammaCurve *curve, gpointer g_class)
 {
   GtkWidget *vbox;
   int i;
