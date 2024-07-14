@@ -59,7 +59,7 @@ compare_channels(const stpi_dither_channel_t *dc1,
   return 1;
 }
 
-const static double dp_fraction = 0.5;
+static const double dp_fraction = 0.5;
 
 static void
 init_dither_channel_new(stpi_dither_channel_t *dc, stp_vars_t *v)
