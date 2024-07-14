@@ -1382,7 +1382,7 @@ parse_canon(FILE *fp_r)
 
   int m=0;
   int currentcolor,currentbpp,density,l_eject;
-  int cmdcounter;
+//  int cmdcounter;
   int delay_c=0, delay_m=0, delay_y=0, delay_C=0,
     delay_M=0, delay_Y=0, delay_K=0, currentdelay=0;
 
@@ -1428,7 +1428,7 @@ parse_canon(FILE *fp_r)
    switch (ch) {
    case '[': /* 0x5b initialize printer */
      get1("Error reading CEM-code.\n");
-     cmdcounter= global_counter;
+//     cmdcounter= global_counter;
      get2("Error reading CEM-data size.\n");
      getn(sh,"Error reading CEM-data.\n");
 
@@ -1475,7 +1475,7 @@ parse_canon(FILE *fp_r)
 
    case '(': /* 0x28 */
      get1("Corrupt file.  Incomplete extended command.\n");
-     cmdcounter= global_counter;
+//     cmdcounter= global_counter;
      get2("Corrupt file.  Error reading buffer size.\n");
      bufsize=sh;
      getn(bufsize,"Corrupt file.  Error reading data buffer.\n");
