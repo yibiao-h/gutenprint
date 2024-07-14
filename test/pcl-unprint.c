@@ -1508,6 +1508,7 @@ int main(int argc, char *argv[])
 		switch (numeric_arg) {
 		case 0 :
 		    fprintf(stderr, "(set by printer controls)\n");
+		    break;
 		case 1 :
 		    fprintf(stderr, "Draft\n");
 		    break;
