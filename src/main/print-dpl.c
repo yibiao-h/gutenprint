@@ -680,7 +680,8 @@ dpl_get_multiplier (const stp_vars_t * v)
   stp_resolution_t x, y;
   int multiplier;
   int i;
-  int max_dpi;
+  int max_dpi = 0;
+
   const dpl_cap_t *caps = dpl_get_model_capabilities (v);
 
   for (i = 0; i < NUM_RESOLUTIONS; i++)
@@ -690,6 +691,8 @@ dpl_get_multiplier (const stp_vars_t * v)
 	  max_dpi = dpl_resolutions[i].p0;
 	}
     }
+
+  // XXX error if max_dpi is 0?
 
   dpl_describe_resolution (v, &x, &y);
 
@@ -1379,8 +1382,8 @@ dpl_pcx (stp_vars_t * v,	/* I - Print file or command */
   stp_resolution_t xdpi, ydpi;
   const dpl_cap_t *caps = dpl_get_model_capabilities (v);
   int i;
-  int max_dpi;
-  int dpi_adjust;
+  int max_dpi = 0;
+  int dpi_adjust = 0;
 
   /* Each line has to be 4 inches long */
   dpl_describe_resolution (v, &xdpi, &ydpi);
@@ -1396,6 +1399,8 @@ dpl_pcx (stp_vars_t * v,	/* I - Print file or command */
 	  dpi_adjust = dpl_resolutions[i].p0;
 	}
     }
+
+  // XXX check to see if max_dpi or dpi_adjust == 0?
 
   if (xdpi == max_dpi)
     {
