@@ -484,7 +484,7 @@ run (const char        *name,		/* I - Name of print program. */
               gimp_vars.orientation = atoi(value);
               break;
             }
-
+            /* Intentional fallthrough */
           default:
             values[0].data.d_status = GIMP_PDB_CALLING_ERROR;
             fprintf(stderr,"Parameter unsupported in gimp2 plugin for parameter %s\n", key);
