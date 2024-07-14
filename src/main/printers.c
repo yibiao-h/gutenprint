@@ -106,7 +106,7 @@ stpi_init_printer_list(void)
   return 0;
 }
 
-unsigned int
+int
 stp_printer_model_count(void)
 {
   if (printer_list == NULL)

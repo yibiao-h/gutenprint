@@ -53,7 +53,7 @@ typedef struct stp_printer stp_printer_t;
  * Get the number of available printer models.
  * @returns the number of printer models.
  */
-extern unsigned int stp_printer_model_count(void);
+extern int stp_printer_model_count(void);
 
 /**
  * Get a printer model by its index number.
