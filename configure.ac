@@ -685,11 +685,11 @@ PKGMODULEDIR="${PACKAGE_LIB_DIR}/${GUTENPRINT_RELEASE_VERSION}/modules"
 
 dnl Compiler flags
 if test x$ac_compiler_gnu = "xyes"; then
-  STP_ADD_COMPILER_ARGS([-Wall -Wextra -Wcast-align -Wmissing-prototypes -Wmissing-declarations -Wwrite-strings -Werror-implicit-function-declaration -Winline -Wformat=2 -Werror=format-security],, [GNUCFLAGS])
+  STP_ADD_COMPILER_ARGS([-Wall -Wextra -Wcast-align -Wmissing-prototypes -Wmissing-declarations -Wwrite-strings -Werror-implicit-function-declaration -Wformat=2 -Werror=format-security],, [GNUCFLAGS])
   if test x${USE_MAINTAINER_MODE} = xyes ; then
-    STP_ADD_COMPILER_ARGS([ -pedantic -Waggregate-return -Wcast-qual -Wshadow -Wredundant-decls -Wstrict-prototypes],, [GNUCFLAGS])
+    STP_ADD_COMPILER_ARGS([ -pedantic -Waggregate-return -Wcast-qual -Wshadow -Wredundant-decls -Wstrict-prototypes -Winline],, [GNUCFLAGS])
   else
-    STP_ADD_COMPILER_ARGS([ -Wno-deprecated-declarations],, [GNUCFLAGS])
+    STP_ADD_COMPILER_ARGS([ -Wno-deprecated-declarations -Wno-missing-field-initializers -Wno-sign-compare -Wno-unused-parameter],, [GNUCFLAGS])
   fi
   if test x$ENABLE_DEBUG = xyes ; then
     STP_ADD_COMPILER_ARG([-g])
