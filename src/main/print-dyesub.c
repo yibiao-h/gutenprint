@@ -4620,7 +4620,7 @@ static int mitsu_p95d_parse_parameters(stp_vars_t *v)
         pd->privdata.m95d.usercomment[usercomment->bytes] = 0;
       for (i = 0 ; i < usercomment->bytes ; i++) {
         if (pd->privdata.m95d.usercomment[i] < 0x20 ||
-	    pd->privdata.m95d.usercomment[i] > 0x7F)
+	    (unsigned int)pd->privdata.m95d.usercomment[i] > 0x7F)
 	  pd->privdata.m95d.usercomment[i] = 0x20;
       }
     }
@@ -5012,7 +5012,7 @@ static int mitsu_p93d_parse_parameters(stp_vars_t *v)
         pd->privdata.m95d.usercomment[usercomment->bytes] = 0;
       for (i = 0 ; i < usercomment->bytes ; i++) {
         if (pd->privdata.m95d.usercomment[i] < 0x20 ||
-	    pd->privdata.m95d.usercomment[i] > 0x7F)
+	    (unsigned int)pd->privdata.m95d.usercomment[i] > 0x7F)
 	  pd->privdata.m95d.usercomment[i] = 0x20;
       }
     }
