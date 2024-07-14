@@ -2590,7 +2590,6 @@ pcl_printfunc(stp_vars_t *v)
 	      stp_zprintf(v, "\033*b%dY", pd->blank_lines);
 	      pd->blank_lines=0;
 	    }
-	  else;
 	}
       else
 	{
