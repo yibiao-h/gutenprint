@@ -107,7 +107,7 @@ get_channel_group(const stp_vars_t *v)
 }
 
 static void
-clear_a_channel(stpi_channel_group_t *cg, unsigned int channel)
+clear_a_channel(stpi_channel_group_t *cg, int channel)
 {
   if (channel < cg->channel_count)
     {
@@ -126,7 +126,7 @@ static void
 stpi_channel_clear(void *vc)
 {
   stpi_channel_group_t *cg = (stpi_channel_group_t *) vc;
-  unsigned int i;
+  int i;
   if (cg->channel_count > 0)
     for (i = 0; i < cg->channel_count; i++)
       clear_a_channel(cg, i);
@@ -400,7 +400,7 @@ stp_channel_set_curve(stp_vars_t *v, int color, const stp_curve_t *curve)
 {
   stpi_channel_t *ch;
   stpi_channel_group_t *cg = get_channel_group(v);
-  if (!cg || color >= (int)cg->channel_count)
+  if (!cg || color >= cg->channel_count)
     return;
   ch = &(cg->c[color]);
   stp_dprintf(STP_DBG_INK, v, "set_curve channel %d set curve\n", color);
@@ -418,7 +418,7 @@ stp_channel_get_curve(stp_vars_t *v, int color)
 {
   stpi_channel_t *ch;
   stpi_channel_group_t *cg = get_channel_group(v);
-  if (!cg || color >= (int)cg->channel_count)
+  if (!cg || color >= cg->channel_count)
     return NULL;
   ch = &(cg->c[color]);
   if (ch)
@@ -451,7 +451,7 @@ input_needs_splitting(const stpi_channel_group_t *cg)
 #if 0
   return cg->total_channels != cg->aux_output_channels;
 #else
-  unsigned int i;
+  int i;
   if (!cg || cg->channel_count <= 0)
     return 0;
   for (i = 0; i < cg->channel_count; i++)
@@ -467,7 +467,7 @@ static void
 stp_dump_channels(const stp_vars_t *v)
 {
   stpi_channel_group_t *cg = get_channel_group(v);
-  unsigned int i, j;
+  int i, j;
   stp_dprintf(STP_DBG_INK, v, "   channel_count  %d\n", cg->channel_count);
   stp_dprintf(STP_DBG_INK, v, "   total_channels %d\n", cg->total_channels);
   stp_dprintf(STP_DBG_INK, v, "   input_channels %d\n", cg->input_channels);
@@ -516,7 +516,7 @@ stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
   stpi_channel_group_t *cg = get_channel_group(v);
   int width = stp_image_width(image);
   int curve_count = 0;
-  unsigned int i, j, k;
+  int i, j, k;
   if (!cg)
     {
       cg = stp_zalloc(sizeof(stpi_channel_group_t));
@@ -527,7 +527,7 @@ stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
     return;
   cg->initialized = 1;
   cg->max_density = 0;
-  if (cg->black_channel < -1 || cg->black_channel >= (int)cg->channel_count)
+  if (cg->black_channel < -1 || cg->black_channel >= cg->channel_count)
     cg->black_channel = -1;
   for (i = 0; i < cg->channel_count; i++)
     {
@@ -555,7 +555,7 @@ stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
 	      val++;
 	    }
 
-	  for (k = 0; (int)k < sc - 1; k++)
+	  for (k = 0; k < sc - 1; k++)
 	    {
 	      double this_val = c->sc[k].value;
 	      double next_val = c->sc[k + 1].value;
@@ -587,7 +587,7 @@ stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
 	      val++;
 	    }
 	}
-      if (cg->gloss_channel != (int)i && c->subchannel_count > 0)
+      if (cg->gloss_channel != i && c->subchannel_count > 0)
 	cg->aux_output_channels++;
       cg->total_channels += c->subchannel_count;
       for (j = 0; j < c->subchannel_count; j++)
@@ -597,7 +597,7 @@ stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
     {
       for (i = 0; i < cg->channel_count; i++)
 	{
-          if (cg->gloss_channel == (int)i)
+	  if (cg->gloss_channel == i)
 	    break;
 	  cg->gloss_physical_channel += cg->c[i].subchannel_count;
 	}
@@ -666,7 +666,7 @@ stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
 static void NOINLINE
 clear_channel(unsigned short *data, unsigned width, unsigned depth)
 {
-  unsigned int i;
+  int i;
   width *= depth;
   for (i = 0; i < width; i += depth)
     data[i] = 0;
@@ -676,7 +676,7 @@ static int NOINLINE
 scale_channel(unsigned short *data, unsigned width, unsigned depth,
 	      unsigned short density)
 {
-  unsigned int i;
+  int i;
   int retval = 0;
   unsigned short previous_data = 0;
   unsigned short previous_value = 0;
@@ -706,7 +706,7 @@ scale_channel(unsigned short *data, unsigned width, unsigned depth,
 static int NOINLINE
 scan_channel(unsigned short *data, unsigned width, unsigned depth)
 {
-  unsigned int i;
+  int i;
   width *= depth;
   for (i = 0; i < width; i += depth)
     {
@@ -729,7 +729,7 @@ ink_sum(const unsigned short *data, int total_channels)
 static int NOINLINE
 limit_ink(stpi_channel_group_t *cg)
 {
-  unsigned int i;
+  int i;
   int retval = 0;
   unsigned short *ptr;
   if (!cg || cg->ink_limit == 0 || cg->ink_limit >= cg->max_density)
@@ -738,10 +738,10 @@ limit_ink(stpi_channel_group_t *cg)
   ptr = cg->output_data;
   for (i = 0; i < cg->width; i++)
     {
-      unsigned int total_ink = ink_sum(ptr, cg->total_channels);
+      int total_ink = ink_sum(ptr, cg->total_channels);
       if (total_ink > cg->ink_limit) /* Need to limit ink? */
 	{
-	  unsigned int j;
+	  int j;
 	  /*
 	   * FIXME we probably should first try to convert light ink to dark
 	   */
@@ -758,8 +758,8 @@ limit_ink(stpi_channel_group_t *cg)
 static inline int
 short_eq(const unsigned short *i1, const unsigned short *i2, size_t count)
 {
-#if 0
-  size_t i;
+#if 1
+  int i;
   for (i = 0; i < count; i++)
     if (i1[i] != i2[i])
       return 0;
@@ -769,10 +769,22 @@ short_eq(const unsigned short *i1, const unsigned short *i2, size_t count)
 #endif
 }
 
+static inline void
+short_copy(unsigned short *out, const unsigned short *in, size_t count)
+{
+#if 1
+  int i;
+  for (i = 0; i < count; i++)
+    out[i] = in[i];
+#else
+  (void) memcpy(out, in, count * sizeof(unsigned short));
+#endif
+}
+
 static void NOINLINE
 copy_channels(stpi_channel_group_t *cg)
 {
-  unsigned int i, j, k;
+  int i, j, k;
   const unsigned short *input;
   unsigned short *output;
   if (!cg)
@@ -786,7 +798,7 @@ copy_channels(stpi_channel_group_t *cg)
 	  stpi_channel_t *ch = &(cg->c[j]);
 	  for (k = 0; k < ch->subchannel_count; k++)
 	    {
-                    if (cg->gloss_channel != (int)j)
+	      if (cg->gloss_channel != j)
 		{
 		  *output = *input++;
 		}
@@ -828,7 +840,7 @@ interpolate_value(const double *vec, double val)
 static void NOINLINE
 generate_special_channels(stpi_channel_group_t *cg)
 {
-  unsigned int i, j;
+  int i, j;
   const unsigned short *input_cache = NULL;
   const unsigned short *output_cache = NULL;
   const unsigned short *input;
@@ -889,7 +901,7 @@ generate_special_channels(stpi_channel_group_t *cg)
 	    }
 	  else
 	    {
-              for (j = 0; (int)j < 4 + offset; j++)
+	      for (j = 0; j < 4 + offset; j++)
 		output[j] = input[j];
 	      for (j = 4 + offset; j < cg->aux_output_channels; j++)
 		output[j] = 0;
@@ -903,7 +915,7 @@ generate_special_channels(stpi_channel_group_t *cg)
 static void NOINLINE
 split_channels(stpi_channel_group_t *cg, unsigned *zero_mask)
 {
-  unsigned int i, j, k;
+  int i, j, k;
   int nz[STP_CHANNEL_LIMIT];
   int outbytes;
   const unsigned short *input_cache = NULL;
@@ -937,14 +949,14 @@ split_channels(stpi_channel_group_t *cg, unsigned *zero_mask)
 	    black_value = input[cg->black_channel];
 	  for (j = 0; j < cg->aux_output_channels; j++)
 	    {
-              if (input[j] < virtual_black && (int)j != cg->black_channel)
+	      if (input[j] < virtual_black && j != cg->black_channel)
 		virtual_black = input[j];
 	    }
 	  black_value += virtual_black / 4;
 	  for (j = 0; j < cg->channel_count; j++)
 	    {
 	      stpi_channel_t *c = &(cg->c[j]);
-	      unsigned int s_count = c->subchannel_count;
+	      int s_count = c->subchannel_count;
 	      if (s_count >= 1)
 		{
 		  unsigned i_val = *input++;
@@ -963,7 +975,7 @@ split_channels(stpi_channel_group_t *cg, unsigned *zero_mask)
 		    {
 		      unsigned l_val = i_val;
 		      unsigned offset;
-		      if (i_val > 0 && black_value && (int)j != cg->black_channel)
+		      if (i_val > 0 && black_value && j != cg->black_channel)
 			{
 			  l_val += black_value;
 			  if (l_val > 65535)
@@ -1004,7 +1016,7 @@ static void NOINLINE
 scale_channels(stpi_channel_group_t *cg, unsigned *zero_mask,
 	       int zero_mask_valid)
 {
-  unsigned int i, j;
+  int i, j;
   int physical_channel = 0;
   if (!cg)
     return;
@@ -1017,7 +1029,7 @@ scale_channels(stpi_channel_group_t *cg, unsigned *zero_mask,
       if (ch->subchannel_count > 0)
 	for (j = 0; j < ch->subchannel_count; j++)
 	  {
-            if (cg->gloss_channel != (int)i)
+	    if (cg->gloss_channel != i)
 	      {
 		stpi_subchannel_t *sch = &(ch->sc[j]);
 		unsigned density = sch->s_density;
@@ -1051,7 +1063,7 @@ generate_gloss(stpi_channel_group_t *cg, unsigned *zero_mask)
 {
   unsigned short *output;
   unsigned gloss_mask;
-  unsigned int i, j, k;
+  int i, j, k;
   if (!cg || cg->gloss_channel == -1 || cg->gloss_limit <= 0)
     return;
   cg->valid_8bit = 0;
@@ -1067,7 +1079,7 @@ generate_gloss(stpi_channel_group_t *cg, unsigned *zero_mask)
 	  stpi_channel_t *ch = &(cg->c[j]);
 	  for (k = 0; k < ch->subchannel_count; k++)
 	    {
-                    if (cg->gloss_channel != (int)j)
+	      if (cg->gloss_channel != j)
 		{
 		  channel_sum += (unsigned) output[physical_channel];
 		  if (channel_sum >= cg->gloss_limit)
@@ -1096,7 +1108,7 @@ do_gcr(stpi_channel_group_t *cg, unsigned *zero_mask)
   const unsigned short *gcr_lookup;
   unsigned short *output;
   size_t count;
-  unsigned int i;
+  int i;
   union {
     unsigned short nz[4];
     unsigned long long nzl;
@@ -1115,7 +1127,7 @@ do_gcr(stpi_channel_group_t *cg, unsigned *zero_mask)
       unsigned k = output[0];
       if (k > 0)
 	{
-	  unsigned kk = gcr_lookup[k];
+	  int kk = gcr_lookup[k];
 	  int ck;
 	  if (kk > k)
 	    kk = k;
@@ -1189,7 +1201,7 @@ stp_channel_get_output_8bit(const stp_vars_t *v)
   if (! cg->output_data_8bit)
     cg->output_data_8bit = stp_malloc(sizeof(unsigned char) *
 				      cg->total_channels * cg->width);
-  unsigned int i;
+  int i;
   (void) memset(cg->output_data_8bit, 0, sizeof(unsigned char) *
 		cg->total_channels * cg->width);
   for (i = 0; i < cg->width * cg->total_channels; i++)

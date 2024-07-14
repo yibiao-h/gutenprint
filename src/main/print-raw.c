@@ -89,19 +89,19 @@ static const stp_parameter_t the_parameters[] =
     "InkType", N_("Ink Type"), "Color=Yes,Category=Advanced Printer Setup",
     N_("Type of ink in the printer"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "PrintingMode", N_("Printing Mode"), "Color=Yes,Category=Core Parameter",
     N_("Printing Output Mode"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "PageSize", N_("Page Size"), "Color=No,Category=Basic Printer Setup",
     N_("Size of the paper being printed to"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
 };
 
@@ -115,7 +115,6 @@ raw_list_parameters(const stp_vars_t *v)
   int i;
   for (i = 0; i < the_parameter_count; i++)
     stp_parameter_list_add_param(ret, &(the_parameters[i]));
-  (void)v;
   return ret;
 }
 
@@ -173,8 +172,6 @@ raw_parameters(const stp_vars_t *v, const char *name,
     }
   else
     description->is_active = 0;
-
-  (void)v;
 }
 
 static void
@@ -199,7 +196,6 @@ raw_limit(const stp_vars_t *v,			/* I */
   *height = 65535;
   *min_width = 1;
   *min_height =	1;
-  (void)v;
 }
 
 static void
@@ -208,7 +204,6 @@ raw_describe_resolution(const stp_vars_t *v,
 {
   *x = 72;
   *y = 72;
-  (void)v;
 }
 
 static const char *

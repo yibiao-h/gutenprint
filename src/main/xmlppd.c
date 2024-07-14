@@ -212,8 +212,8 @@ stpi_xmlppd_read_ppd_file(const char *filename)	/* I - PPD file */
 		*text,			/* Pointer to text */
 		*value;			/* Pointer to value */
   order_t	*order_array;		/* Precedence order of options */
-  unsigned int	i;
-  unsigned int	option_count;
+  int		i;
+  int		option_count;
   int		order_length;
   char		*order_list;
   stp_string_list_t *ialist = stp_string_list_create();

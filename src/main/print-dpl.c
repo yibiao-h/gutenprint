@@ -93,29 +93,29 @@ static const dpl_t dpl_resolutions[] = {
 #define NUM_RESOLUTIONS		(sizeof(dpl_resolutions) / sizeof (dpl_t))
 
 static const dpl_t dpl_speeds[] = {
-  {"A", N_("1.0 IPS"), 'A', 0, 0},
-  {"B", N_("1.5 IPS"), 'B', 0, 0},
-  {"C", N_("2.0 IPS"), 'C', 0, 0},
-  {"D", N_("2.5 IPS"), 'D', 0, 0},
-  {"E", N_("3.0 IPS"), 'E', 0, 0},
-  {"F", N_("3.5 IPS"), 'F', 0, 0},
-  {"G", N_("4.0 IPS"), 'G', 0, 0},
-  {"H", N_("4.5 IPS"), 'H', 0, 0},
-  {"I", N_("5.0 IPS"), 'I', 0, 0},
-  {"J", N_("5.5 IPS"), 'J', 0, 0},
-  {"K", N_("6.0 IPS"), 'K', 0, 0},
-  {"L", N_("6.5 IPS"), 'L', 0, 0},
-  {"M", N_("7.0 IPS"), 'M', 0, 0},
-  {"N", N_("7.5 IPS"), 'N', 0, 0},
-  {"O", N_("8.0 IPS"), 'O', 0, 0},
-  {"P", N_("8.5 IPS"), 'P', 0, 0},
-  {"Q", N_("9.0 IPS"), 'Q', 0, 0},
-  {"R", N_("9.5 IPS"), 'R', 0, 0},
-  {"S", N_("10.0 IPS"), 'S', 0, 0},
-  {"T", N_("10.5 IPS"), 'T', 0, 0},
-  {"U", N_("11.0 IPS"), 'U', 0, 0},
-  {"V", N_("11.5 IPS"), 'V', 0, 0},
-  {"W", N_("12.0 IPS"), 'W', 0, 0},
+  {"A", N_("1.0 IPS"), 'A'},
+  {"B", N_("1.5 IPS"), 'B'},
+  {"C", N_("2.0 IPS"), 'C'},
+  {"D", N_("2.5 IPS"), 'D'},
+  {"E", N_("3.0 IPS"), 'E'},
+  {"F", N_("3.5 IPS"), 'F'},
+  {"G", N_("4.0 IPS"), 'G'},
+  {"H", N_("4.5 IPS"), 'H'},
+  {"I", N_("5.0 IPS"), 'I'},
+  {"J", N_("5.5 IPS"), 'J'},
+  {"K", N_("6.0 IPS"), 'K'},
+  {"L", N_("6.5 IPS"), 'L'},
+  {"M", N_("7.0 IPS"), 'M'},
+  {"N", N_("7.5 IPS"), 'N'},
+  {"O", N_("8.0 IPS"), 'O'},
+  {"P", N_("8.5 IPS"), 'P'},
+  {"Q", N_("9.0 IPS"), 'Q'},
+  {"R", N_("9.5 IPS"), 'R'},
+  {"S", N_("10.0 IPS"), 'S'},
+  {"T", N_("10.5 IPS"), 'T'},
+  {"U", N_("11.0 IPS"), 'U'},
+  {"V", N_("11.5 IPS"), 'V'},
+  {"W", N_("12.0 IPS"), 'W'},
 };
 
 #define NUM_SPEEDS		(sizeof(dpl_speeds) / sizeof (dpl_t))
@@ -127,10 +127,10 @@ static const dpl_t dpl_speeds[] = {
 typedef struct
 {
   int model;
-  unsigned int custom_max_width;
-  unsigned int custom_max_height;
-  unsigned int custom_min_width;
-  unsigned int custom_min_height;
+  int custom_max_width;
+  int custom_max_height;
+  int custom_min_width;
+  int custom_min_height;
   int resolutions;
   int max_resolution;
   int resolution_adjust;
@@ -479,19 +479,17 @@ static const stp_parameter_t the_parameters[] = {
    "PageSize", N_("Page Size"), "Color=No,Category=Basic Printer Setup",
    N_("Size of the paper being printed to"),
    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
-   STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
-  },
+   STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0},
   {
    "Resolution", N_("Resolution"), "Color=No,Category=Basic Printer Setup",
    N_("Resolution of the print"),
    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-   STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
-  },
+   STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0},
   {
     "PrintingMode", N_("Printing Mode"), "Color=Yes,Category=Core Parameter",
     N_("Printing Output Mode"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
 #ifdef FIXME  /* Orientation not available for graphics, need
                * rotation routine in this driver */
@@ -499,7 +497,7 @@ static const stp_parameter_t the_parameters[] = {
    "Orientation", N_("Orientation"), "Color=No,Category=Basic Printer Setup",
    N_("Orientation, Portrait, Landscape, Upside Down, Seascape"),
    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-   STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+   STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
    },
 #endif
   {
@@ -507,20 +505,18 @@ static const stp_parameter_t the_parameters[] = {
    "Color=No,Category=Basic Printer Setup",
    N_("Gap, Notch, Hole, Black Mark, Continuous"),
    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-   STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+   STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0,
    },
   {
    "Darkness", N_("Darkness"), "Color=No,Category=Basic Printer Setup",
    N_("Darkness Adjust, from 0 to 30"),
    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-   STP_PARAMETER_LEVEL_BASIC, 0, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
-  },
+   STP_PARAMETER_LEVEL_BASIC, 0, 1, STP_CHANNEL_NONE, 1, 0},
   {
    "Speed", N_("Print Speed"), "Color=No,Category=Basic Printer Setup",
    N_("Speed Adjust"),
    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-   STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 0, 0, {NULL}, {NULL}
-  },
+   STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 0, 0},
 };
 
 static const int the_parameter_count =
@@ -542,7 +538,7 @@ static const float_param_t float_parameters[] = {
     "Color=No,Category=Basic Output Adjustment",
     N_("Adjust horizontal position"),
     STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-    STP_PARAMETER_LEVEL_ADVANCED3, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED3, 1, 1, STP_CHANNEL_NONE, 1, 0,
     }, 0.0, 4.0, 0.0, 0},
   {
    {
@@ -550,7 +546,7 @@ static const float_param_t float_parameters[] = {
     "Color=No,Category=Basic Output Adjustment",
     N_("Adjust vertical position"),
     STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-    STP_PARAMETER_LEVEL_ADVANCED3, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED3, 1, 1, STP_CHANNEL_NONE, 1, 0,
     }, 0.0, 10.0, 0.0, 0},
   {
    {
@@ -558,7 +554,7 @@ static const float_param_t float_parameters[] = {
     "Color=No,Category=Basic Output Adjustment",
     N_("Presnt Distance, 0.0 advances the default."),
     STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0,
     }, 0.0, 10.0, 0.0, 0},
 };
 
@@ -653,7 +649,7 @@ dpl_get_model_capabilities (const stp_vars_t *v)	/* I: Model */
 static void
 dpl_describe_resolution (const stp_vars_t * v, stp_resolution_t *x, stp_resolution_t *y)
 {
-  unsigned int i;
+  int i;
   const char *resolution = stp_get_string_parameter (v, "Resolution");
 
   *x = -1;
@@ -683,7 +679,7 @@ dpl_get_multiplier (const stp_vars_t * v)
 {
   stp_resolution_t x, y;
   int multiplier;
-  unsigned int i;
+  int i;
   int max_dpi;
   const dpl_cap_t *caps = dpl_get_model_capabilities (v);
 
@@ -797,8 +793,6 @@ dpl_list_parameters (const stp_vars_t * v)
     stp_parameter_list_add_param (ret, &(the_parameters[i]));
   for (i = 0; i < float_parameter_count; i++)
     stp_parameter_list_add_param (ret, &(float_parameters[i].param));
-
-  (void)v;
   return ret;
 }
 
@@ -807,7 +801,7 @@ dpl_parameters (const stp_vars_t * v, const char *name,
 		stp_parameter_t * description)
 {
   int model = stp_get_model_id (v);
-  unsigned int i;
+  int i;
   const dpl_cap_t *caps;
   description->p_type = STP_PARAMETER_TYPE_INVALID;
 
@@ -960,7 +954,6 @@ internal_imageable_area (const stp_vars_t * v,	/* I */
   *right = width;
   *top = 0;
   *bottom = height;
-  (void)v;
 }
 
 static void
@@ -988,14 +981,12 @@ static const char *
 dpl_describe_output (const stp_vars_t * v)
 {
   return "Grayscale";
-  (void)v;
 }
 
 static const stp_papersize_t *
 dpl_describe_papersize(const stp_vars_t *v, const char *name)
 {
   return stpi_get_listed_papersize(name, "labels");
-  (void)v;
 }
 
 static void
@@ -1205,7 +1196,7 @@ dpl_do_print (stp_vars_t * v, stp_image_t * image)
         }
       else
         {
-          unsigned int i;
+          int i;
           for (i = 0; i < NUM_SPEEDS; i++)
             {
               if (0 == strcmp(dpl_speeds[i].dpl_name, speed))
@@ -1387,7 +1378,7 @@ dpl_pcx (stp_vars_t * v,	/* I - Print file or command */
   int out = 0;
   stp_resolution_t xdpi, ydpi;
   const dpl_cap_t *caps = dpl_get_model_capabilities (v);
-  unsigned int i;
+  int i;
   int max_dpi;
   int dpi_adjust;
 
@@ -1454,8 +1445,6 @@ dpl_pcx (stp_vars_t * v,	/* I - Print file or command */
   stp_zfwrite ((const char *) data, out, 1, v);
   stp_free (line);
   stp_free (data);
-
-  (void)last_plane;
 }
 
 
