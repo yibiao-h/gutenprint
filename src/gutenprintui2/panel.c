@@ -372,7 +372,6 @@ static int
 open_curve_editor(GtkObject *button, gpointer xopt)
 {
   option_t *opt = (option_t *)xopt;
-  (void)button;
   if (opt->info.curve.is_visible == FALSE)
     {
       GtkWidget *gcurve =
@@ -409,7 +408,6 @@ set_default_curve_callback(GtkObject *button, gpointer xopt)
   set_stp_curve_values(gcurve, opt);
   invalidate_preview_thumbnail();
   update_adjusted_thumbnail(TRUE);
-  (void)button;
   return 1;
 }
 
@@ -426,7 +424,6 @@ set_previous_curve_callback(GtkObject *button, gpointer xopt)
   set_stp_curve_values(gcurve, opt);
   invalidate_preview_thumbnail();
   update_adjusted_thumbnail(TRUE);
-  (void)button;
   return 1;
 }
 
@@ -445,7 +442,6 @@ set_curve_callback(GtkObject *button, gpointer xopt)
   opt->info.curve.current = NULL;
   invalidate_preview_thumbnail();
   update_adjusted_thumbnail(TRUE);
-  (void)button;
   return 1;
 }
 
@@ -492,7 +488,6 @@ cancel_curve_callback(GtkObject *button, gpointer xopt)
       invalidate_preview_thumbnail();
       update_adjusted_thumbnail(TRUE);
     }
-  (void)button;
   return 1;
 }
 
@@ -506,7 +501,6 @@ stpui_create_curve(option_t *opt,
 		   gboolean is_optional)
 {
   double lower, upper;
-
   opt->checkbox = gtk_check_button_new();
   gtk_table_attach(GTK_TABLE(table), opt->checkbox,
 		   column, column + 1, row, row + 1,
@@ -546,7 +540,7 @@ stpui_create_curve(option_t *opt,
   opt->info.curve.gamma_curve = stpui_gamma_curve_new();
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(opt->info.curve.dialog)->vbox),
 		     opt->info.curve.gamma_curve, TRUE, TRUE, 0);
-  stp_curve_get_bounds(deflt, &lower, &upper);
+  stp_curve_get_bounds(opt->info.curve.deflt, &lower, &upper);
   stpui_curve_set_range
     (STPUI_CURVE (STPUI_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve),
      0.0, 1.0, lower, upper);
@@ -578,7 +572,6 @@ open_file_browser(GtkObject *button, gpointer xopt)
   gtk_file_selection_set_filename (GTK_FILE_SELECTION (browser),
 				   gtk_entry_get_text (GTK_ENTRY (entry)));
   gtk_widget_show(opt->info.file.f_browser);
-  (void)button;
   return 1;
 }
 
@@ -604,7 +597,6 @@ file_browser_ok_callback(GtkObject *browser_ok, gpointer xopt)
     (GTK_ENTRY (entry),
      gtk_file_selection_get_filename (GTK_FILE_SELECTION (browser)));
   file_entry_callback(entry, xopt);
-  (void)browser_ok;
   return 1;
 }
 
@@ -684,7 +676,6 @@ checkbox_callback(GtkObject *button, gpointer xopt)
   invalidate_preview_thumbnail();
   update_adjusted_thumbnail(TRUE);
   preview_update();
-  (void)button;
   return 1;
 }
 
@@ -749,8 +740,6 @@ stpui_create_boolean(option_t *opt,
      stp_get_boolean_parameter(pv->v, opt->fast_desc->name));
   g_signal_connect(G_OBJECT(opt->info.bool.checkbox), "toggled",
 		   G_CALLBACK(checkbox_callback), opt);
-  (void)text;
-  (void)deflt;
 }
 
 static void
@@ -1026,7 +1015,6 @@ static void
 destroy_something(GtkWidget *widget, gpointer data)
 {
   gtk_widget_destroy(widget);
-  (void)data;
 }
 
 static void
@@ -1041,7 +1029,7 @@ add_reset_button(option_t *opt, GtkWidget *table, gint column, gint row)
 }
 
 static void
-populate_option_table(GtkWidget *table, stp_parameter_class_t p_class)
+populate_option_table(GtkWidget *table, int p_class)
 {
   int i, j;
   int current_pos = 0;
@@ -1368,8 +1356,6 @@ color_button_callback(GtkWidget *widget, gpointer data)
 {
   invalidate_preview_thumbnail();
   update_adjusted_thumbnail(TRUE);
-  (void)widget;
-  (void)data;
 }
 
 static void
@@ -1438,7 +1424,6 @@ drawing_area_resize_callback(GtkWidget *widget, GdkEventConfigure *event)
   invalidate_preview_thumbnail();
   invalidate_frame();
   preview_update();
-  (void)widget;
   return 1;
 }
 
@@ -1729,7 +1714,7 @@ create_printer_dialog (void)
   GtkWidget *label;
   GtkWidget *event_box;
   GSList    *group;
-  guint       i;
+  gint       i;
   stp_string_list_t *manufacturer_list = stp_string_list_create();
 
   setup_dialog = stpui_dialog_new(_("Setup Printer"),
@@ -1812,6 +1797,7 @@ create_printer_dialog (void)
 
   g_signal_connect (G_OBJECT (printer_driver), "select_row",
 		    G_CALLBACK (print_driver_callback), NULL);
+
 
   for (i = 0; i < stp_printer_model_count (); i ++)
     {
@@ -2960,7 +2946,6 @@ position_button_callback(GtkWidget *widget, gpointer data)
   reset_preview();
   pv->invalid_mask |= p2gint(data);
   preview_update ();
-  (void)widget;
 }
 
 /*
@@ -3325,7 +3310,6 @@ copy_count_callback(GtkAdjustment *adjustment, gpointer data)
   gint copy_count = adjustment->value;
   stpui_plist_set_copy_count(pv, copy_count);
   update_standard_print_command();
-  (void)data;
 }
 
 static void
@@ -3336,8 +3320,6 @@ auto_paper_size_callback(GtkWidget *widget, gpointer data)
   pv->auto_size_roll_feed_paper = auto_paper_size;
   set_orientation(pv->orientation);
   do_all_updates();
-  (void)widget;
-  (void)data;
 }
 
 static void
@@ -3392,8 +3374,6 @@ queue_callback (GtkWidget *widget,
 	  return;
 	}
     }
-  (void)widget;
-  (void)data;
 }
 
 static void
@@ -3488,7 +3468,6 @@ show_all_paper_sizes_callback(GtkWidget *widget, gpointer data)
 	  break;
 	}
     }
-  (void)data;
 }
 
 static void
@@ -3523,7 +3502,6 @@ custom_media_size_callback(GtkWidget *widget,
     }
   set_entry_value (widget, new_value, 0);
   preview_update ();
-  (void)data;
 }
 
 
@@ -3647,7 +3625,6 @@ refresh_all_options(gpointer data)
 {
   do_all_updates();
   do_all_updates();		/* Update twice to pick up cascading changes */
-  (void)data;
   return FALSE;
 }
 
@@ -3675,7 +3652,6 @@ combo_callback(GtkWidget *widget, gpointer data)
 	  preview_update();
 	}
     }
-  (void)widget;
 }
 
 /*
@@ -3696,7 +3672,6 @@ orientation_callback (GtkWidget *widget,
       update_adjusted_thumbnail(TRUE);
       preview_update ();
     }
-  (void)widget;
 }
 #pragma GCC diagnostic pop
 
@@ -3765,7 +3740,6 @@ command_type_callback(GtkWidget *widget, gpointer data)
       gtk_widget_set_sensitive(copy_count_spin_button, FALSE);
       stpui_plist_set_command_type(pv, COMMAND_TYPE_FILE);
     }
-  (void)widget;
 }
 
 static void
@@ -4000,8 +3974,6 @@ ppd_file_callback(GtkWidget *widget, gpointer data)
     }
   else
     gtk_label_set_text(GTK_LABEL(ppd_model), "");
-
-  (void)data;
 }
 
 /*
@@ -4139,7 +4111,7 @@ pop_ppd_box(void)
 static void
 build_printer_driver_clist(void)
 {
-  unsigned int i;
+  int i;
   int current_idx = 0;
   gtk_clist_clear(GTK_CLIST(printer_driver));
   for (i = 0; i < stp_printer_model_count (); i ++)
@@ -4183,8 +4155,6 @@ manufacturer_callback(GtkWidget      *widget, /* I - Driver list */
   build_printer_driver_clist();
   setup_update();
   calling_manufacturer_callback--;
-  (void)event;
-  (void)data;
 }
 
 /*
@@ -4215,9 +4185,6 @@ print_driver_callback (GtkWidget      *widget, /* I - Driver list */
 
   pop_ppd_box();
   calling_print_driver_callback--;
-
-  (void)event;
-  (void)column;
 }
 #pragma GCC diagnostic pop
 
@@ -4293,7 +4260,7 @@ static void
 fill_buffer_writefunc(void *priv, const char *buffer, size_t bytes)
 {
   int mask = 0;
-  unsigned int i;
+  int i;
 
   priv_t *p = (priv_t *) priv;
   unsigned char *where = p->base_addr + p->offset;
@@ -4312,8 +4279,8 @@ fill_buffer_writefunc(void *priv, const char *buffer, size_t bytes)
     }
   else if (strcmp(p->output_type, "RGB") == 0)
     {
-      unsigned int pixels = bytes / 3;
-      if ((int)(bytes + p->offset) > p->limit)
+      int pixels = bytes / 3;
+      if (bytes + p->offset > p->limit)
 	bytes = p->limit - p->offset;
       if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(red_button)))
 	mask |= 1;
@@ -4338,8 +4305,8 @@ fill_buffer_writefunc(void *priv, const char *buffer, size_t bytes)
     }
   else if (strcmp(p->output_type, "CMY") == 0)
     {
-      unsigned int pixels = bytes / 3;
-      if ((int)(bytes + p->offset) > p->limit)
+      int pixels = bytes / 3;
+      if (bytes + p->offset > p->limit)
 	bytes = p->limit - p->offset;
       if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(cyan_button)))
 	mask |= 1;
@@ -4364,8 +4331,8 @@ fill_buffer_writefunc(void *priv, const char *buffer, size_t bytes)
     }
   else
     {
-      unsigned int pixels = bytes / 4;
-      if ((int)(bytes + p->offset) > p->limit)
+      int pixels = bytes / 4;
+      if (bytes + p->offset > p->limit)
 	bytes = p->limit - p->offset;
       if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(cyan_button)))
 	mask |= 1;
@@ -4970,7 +4937,6 @@ idle_preview_thumbnail(gpointer data)
     }
   thumbnail_update_pending = FALSE;
   return FALSE;
-  (void)data;
 }
 
 static void
@@ -5143,8 +5109,6 @@ preview_button_callback (GtkWidget      *widget,
 	  preview_active = 0;
 	}
     }
-  (void)widget;
-  (void)data;
 }
 
 /*
@@ -5236,8 +5200,6 @@ preview_motion_callback (GtkWidget      *widget,
       stp_set_left (pv->v, new_left);
       preview_update ();
     }
-  (void)widget;
-  (void)data;
 }
 
 static void
@@ -5519,7 +5481,6 @@ reset_callback(GtkObject *button, gpointer xopt)
       else
 	do_color_updates ();
     }
-  (void)button;
 }
 
 static void

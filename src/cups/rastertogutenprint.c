@@ -186,7 +186,7 @@ set_special_parameter(stp_vars_t *v, const char *name, int choice)
 	    fprintf(stderr, "DEBUG: Gutenprint:   Clear special parameter %s\n",
 		    name);
 	}
-        else if (choice >= (int)stp_string_list_count(desc.bounds.str))
+      else if (choice >= stp_string_list_count(desc.bounds.str))
 	{
 	  if (! suppress_messages)
 	    stp_i18n_printf(po, _("ERROR: Unable to set Gutenprint option %s "
@@ -283,7 +283,7 @@ printer_supports_bw(const stp_vars_t *v)
 }
 
 static void
-validate_options(stp_vars_t *v)
+validate_options(stp_vars_t *v, cups_image_t *cups)
 {
   stp_parameter_list_t params = stp_get_parameter_list(v);
   int nparams = stp_parameter_list_count(params);
@@ -471,7 +471,7 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings,
      stp_get_int_parameter(v, "CUPSShrinkPage") : 0);
 
   set_string_parameter(v, "JobMode", "Job");
-  validate_options(v);
+  validate_options(v, cups);
   stp_get_media_size(v, &(cups->d_width), &(cups->d_height));
   stp_get_maximum_imageable_area(v, &tmp_left, &tmp_right,
 				 &tmp_bottom, &tmp_top);
@@ -602,7 +602,7 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings,
   cups->left_trim = cups->header.HWResolution[0] * cups->d_left_trim / 72;
   cups->right_trim = cups->header.HWResolution[0] * cups->d_right_trim / 72;
   cups->adjusted_width = cups->width;
-  if (cups->adjusted_width > (int)cups->header.cupsWidth)
+  if (cups->adjusted_width > cups->header.cupsWidth)
     cups->adjusted_width = cups->header.cupsWidth;
 
   cups->d_bottom = cups->d_height - cups->d_bottom;
@@ -616,7 +616,7 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings,
   cups->top_trim = cups->header.HWResolution[1] * cups->d_top_trim / 72;
   cups->bottom_trim = cups->header.HWResolution[1] * cups->d_bottom_trim / 72;
   cups->adjusted_height = cups->height;
-  if (cups->adjusted_height > (int)cups->header.cupsHeight)
+  if (cups->adjusted_height > cups->header.cupsHeight)
     cups->adjusted_height = cups->header.cupsHeight;
   if (! suppress_messages)
     {
@@ -643,7 +643,7 @@ purge_excess_data(cups_image_t *cups)
 	fprintf(stderr, "DEBUG2: Gutenprint: Purging %d row%s\n",
 		cups->header.cupsHeight - cups->row,
 		((cups->header.cupsHeight - cups->row) == 1 ? "" : "s"));
-      while (cups->row < (int)cups->header.cupsHeight)
+      while (cups->row < cups->header.cupsHeight)
 	{
 	  cupsRasterReadPixels(cups->ras, (unsigned char *)buffer,
 			       cups->header.cupsBytesPerLine);
@@ -1403,7 +1403,7 @@ main(int  argc,				/* I - Number of command-line arguments */
       /*
        * Purge any remaining bitmap data...
        */
-      if (cups.row < (int)cups.header.cupsHeight)
+      if (cups.row < cups.header.cupsHeight)
 	purge_excess_data(&cups);
       if (! suppress_messages)
 	fprintf(stderr, "DEBUG: Gutenprint: ================ Done printing page %d ================\n", cups.page + 1);
@@ -1554,7 +1554,7 @@ static stp_image_status_t
 Image_get_row(stp_image_t   *image,	/* I - Image */
 	      unsigned char *data,	/* O - Row */
 	      size_t	    byte_limit,	/* I - how many bytes in data */
-	      int           row)	/* I - Row number */
+	      int           row)	/* I - Row number (unused) */
 {
   cups_image_t	*cups;			/* CUPS image */
   int		i;			/* Looping var */
@@ -1565,8 +1565,6 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
   static int warned = 0;                /* Error warning printed? */
   int new_percent;
   int left_margin, right_margin;
-
-  (void)byte_limit;
 
   if ((cups = (cups_image_t *)(image->rep)) == NULL)
     {
@@ -1586,12 +1584,12 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
   margin = cups->header.cupsBytesPerLine - left_margin - bytes_per_line -
     right_margin;
 
-  if (cups->row < (int)cups->header.cupsHeight)
+  if (cups->row < cups->header.cupsHeight)
   {
     if (! suppress_messages && ! suppress_verbose_messages)
       fprintf(stderr, "DEBUG2: Gutenprint: Reading %d %d\n",
 	      bytes_per_line, cups->row);
-    while (cups->row <= row && cups->row < (int)cups->header.cupsHeight)
+    while (cups->row <= row && cups->row < cups->header.cupsHeight)
       {
 	if (left_margin > 0)
 	  {

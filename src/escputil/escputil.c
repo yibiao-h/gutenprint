@@ -453,11 +453,11 @@ main(int argc, char **argv)
 static void
 print_debug_data(const char *buf, size_t count)
 {
-  size_t i;
+  int i;
   for (i = 0; i < count; i++)
     {
       if (i % 16 == 0)
-	printf("\n***%4zd: ", i);
+	printf("\n***%4d: ", i);
       else if (i % 4 == 0)
 	printf(" ");
       if (isgraph(buf[i]))
@@ -767,7 +767,6 @@ static volatile int alarm_interrupt;
 static void
 alarm_handler(int sig)
 {
-  (void)sig;
   alarm_interrupt = 1;
 }
 
@@ -1244,7 +1243,7 @@ print_error(int param)
 }
 
 static void
-print_warning(unsigned param, const stp_string_list_t *color_list)
+print_warning(int param, const stp_string_list_t *color_list)
 {
   if (param >= 0x10 && param < 0x20)
     {
@@ -1334,7 +1333,7 @@ get_digit(char digit)
 static void
 print_old_ink_levels(const char *ind, stp_string_list_t *color_list)
 {
-  unsigned i;
+  int i;
   for (i = 0; i < stp_string_list_count(color_list); i++)
     {
       int val;
@@ -1405,7 +1404,7 @@ do_new_status(status_cmd_t cmd, char *buf, int bytes,
 	      const stp_printer_t *printer)
 {
   int i = 0;
-  unsigned j;
+  int j;
   const char *ind;
   const stp_string_list_t *color_list = NULL;
   stp_parameter_t desc;
@@ -1726,7 +1725,7 @@ do_extended_ink_info_1(const stp_printer_t *printer)
   unsigned iv[6];
 
   char *ind;
-  unsigned i;
+  int i;
   int fd = open_raw_device();
 
   stp_string_list_t *color_list = get_ink_channel_list(printer, fd);
@@ -1913,7 +1912,7 @@ do_reset_ink_levels(void)
 {
   const stp_printer_t *printer;
   int fd;
-  unsigned i;
+  int i;
 
   stp_string_list_t *color_list;
 

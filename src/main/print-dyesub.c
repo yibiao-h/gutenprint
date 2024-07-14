@@ -374,7 +374,7 @@ typedef struct /* printer specific parameters */
   void (*job_start_func)(stp_vars_t *);
   void (*job_end_func)(stp_vars_t *);
   const stp_parameter_t *parameters;
-  unsigned parameter_count;
+  int parameter_count;
   int (*load_parameters)(const stp_vars_t *, const char *name, stp_parameter_t *);
   int (*parse_parameters)(stp_vars_t *);
 } dyesub_cap_t;
@@ -1673,7 +1673,7 @@ static const stp_parameter_t sony_upd895_parameters[] =
     "SonyGamma", N_("Printer Gamma Correction"), "Color=No,Category=Advanced Printer Setup",
     N_("Printer Gamma Correction"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
 };
 #define sony_upd895_parameter_count (sizeof(sony_upd895_parameters) / sizeof(const stp_parameter_t))
@@ -1682,7 +1682,7 @@ static int
 sony_upd895_load_parameters(const stp_vars_t *v, const char *name,
 			    stp_parameter_t *description)
 {
-  unsigned i;
+  int	i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -1905,31 +1905,31 @@ static const stp_parameter_t sony_upd897_parameters[] =
     "SonyGamma", N_("Printer Gamma Correction"), "Color=No,Category=Advanced Printer Setup",
     N_("Printer Gamma Correction"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Sharpen", N_("Image Sharpening"), "Color=No,Category=Advanced Printer Setup",
     N_("Sharpening to apply to image (0 is off, 14 is max"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Darkness", N_("Darkness"), "Color=No,Category=Advanced Printer Setup",
     N_("Printer Image Darkness Adjustment"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Lightness", N_("Lightness"), "Color=No,Category=Advanced Printer Setup",
     N_("Printer Image Lightness Adjustment"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Advance", N_("Advance"), "Color=No,Category=Advanced Printer Setup",
     N_("Printer Image Advance Adjustment"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
 
 };
@@ -1939,7 +1939,7 @@ static int
 sony_upd897_load_parameters(const stp_vars_t *v, const char *name,
 			    stp_parameter_t *description)
 {
-  unsigned i;
+  int	i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -2064,19 +2064,19 @@ static const stp_parameter_t sony_upd898_parameters[] =
     "SonyGamma", N_("Printer Gamma Correction"), "Color=No,Category=Advanced Printer Setup",
     N_("Printer Gamma Correction"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Sharpen", N_("Image Sharpening"), "Color=No,Category=Advanced Printer Setup",
     N_("Sharpening to apply to image (0 is off, 14 is max"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Tone", N_("Tone Curve"), "Color=No,Category=Advanced Printer Setup",
     N_("Tone curve adjustment to apply to image (-32..+32, 0 is off)"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
 };
 #define sony_upd898_parameter_count (sizeof(sony_upd898_parameters) / sizeof(const stp_parameter_t))
@@ -2085,7 +2085,7 @@ static int
 sony_upd898_load_parameters(const stp_vars_t *v, const char *name,
 			    stp_parameter_t *description)
 {
-  unsigned i;
+  int	i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -2473,49 +2473,49 @@ static const stp_parameter_t sony_upd711_parameters[] =
     "SonyGamma", N_("Printer Gamma Correction"), "Color=No,Category=Advanced Printer Setup",
     N_("Printer Gamma Correction"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Sharpen", N_("Image Sharpening"), "Color=No,Category=Advanced Printer Setup",
     N_("Sharpening to apply to image (0 is off, 14 is max"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Darkness", N_("Darkness"), "Color=No,Category=Advanced Printer Setup",
     N_("Printer Image Darkness Adjustment"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Lightness", N_("Lightness"), "Color=No,Category=Advanced Printer Setup",
     N_("Printer Image Lightness Adjustment"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Advance", N_("Advance"), "Color=No,Category=Advanced Printer Setup",
     N_("Printer Image Advance Adjustment"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "LongFeedAfter", N_("LongFeedAfter"), "Color=No,Category=Advanced Printer Setup",
     N_("Long Feed After N Pages"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "PrintInfo", N_("Print Info"), "Color=No,Category=Advanced Printer Setup",
     N_("Print Information"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "SonyMediaType", N_("Roll Type"), "Color=No,Category=Advanced Printer Setup",
     N_("Roll Type"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
 };
 #define sony_upd711_parameter_count (sizeof(sony_upd711_parameters) / sizeof(const stp_parameter_t))
@@ -2524,7 +2524,7 @@ static int
 sony_upd711_load_parameters(const stp_vars_t *v, const char *name,
 			    stp_parameter_t *description)
 {
-  unsigned i;
+  int	i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
                                             stp_get_model_id(v));
 
@@ -3513,7 +3513,7 @@ static const stp_parameter_t kodak_9810_parameters[] =
     "Sharpen", N_("Image Sharpening"), "Color=No,Category=Advanced Printer Setup",
     N_("Sharpening to apply to image (0 is off, 18 is normal, 24 is max"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
 };
 #define kodak_9810_parameter_count (sizeof(kodak_9810_parameters) / sizeof(const stp_parameter_t))
@@ -3522,7 +3522,7 @@ static int
 kodak_9810_load_parameters(const stp_vars_t *v, const char *name,
 			   stp_parameter_t *description)
 {
-  unsigned i;
+  int	i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -3904,7 +3904,7 @@ static const stp_parameter_t kodak6900_parameters[] =
     "PrintQuality", N_("Print Quality"), "Color=No,Category=Advanced Printer Setup",
     N_("Print Speed"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
 };
 #define kodak6900_parameter_count (sizeof(kodak6900_parameters) / sizeof(const stp_parameter_t))
@@ -3913,7 +3913,7 @@ static int
 kodak6900_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
-  unsigned i;
+  int	i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -4119,13 +4119,13 @@ static const stp_parameter_t kodak_8500_parameters[] =
     "Sharpen", N_("Image Sharpening"), "Color=No,Category=Advanced Printer Setup",
     N_("Sharpening to apply to image (-5 through +5)"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "MatteIntensity", N_("Matte Intensity"), "Color=No,Category=Advanced Printer Setup",
     N_("Strength of matte lamination pattern (-5 through +5)"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
 };
 #define kodak_8500_parameter_count (sizeof(kodak_8500_parameters) / sizeof(const stp_parameter_t))
@@ -4134,7 +4134,7 @@ static int
 kodak_8500_load_parameters(const stp_vars_t *v, const char *name,
 			   stp_parameter_t *description)
 {
-  unsigned i;
+  int	i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -4355,61 +4355,61 @@ static const stp_parameter_t mitsu_p95d_parameters[] =
     "P95Gamma", N_("Printer Gamma Correction"), "Color=No,Category=Advanced Printer Setup",
     N_("Printer Gamma Correction"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Buzzer", N_("Printer Buzzer"), "Color=No,Category=Advanced Printer Setup",
     N_("Printer Buzzer"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "MediaCut", N_("Media Cut Length"), "Color=No,Category=Advanced Printer Setup",
     N_("Media Cut Length"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Comment", N_("Generate Comment"), "Color=No,Category=Advanced Printer Setup",
     N_("Generate Comment"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "ClearMemory", N_("Clear Memory"), "Color=No,Category=Advanced Printer Setup",
     N_("Clear Memory"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "ContinuousPrint", N_("Continuous Printing"), "Color=No,Category=Advanced Printer Setup",
     N_("Continuous Printing"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "P95Brightness", N_("Brightness"), "Color=No,Category=Advanced Printer Setup",
     N_("Printer Brightness Adjustment"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "P95Contrast", N_("Contrast"), "Color=No,Category=Advanced Printer Setup",
     N_("Printer Contrast Adjustment"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "UserComment", N_("User Comment"), "Color=No,Category=Advanced Printer Setup",
     N_("User-specified comment (0-34 characters from 0x20->0x7E), null terminated if under 34 characters long"),
     STP_PARAMETER_TYPE_RAW, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 0, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 0, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "UserLUT", N_("User LUT"), "Color=No,Category=Advanced Printer Setup",
     N_("User-specified Lookup Table, must be exactly 34 bytes in long"),
     STP_PARAMETER_TYPE_RAW, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 0, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 0, 1, STP_CHANNEL_NONE, 1, 0
   },
 };
 #define mitsu_p95d_parameter_count (sizeof(mitsu_p95d_parameters) / sizeof(const stp_parameter_t))
@@ -4418,7 +4418,7 @@ static int
 mitsu_p95d_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
-  unsigned i;
+  int	i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -4614,12 +4614,13 @@ static int mitsu_p95d_parse_parameters(stp_vars_t *v)
 
   if (usercomment) {
     if (strncmp("None", usercomment->data, usercomment->bytes)) {
-      unsigned i;
+      int i;
       memcpy(pd->privdata.m95d.usercomment, usercomment->data, usercomment->bytes);
       if (usercomment->bytes < 34)
         pd->privdata.m95d.usercomment[usercomment->bytes] = 0;
       for (i = 0 ; i < usercomment->bytes ; i++) {
-        if (pd->privdata.m95d.usercomment[i] < 0x20 /* || pd->privdata.m95d.usercomment[i] < 0x7F */)
+        if (pd->privdata.m95d.usercomment[i] < 0x20 ||
+	    pd->privdata.m95d.usercomment[i] > 0x7F)
 	  pd->privdata.m95d.usercomment[i] = 0x20;
       }
     }
@@ -4777,61 +4778,61 @@ static const stp_parameter_t mitsu_p93d_parameters[] =
     "P93Gamma", N_("Printer Gamma Correction"), "Color=No,Category=Advanced Printer Setup",
     N_("Printer Gamma Correction"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Buzzer", N_("Printer Buzzer"), "Color=No,Category=Advanced Printer Setup",
     N_("Printer Buzzer"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "PaperSaving", N_("Paper Saving Mode"), "Color=Yes,Category=Advanced Printer Setup",
     N_("Paper Saving Mode"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Comment", N_("Generate Comment"), "Color=No,Category=Advanced Printer Setup",
     N_("Generate Comment"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "ClearMemory", N_("Clear Memory"), "Color=No,Category=Advanced Printer Setup",
     N_("Clear Memory"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "ContinuousPrint", N_("Continuous Printing"), "Color=No,Category=Advanced Printer Setup",
     N_("Continuous Printing"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "P93Brightness", N_("Brightness"), "Color=No,Category=Advanced Printer Setup",
     N_("Printer Brightness Adjustment"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "P93Contrast", N_("Contrast"), "Color=No,Category=Advanced Printer Setup",
     N_("Printer Contrast Adjustment"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Sharpen", N_("Image Sharpening"), "Color=No,Category=Advanced Printer Setup",
     N_("Sharpening to apply to image (0 is soft, 1 is normal, 2 is hard"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "UserComment", N_("User Comment"), "Color=No,Category=Advanced Printer Setup",
     N_("User-specified comment (0-40 characters from 0x20->0x7E), null terminated if under 40 characters long"),
     STP_PARAMETER_TYPE_RAW, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 0, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 0, 1, STP_CHANNEL_NONE, 1, 0
   },
 };
 #define mitsu_p93d_parameter_count (sizeof(mitsu_p93d_parameters) / sizeof(const stp_parameter_t))
@@ -4840,7 +4841,7 @@ static int
 mitsu_p93d_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
-  unsigned i;
+  int	i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -5005,12 +5006,13 @@ static int mitsu_p93d_parse_parameters(stp_vars_t *v)
 
   if (usercomment) {
     if (strncmp("None", usercomment->data, usercomment->bytes)) {
-      unsigned i;
+      int i;
       memcpy(pd->privdata.m95d.usercomment, usercomment->data, usercomment->bytes);
       if (usercomment->bytes < 40)
         pd->privdata.m95d.usercomment[usercomment->bytes] = 0;
       for (i = 0 ; i < usercomment->bytes ; i++) {
-        if (pd->privdata.m95d.usercomment[i] < 0x20 /* || pd->privdata.m95d.usercomment[i] < 0x7F */)
+        if (pd->privdata.m95d.usercomment[i] < 0x20 ||
+	    pd->privdata.m95d.usercomment[i] > 0x7F)
 	  pd->privdata.m95d.usercomment[i] = 0x20;
       }
     }
@@ -5395,7 +5397,7 @@ static const stp_parameter_t mitsu9500_parameters[] =
     "CP9500Contrast", N_("Printer Contrast"), "Color=No,Category=Advanced Printer Setup",
     N_("Printer Contrast"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
 };
 #define mitsu9500_parameter_count (sizeof(mitsu9500_parameters) / sizeof(const stp_parameter_t))
@@ -5404,7 +5406,7 @@ static int
 mitsu9500_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
-  unsigned i;
+  int	i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -5507,7 +5509,7 @@ static const stp_parameter_t mitsu9550_parameters[] =
     "PrintSpeed", N_("Print Speed"), "Color=No,Category=Advanced Printer Setup",
     N_("Print Speed"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
 };
 #define mitsu9550_parameter_count (sizeof(mitsu9550_parameters) / sizeof(const stp_parameter_t))
@@ -5516,7 +5518,7 @@ static int
 mitsu9550_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
-  unsigned i;
+  int	i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -5816,19 +5818,19 @@ static const stp_parameter_t mitsu98xx_parameters[] =
     "PrintSpeed", N_("Print Speed"), "Color=No,Category=Advanced Printer Setup",
     N_("Print Speed"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "UseLUT", N_("Internal Color Correction"), "Color=Yes,Category=Advanced Printer Setup",
     N_("Use Internal Color Correction"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Sharpen", N_("Image Sharpening"), "Color=No,Category=Advanced Printer Setup",
     N_("Sharpening to apply to image (0 is off, 1 is min, 10 is max"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
 };
 #define mitsu98xx_parameter_count (sizeof(mitsu98xx_parameters) / sizeof(const stp_parameter_t))
@@ -5837,7 +5839,7 @@ static int
 mitsu98xx_load_parameters(const stp_vars_t *v, const char *name,
 			  stp_parameter_t *description)
 {
-  unsigned i;
+  int	i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -6119,19 +6121,19 @@ static const stp_parameter_t mitsu_cp30_parameters[] =
     "UseLUT", N_("Internal Color Correction"), "Color=Yes,Category=Advanced Printer Setup",
     N_("Use Internal Color Correction"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Sharpen", N_("Image Sharpening"), "Color=No,Category=Advanced Printer Setup",
     N_("Sharpening to apply to image (0 is off, 1 is min, 7 is max"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "PrintSpeed", N_("Print Speed"), "Color=No,Category=Advanced Printer Setup",
     N_("Print Speed"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
 };
 #define mitsu_cp30_parameter_count (sizeof(mitsu_cp30_parameters) / sizeof(const stp_parameter_t))
@@ -6139,7 +6141,7 @@ static const stp_parameter_t mitsu_cp30_parameters[] =
 static int mitsu_cp30_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
-  unsigned i;
+  int	i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -6271,19 +6273,19 @@ static const stp_parameter_t mitsu70x_parameters[] =
     "PrintSpeed", N_("Print Speed"), "Color=No,Category=Advanced Printer Setup",
     N_("Print Speed"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "UseLUT", N_("Internal Color Correction"), "Color=Yes,Category=Advanced Printer Setup",
     N_("Use Internal Color Correction"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Sharpen", N_("Image Sharpening"), "Color=No,Category=Advanced Printer Setup",
     N_("Sharpening to apply to image (0 is off, 1 is min, 9 is max"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
 };
 #define mitsu70x_parameter_count (sizeof(mitsu70x_parameters) / sizeof(const stp_parameter_t))
@@ -6302,25 +6304,25 @@ static const stp_parameter_t mitsu707_parameters[] =
     "PrintSpeed", N_("Print Speed"), "Color=No,Category=Advanced Printer Setup",
     N_("Print Speed"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "UseLUT", N_("Internal Color Correction"), "Color=Yes,Category=Advanced Printer Setup",
     N_("Use Internal Color Correction"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Sharpen", N_("Image Sharpening"), "Color=No,Category=Advanced Printer Setup",
     N_("Sharpening to apply to image (0 is off, 1 is min, 9 is max"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Deck", N_("Printer Deck"), "Color=No,Category=Advanced Printer Setup",
     N_("Printer Deck"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
 };
 #define mitsu707_parameter_count (sizeof(mitsu707_parameters) / sizeof(const stp_parameter_t))
@@ -6329,7 +6331,7 @@ static int
 mitsu70x_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
-  unsigned i;
+  int	i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -6380,7 +6382,7 @@ static int
 mitsu707_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
-  unsigned i;
+  int	i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -6623,7 +6625,7 @@ static int
 mitsu_k60_load_parameters(const stp_vars_t *v, const char *name,
 			  stp_parameter_t *description)
 {
-  unsigned i;
+  int	i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -6736,7 +6738,7 @@ static int
 dnp_ds4x0_load_parameters(const stp_vars_t *v, const char *name,
 			  stp_parameter_t *description)
 {
-  unsigned i;
+  int	i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -6904,31 +6906,31 @@ static const stp_parameter_t mitsu_d90_parameters[] =
     "PrintSpeed", N_("Print Speed"), "Color=No,Category=Advanced Printer Setup",
     N_("Print Speed"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "UseLUT", N_("Internal Color Correction"), "Color=Yes,Category=Advanced Printer Setup",
     N_("Use Internal Color Correction"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Sharpen", N_("Image Sharpening"), "Color=No,Category=Advanced Printer Setup",
     N_("Sharpening to apply to image (0 is off, 1 is min, 9 is max"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "ComboWait", N_("Combo Print Wait Time"), "Color=No,Category=Advanced Printer Setup",
     N_("How many seconds to wait for a second print before starting"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "MarginCutOff", N_("Disable Margin Cut"), "Color=No,Category=Advanced Printer Setup",
     N_("Disable Margin Cut"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 0, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 0, STP_CHANNEL_NONE, 1, 0
   },
 };
 #define mitsu_d90_parameter_count (sizeof(mitsu_d90_parameters) / sizeof(const stp_parameter_t))
@@ -6937,7 +6939,7 @@ static int
 mitsu_d90_load_parameters(const stp_vars_t *v, const char *name,
 			  stp_parameter_t *description)
 {
-  unsigned i;
+  int	i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -7205,37 +7207,37 @@ static const stp_parameter_t mitsu_cpm1_parameters[] =
     "PrintSpeed", N_("Print Speed"), "Color=No,Category=Advanced Printer Setup",
     N_("Print Speed"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "UseLUT", N_("Internal Color Correction"), "Color=Yes,Category=Advanced Printer Setup",
     N_("Use Internal Color Correction"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "ColorMatching", N_("Color Matching"), "Color=Yes,Category=Advanced Printer Setup",
     N_("Enable if color matched flow (ICC profile) is being used"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Sharpen", N_("Image Sharpening"), "Color=No,Category=Advanced Printer Setup",
     N_("Sharpening to apply to image (0 is off, 1 is min, 7 is max"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "ComboWait", N_("Combo Print Wait Time"), "Color=No,Category=Advanced Printer Setup",
     N_("How many seconds to wait for a second print before starting"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "MarginCutOff", N_("Disable Margin Cut"), "Color=No,Category=Advanced Printer Setup",
     N_("Disable Margin Cut"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 0, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 0, STP_CHANNEL_NONE, 1, 0
   },
 };
 #define mitsu_cpm1_parameter_count (sizeof(mitsu_cpm1_parameters) / sizeof(const stp_parameter_t))
@@ -7259,7 +7261,7 @@ static int
 mitsu_cpm1_load_parameters(const stp_vars_t *v, const char *name,
 			   stp_parameter_t *description)
 {
-  unsigned i;
+  int	i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -7471,19 +7473,19 @@ static const stp_parameter_t mitsu_cpw5k_parameters[] =
     "BackFinish", N_("Back Finish"), "Color=No,Category=Advanced Printer Setup",
     N_("Back Finish"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "UseLUT", N_("Internal Color Correction"), "Color=Yes,Category=Advanced Printer Setup",
     N_("Use Internal Color Correction"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Sharpen", N_("Image Sharpening"), "Color=No,Category=Advanced Printer Setup",
     N_("Sharpening to apply to image (0 is off, 1 is min, 9 is max"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
 };
 #define mitsu_cpw5k_parameter_count (sizeof(mitsu_cpw5k_parameters) / sizeof(const stp_parameter_t))
@@ -7492,7 +7494,7 @@ static int
 mitsu_cpw5k_load_parameters(const stp_vars_t *v, const char *name,
 			  stp_parameter_t *description)
 {
-  unsigned i;
+  int	i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -8006,13 +8008,13 @@ static const stp_parameter_t shinko_chcs1245_parameters[] =
     "DustRemoval", N_("Dust Removal"), "Color=No,Category=Advanced Printer Setup",
     N_("Print Speed"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "MatteIntensity", N_("Matte Intensity"), "Color=No,Category=Advanced Printer Setup",
     N_("Strength of matte lamination pattern (-25 through +25)"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
 };
 #define shinko_chcs1245_parameter_count (sizeof(shinko_chcs1245_parameters) / sizeof(const stp_parameter_t))
@@ -8021,7 +8023,7 @@ static int
 shinko_chcs1245_load_parameters(const stp_vars_t *v, const char *name,
 			   stp_parameter_t *description)
 {
-  unsigned i;
+  int	i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -8607,7 +8609,7 @@ static const stp_parameter_t ds40_parameters[] =
     "NoCutWaste", N_("No Cut-Paper Waste"), "Color=No,Category=Advanced Printer Setup",
     N_("No Cut-Paper Waste"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 0, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 0, STP_CHANNEL_NONE, 1, 0
   },
 };
 
@@ -8617,7 +8619,7 @@ static int
 ds40_load_parameters(const stp_vars_t *v, const char *name,
 		     stp_parameter_t *description)
 {
-  unsigned i;
+  int	i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 					stp_get_model_id(v));
 
@@ -9572,13 +9574,13 @@ static const stp_parameter_t ds820_parameters[] =
     "PrintSpeed", N_("Print Speed"), "Color=No,Category=Advanced Printer Setup",
     N_("Print Speed"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "NoCutWaste", N_("No Cut-Paper Waste"), "Color=No,Category=Advanced Printer Setup",
     N_("No Cut-Paper Waste"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 0, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 0, STP_CHANNEL_NONE, 1, 0
   },
 };
 #define ds820_parameter_count (sizeof(ds820_parameters) / sizeof(const stp_parameter_t))
@@ -9587,7 +9589,7 @@ static int
 ds820_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
-  unsigned i;
+  int	i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -9799,19 +9801,19 @@ static const stp_parameter_t qw410_parameters[] =
     "PrintSpeed", N_("Print Speed"), "Color=No,Category=Advanced Printer Setup",
     N_("Print Speed"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "NoCutWaste", N_("No Cut-Paper Waste"), "Color=No,Category=Advanced Printer Setup",
     N_("No Cut-Paper Waste"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 0, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 0, STP_CHANNEL_NONE, 1, 0
   },
   {
     "DeCurl", N_("De-Curl Control"), "Color=No,Category=Advanced Printer Setup",
     N_("De-Curl Control"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 0, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 0, STP_CHANNEL_NONE, 1, 0
   },
 };
 #define qw410_parameter_count (sizeof(qw410_parameters) / sizeof(const stp_parameter_t))
@@ -9820,7 +9822,7 @@ static int
 qw410_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
-  unsigned i;
+  int	i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -10032,7 +10034,7 @@ static const stp_parameter_t hiti_p520l_parameters[] =
     "UseLUT", N_("Internal Color Correction"), "Color=Yes,Category=Advanced Printer Setup",
     N_("Use Internal Color Correction"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
 };
 #define hiti_p520l_parameter_count (sizeof(hiti_p520l_parameters) / sizeof(const stp_parameter_t))
@@ -10041,7 +10043,7 @@ static int
 hiti_p520l_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
-  unsigned i;
+  int	i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -10092,13 +10094,13 @@ static const stp_parameter_t hiti_p720l_parameters[] =
     "UseLUT", N_("Internal Color Correction"), "Color=Yes,Category=Advanced Printer Setup",
     N_("Use Internal Color Correction"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "PrintSpeed", N_("Print Speed"), "Color=No,Category=Advanced Printer Setup",
     N_("Print Speed"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
 };
 #define hiti_p720l_parameter_count (sizeof(hiti_p720l_parameters) / sizeof(const stp_parameter_t))
@@ -10116,7 +10118,7 @@ static int
 hiti_p720l_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
-  unsigned i;
+  int	i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -10237,19 +10239,19 @@ static const stp_parameter_t hiti_p461_parameters[] =
     "UseLUT", N_("Internal Color Correction"), "Color=Yes,Category=Advanced Printer Setup",
     N_("Use Internal Color Correction"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "PrintSpeed", N_("Print Speed"), "Color=No,Category=Advanced Printer Setup",
     N_("Print Speed"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "MediaVer", N_("Media Version"), "Color=No,Category=Advanced Printer Setup",
     N_("Printer media version"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
 
 };
@@ -10268,7 +10270,7 @@ static int
 hiti_p461_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
-  unsigned i;
+  int	i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -10538,91 +10540,91 @@ static const stp_parameter_t magicard_parameters[] =
     "BlackType", N_("Black Type"), "Color=No,Category=Advanced Printer Setup",
     N_("Black Type"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 0, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 0, STP_CHANNEL_NONE, 1, 0
   },
   {
     "RejectBad", N_("Reject Bad Cards"), "Color=No,Category=Advanced Printer Setup",
     N_("Reject Bad Cards"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 0, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 0, STP_CHANNEL_NONE, 1, 0
   },
   {
     "ColorSure", N_("Enable Colorsure"), "Color=No,Category=Advanced Printer Setup",
     N_("Enable Colorsure"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 0, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 0, STP_CHANNEL_NONE, 1, 0
   },
   {
     "GammaCurve", N_("Printer Gamma Curve"), "Color=No,Category=Advanced Printer Setup",
     N_("Internal Gamma Curve to apply (0 is none)"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "PowerColor", N_("Color Power Level"), "Color=No,Category=Advanced Printer Setup",
     N_("Power level for color passes"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "PowerBlack", N_("Black Power Level"), "Color=No,Category=Advanced Printer Setup",
     N_("Power level for black pass"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "PowerOC", N_("Overcoat Power Level"), "Color=No,Category=Advanced Printer Setup",
     N_("Power level for overcoat pass"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "AlignStart", N_("Card Start Alignment"), "Color=No,Category=Advanced Printer Setup",
     N_("Fine-tune card start position"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "AlignEnd", N_("Card End Alignment"), "Color=No,Category=Advanced Printer Setup",
     N_("Fine-tune card end position"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "CardOffset", N_("Horizontal Card offset"), "Color=No,Category=Advanced Printer Setup",
     N_("Fine-tune card horizontal centering"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Holokote", N_("Holokote"), "Color=No,Category=Advanced Printer Setup",
     N_("Holokote option"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "HolokoteCustom", N_("Custom Holokote Key"), "Color=No,Category=Advanced Printer Setup",
     N_("Use an optional custom Holokote key"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Holopatch", N_("HoloPatch"), "Color=No,Category=Advanced Printer Setup",
     N_("Position of the HoloPatch"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "OvercoatHole", N_("Overcoat Hole"), "Color=No,Category=Advanced Printer Setup",
     N_("Area to not cover with an overcoat layer"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "OvercoatHoleDuplex", N_("Overcoat Hole Duplex"), "Color=No,Category=Advanced Printer Setup",
     N_("Area to not cover with an overcoat layer"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {  /* Note this is called "LaminateDuplex" rather than "OvercoatDuplex"
         to align with the mis-named "Laminate" option.
@@ -10630,31 +10632,31 @@ static const stp_parameter_t magicard_parameters[] =
     "LaminateDuplex", N_("Overcoat Pattern Duplex"), "Color=No,Category=Advanced Printer Setup",
     N_("Overcoat Pattern Duplex"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 0, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 0, STP_CHANNEL_NONE, 1, 0
   },
   {
     "MagCoer", N_("Magnetic Stripe Coercivity"), "Color=No,Category=Advanced Printer Setup",
     N_("Magnetic Stripe Coercivity Type"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "MagStripe1", N_("Magnetic Stripe Row 1"), "Color=No,Category=Advanced Printer Setup",
     N_("ISO 7811 alphanumeric data to be encoded in the first magnetic stripe row (0-79 characters)"),
     STP_PARAMETER_TYPE_RAW, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 0, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 0, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "MagStripe2", N_("Magnetic Stripe Row 2"), "Color=No,Category=Advanced Printer Setup",
     N_("ISO 7811 alphanumeric data to be encoded in the second magnetic stripe row (0-40 digits)"),
     STP_PARAMETER_TYPE_RAW, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 0, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 0, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "MagStripe3", N_("Magnetic Stripe Row 3"), "Color=No,Category=Advanced Printer Setup",
     N_("ISO 7811 alphanumeric data to be encoded in the third magnetic stripe row (0-107 digits)"),
     STP_PARAMETER_TYPE_RAW, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 0, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 0, 1, STP_CHANNEL_NONE, 1, 0
   },
 };
 #define magicard_parameter_count (sizeof(magicard_parameters) / sizeof(const stp_parameter_t))
@@ -10682,7 +10684,7 @@ static int
 magicard_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
-  size_t i;
+  int	i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -10967,7 +10969,7 @@ static int magicard_parse_parameters(stp_vars_t *v)
   pd->privdata.magicard.mag_coer = mag_coer && !strcmp("High", mag_coer);
 
   if (magstripe1 && magstripe1->bytes) {
-    unsigned i;
+    int i;
     memcpy(pd->privdata.magicard.mag1, magstripe1->data, magstripe1->bytes);
     pd->privdata.magicard.mag1[magstripe1->bytes] = 0;
     for (i = 0 ; i < magstripe1->bytes ; i++) {
@@ -10987,7 +10989,7 @@ static int magicard_parse_parameters(stp_vars_t *v)
     }
   }
   if (magstripe2 && magstripe2->bytes) {
-    unsigned i;
+    int i;
     memcpy(pd->privdata.magicard.mag2, magstripe2->data, magstripe2->bytes);
     pd->privdata.magicard.mag2[magstripe2->bytes] = 0;
     for (i = 0 ; i < magstripe2->bytes ; i++) {
@@ -11007,7 +11009,7 @@ static int magicard_parse_parameters(stp_vars_t *v)
     }
   }
   if (magstripe3 && magstripe3->bytes) {
-    unsigned i;
+    int i;
     memcpy(pd->privdata.magicard.mag3, magstripe3->data, magstripe3->bytes);
     pd->privdata.magicard.mag3[magstripe3->bytes] = 0;
     for (i = 0 ; i < magstripe3->bytes ; i++) {
@@ -12620,31 +12622,31 @@ static const stp_parameter_t the_parameters[] =
     "PageSize", N_("Page Size"), "Color=No,Category=Basic Printer Setup",
     N_("Size of the paper being printed to"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "MediaType", N_("Media Type"), "Color=Yes,Category=Basic Printer Setup",
     N_("Type of media (plain paper, photo paper, etc.)"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "InputSlot", N_("Media Source"), "Color=No,Category=Basic Printer Setup",
     N_("Source (input slot) of the media"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Resolution", N_("Resolution"), "Color=Yes,Category=Basic Printer Setup",
     N_("Resolution and quality of the print"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "InkType", N_("Ink Type"), "Color=Yes,Category=Advanced Printer Setup",
     N_("Type of ink in the printer"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   { /* TRANSLATORS: Some dye sublimation printers are able to achieve
        better durability of output by covering it with transparent
@@ -12657,53 +12659,53 @@ static const stp_parameter_t the_parameters[] =
     "Laminate", N_("Overcoat Pattern"), "Color=No,Category=Advanced Printer Setup",
     N_("Overcoat Pattern"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 0, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 0, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Borderless", N_("Borderless"), "Color=No,Category=Advanced Printer Setup",
     N_("Print without borders"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 0, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 0, STP_CHANNEL_NONE, 1, 0
   },
   {
     "PrintingMode", N_("Printing Mode"), "Color=Yes,Category=Core Parameter",
     N_("Printing Output Mode"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Duplex", N_("Double-Sided Printing"), "Color=No,Category=Basic Printer Setup",
     N_("Duplex/Tumble Setting"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "NativeCopies", N_("Printer Generates Copies Natively"), "Color=No,Category=Job Mode",
     N_("Printer Generates Copies"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_INTERNAL, 1, 0, STP_CHANNEL_NONE, 0, 1, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_INTERNAL, 1, 0, STP_CHANNEL_NONE, 0, 1
   },
   {
     "LegacyDyesubGamma", N_("Use legacy dyesub gamma curve"), "Color=Yes,Category=Advanced Printer Setup",
     N_("Use legacy dyesub gamma curve"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 0, STP_CHANNEL_NONE, 1, 0, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 0, STP_CHANNEL_NONE, 1, 0
   },
   {
     "CommandFilterName", N_("Command filter name"), "Color=No,Category=Job Mode",
     N_("Command filter name"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_INTERNAL, 1, 0, STP_CHANNEL_NONE, 0, 1, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_INTERNAL, 1, 0, STP_CHANNEL_NONE, 0, 1
   },
   {
     "CommandFilterCommands", N_("Filter commands supported"), "Color=No,Category=Job Mode",
     N_("Filter commands supported"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_INTERNAL, 1, 0, STP_CHANNEL_NONE, 0, 1, {NULL}, {NULL}
+    STP_PARAMETER_LEVEL_INTERNAL, 1, 0, STP_CHANNEL_NONE, 0, 1
   },
 };
 
-static unsigned the_parameter_count =
+static int the_parameter_count =
 sizeof(the_parameters) / sizeof(const stp_parameter_t);
 
 typedef struct
@@ -12722,7 +12724,7 @@ static const float_param_t float_parameters[] =
       "CyanDensity", N_("Cyan Balance"), N_("Output Level Adjustment"),
       N_("Adjust the cyan balance"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 1, 1, 0, {NULL}, {NULL}
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 1, 1, 0
     }, 0.0, 2.0, 1.0, 1
   },
   {
@@ -12730,7 +12732,7 @@ static const float_param_t float_parameters[] =
       "MagentaDensity", N_("Magenta Balance"), N_("Output Level Adjustment"),
       N_("Adjust the magenta balance"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 2, 1, 0, {NULL}, {NULL}
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 2, 1, 0
     }, 0.0, 2.0, 1.0, 1
   },
   {
@@ -12738,7 +12740,7 @@ static const float_param_t float_parameters[] =
       "YellowDensity", N_("Yellow Balance"), N_("Output Level Adjustment"),
       N_("Adjust the yellow balance"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 3, 1, 0, {NULL}, {NULL}
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 3, 1, 0
     }, 0.0, 2.0, 1.0, 1
   },
   {
@@ -12746,7 +12748,7 @@ static const float_param_t float_parameters[] =
       "BlackDensity", N_("Black Balance"), N_("Output Level Adjustment"),
       N_("Adjust the black balance"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 0, 1, 0, {NULL}, {NULL}
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 0, 1, 0
     }, 0.0, 2.0, 1.0, 1
   },
 };
@@ -12770,8 +12772,8 @@ static const stp_param_string_t duplex_types[] =
 
 static const dyesub_cap_t* dyesub_get_model_capabilities(const stp_vars_t *v, int model)
 {
-  unsigned i;
-  unsigned models = sizeof(dyesub_model_capabilities) / sizeof(dyesub_cap_t);
+  int i;
+  int models = sizeof(dyesub_model_capabilities) / sizeof(dyesub_cap_t);
 
   for (i=0; i<models; i++)
     {
@@ -12790,7 +12792,7 @@ static const overcoat_t* dyesub_get_overcoat_pattern(stp_vars_t *v)
 		  				stp_get_model_id(v));
   const overcoat_list_t *llist = caps->overcoat;
   const overcoat_t *l = NULL;
-  size_t i;
+  int i;
 
   for (i = 0; i < llist->n_items; i++)
     {
@@ -12808,7 +12810,7 @@ static const dyesub_media_t* dyesub_get_mediatype(stp_vars_t *v)
                                               stp_get_model_id(v));
   const dyesub_media_list_t *mlist = caps->media;
   const dyesub_media_t *m = NULL;
-  size_t i;
+  int i;
 
   for (i = 0; i < mlist->n_items; i++)
     {
@@ -12824,7 +12826,7 @@ dyesub_printsize(const stp_vars_t *v,
 		   int  *width,
 		   int  *height)
 {
-  size_t i;
+  int i;
   const char *page = stp_get_string_parameter(v, "PageSize");
   const char *resolution = stp_get_string_parameter(v, "Resolution");
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
@@ -12857,7 +12859,7 @@ dyesub_list_parameters(const stp_vars_t *v)
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v, stp_get_model_id(v));
 
   stp_parameter_list_t *ret = stp_parameter_list_create();
-  unsigned i;
+  int i;
 
   for (i = 0; i < the_parameter_count; i++)
     stp_parameter_list_add_param(ret, &(the_parameters[i]));
@@ -12874,7 +12876,7 @@ static void
 dyesub_parameters(const stp_vars_t *v, const char *name,
 	       stp_parameter_t *description)
 {
-  unsigned i;
+  int	i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -13095,7 +13097,7 @@ dyesub_get_pagesize(const stp_vars_t *v, const char *page)
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
   const dyesub_pagesize_list_t *p = caps->pages;
-  unsigned i;
+  int i;
   if (page == NULL)
     return NULL;
 
@@ -13214,7 +13216,6 @@ dyesub_limit(const stp_vars_t *v,			/* I */
 	    stp_dimension_t *width, stp_dimension_t *height,
 	    stp_dimension_t *min_width, stp_dimension_t *min_height)
 {
-  (void)v;
   *width  = SHRT_MAX;
   *height = SHRT_MAX;
   *min_width  = 1;
@@ -13229,7 +13230,7 @@ dyesub_describe_resolution(const stp_vars_t *v,
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
   							stp_get_model_id(v));
   const dyesub_resolution_list_t *r = caps->resolution;
-  size_t i;
+  int i;
 
   *x = -1;
   *y = -1;
@@ -13255,7 +13256,7 @@ dyesub_describe_output_internal(const stp_vars_t *v, dyesub_print_vars_t *pv)
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
   							stp_get_model_id(v));
   const char *output_type;
-  size_t i;
+  int i;
 
   pv->ink_channels = 1;
   pv->ink_order = "\1";
@@ -13369,7 +13370,6 @@ dyesub_free_image(dyesub_print_vars_t *pv, stp_image_t *image)
   unsigned short** image_data = pv->image_data;
   int image_px_height = pv->image_rows;
   int i;
-  (void)image;
 
   for (i = 0; i< image_px_height; i++)
     if (image_data[i])
@@ -13425,7 +13425,6 @@ dyesub_render_pixel_u8(unsigned short *src, char *dest,
 		       dyesub_print_vars_t *pv,
 		       int plane)
 {
-  (void)pv;
   /* Scale down to output bit depth */
   *dest = src[plane] / 257;
 }
@@ -13453,8 +13452,6 @@ dyesub_render_row_packed_u8(stp_vars_t *v,
 {
   int w;
   unsigned short *src;
-  (void)v;
-  (void)caps;
 
   for (w = 0; w < pv->outw_px; w++)
     {
@@ -13483,8 +13480,6 @@ dyesub_render_row_interlaced_u8(stp_vars_t *v,
 {
   int w;
   unsigned short *src;
-  (void)v;
-  (void)caps;
 
   for (w = 0; w < pv->outw_px; w++)
     {
@@ -13911,7 +13906,6 @@ dyesub_job_start(const stp_vars_t *v, stp_image_t *image)
 {
   const dyesub_cap_t *caps;
   stp_vars_t *nv = stp_vars_create_copy(v);
-  (void)image;
 
   caps = dyesub_get_model_capabilities(v, stp_get_model_id(nv));
 
@@ -13927,7 +13921,6 @@ dyesub_job_end(const stp_vars_t *v, stp_image_t *image)
 {
   const dyesub_cap_t *caps;
   stp_vars_t *nv = stp_vars_create_copy(v);
-  (void)image;
 
   caps = dyesub_get_model_capabilities(v, stp_get_model_id(nv));
 

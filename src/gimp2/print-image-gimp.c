@@ -180,7 +180,6 @@ Image_GimpDrawable_new(GimpDrawable *drawable, gint32 image_ID)
 static void
 Image_init(stp_image_t *image)
 {
-  (void)image;
   /* Nothing to do. */
 }
 
@@ -218,7 +217,6 @@ Image_get_row(stp_image_t *image, unsigned char *data, size_t byte_limit,
   Gimp_Image_t *im = (Gimp_Image_t *) (image->rep);
   int last_printed_percent;
   guchar *inter;
-  (void)byte_limit;
   if (!im->initialized)
     {
       gimp_progress_init(_("Printing..."));
@@ -438,7 +436,5 @@ Image_get_appname(stp_image_t *image)
 {
   static char pluginname[] = "Print plug-in V" VERSION " - " RELEASE_DATE
     " for GIMP";
-  (void)image;
-
   return pluginname;
 }

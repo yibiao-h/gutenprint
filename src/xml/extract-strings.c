@@ -39,7 +39,6 @@ main(int argc, char **argv)
   printf(" * Please take into account expansion due to multi-byte characters,\n");
   printf(" * as the limit is *bytes*, not characters!\n");
   printf(" */\n");
-  (void)argc;
   while (*argv)
     {
       stp_mxml_node_t *top =

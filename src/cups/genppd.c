@@ -136,7 +136,9 @@ static int	gpprintf(gpFile f, const char *format, ...)
        __attribute__((format(__printf__, 2, 3)));
 static int	is_special_option(const char *name);
 static void	print_group_close(gpFile fp, stp_parameter_class_t p_class,
-				  stp_parameter_level_t p_level);
+				  stp_parameter_level_t p_level,
+				  const char *language,
+				  const stp_string_list_t *po);
 static void	print_group_open(gpFile fp, stp_parameter_class_t p_class,
 				 stp_parameter_level_t p_level,
 				 const char *language,
@@ -275,9 +277,12 @@ bytelen(const char *buffer)
 #define PPD_MAX_SHORT_NICKNAME (31)
 
 static void
-print_ppd_header(gpFile fp, ppd_type_t ppd_type, const char *driver,
-		 const char *long_name, const char *manufacturer,
-		 const char *language, const stp_string_list_t *po)
+print_ppd_header(gpFile fp, ppd_type_t ppd_type, int model, const char *driver,
+		 const char *family, const char *long_name,
+		 const char *manufacturer, const char *device_id,
+		 const char *ppd_location,
+		 const char *language, const stp_string_list_t *po,
+		 char **all_langs)
 {
   char short_long_name[(PPD_MAX_SHORT_NICKNAME) + 1];
  /*
@@ -363,8 +368,13 @@ print_ppd_header(gpFile fp, ppd_type_t ppd_type, const char *driver,
 }
 
 static void
-print_ppd_header_3(gpFile fp, const char *device_id,
-		   const char *language, char **all_langs)
+print_ppd_header_3(gpFile fp, ppd_type_t ppd_type, int model,
+		   const char *driver,
+		   const char *family, const char *long_name,
+		   const char *manufacturer, const char *device_id,
+		   const char *ppd_location,
+		   const char *language, const stp_string_list_t *po,
+		   char **all_langs)
 {
   int i;
   gpputs(fp, "*FileSystem:	False\n");
@@ -422,9 +432,12 @@ print_ppd_header_3(gpFile fp, const char *device_id,
 }
 
 static void
-print_ppd_header_2(gpFile fp, int model, const char *driver,
-		   const char *family, const char *ppd_location,
-		   const char *language)
+print_ppd_header_2(gpFile fp, ppd_type_t ppd_type, int model, const char *driver,
+		   const char *family, const char *long_name,
+		   const char *manufacturer, const char *device_id,
+		   const char *ppd_location,
+		   const char *language, const stp_string_list_t *po,
+		   char **all_langs)
 {
   gpprintf(fp, "*StpDriverName:	\"%s\"\n", driver);
   gpprintf(fp, "*StpDriverModelFamily:	\"%d_%s\"\n", model, family);
@@ -747,7 +760,9 @@ static void
 print_group_close(
     gpFile                fp,		/* I - File to write to */
     stp_parameter_class_t p_class,	/* I - Option class */
-    stp_parameter_level_t p_level)	/* I - Option level */
+    stp_parameter_level_t p_level,	/* I - Option level */
+    const char		 *language,	/* I - language */
+    const stp_string_list_t    *po)		/* I - Message catalog */
 {
   print_group(fp, "Close", p_class, p_level, NULL, NULL);
 }
@@ -1024,6 +1039,7 @@ print_one_option(gpFile fp, stp_vars_t *v, const stp_string_list_t *po,
 static void
 print_one_localization(gpFile fp, const stp_string_list_t *po,
 		       int simplified, const char *lang,
+		       const stp_parameter_t *lparam,
 		       const stp_parameter_t *desc)
 {
   int num_opts;
@@ -1181,8 +1197,8 @@ write_ppd(
     const char		*filename,	/* I - input filename */
     int			compress)	/* I - compress output */
 {
-  unsigned		i, j, k, l;	/* Looping vars */
-  unsigned		num_opts;	/* Number of printer options */
+  int		i, j, k, l;		/* Looping vars */
+  int		num_opts;		/* Number of printer options */
   stp_resolution_t	xdpi, ydpi;	/* Resolution info */
   stp_vars_t	*v;			/* Variable info */
   const char	*driver;		/* Driver name */
@@ -1200,7 +1216,7 @@ write_ppd(
   int printer_is_color = 0;
   int simplified = ppd_type == PPD_SIMPLIFIED;
   int skip_color = ppd_type == PPD_NO_COLOR_OPTS;
-  unsigned maximum_level = simplified ?
+  int maximum_level = simplified ?
     STP_PARAMETER_LEVEL_BASIC : STP_PARAMETER_LEVEL_ADVANCED4;
   char		*default_resolution = NULL;  /* Default resolution mapped name */
   stp_string_list_t *resolutions = stp_string_list_create();
@@ -1226,8 +1242,9 @@ write_ppd(
   device_id  = stp_printer_get_device_id(p);
   printvars  = stp_printer_get_defaults(p);
 
-  print_ppd_header(fp, ppd_type, driver, long_name,
-		   manufacturer, language, po);
+  print_ppd_header(fp, ppd_type, model, driver, family, long_name,
+		   manufacturer, device_id, ppd_location, language, po,
+		   all_langs);
 
 
   /* Set Job Mode to "Job" as this enables the Duplex option */
@@ -1287,7 +1304,10 @@ write_ppd(
     }
   stp_parameter_description_destroy(&desc);
 
-  print_ppd_header_3(fp, device_id, language, all_langs);
+  print_ppd_header_3(fp, ppd_type, model,
+		     driver, family, long_name,
+		     manufacturer, device_id, ppd_location, language, po,
+		     all_langs);
 
   /* Macintosh color management */
 
@@ -1302,7 +1322,9 @@ write_ppd(
 
   gpputs(fp, "\n");
 
-  print_ppd_header_2(fp, model, driver, family, ppd_location, language);
+  print_ppd_header_2(fp, ppd_type, model, driver, family, long_name,
+		     manufacturer, device_id, ppd_location, language, po,
+		     all_langs);
 
  /*
   * Get the page sizes from the driver...
@@ -1684,7 +1706,7 @@ write_ppd(
 	      stp_parameter_description_destroy(&desc);
 	    }
 	  if (printed_open_group)
-	    print_group_close(fp, j, k);
+	    print_group_close(fp, j, k, language, po);
 	}
     }
   stp_describe_parameter(v, "ImageType", &desc);
@@ -1941,7 +1963,7 @@ write_ppd(
 		      stp_describe_parameter(v, lparam->name, &desc);
 		      if (desc.is_active)
 			print_one_localization(fp, po, simplified, lang,
-					       &desc);
+					       lparam, &desc);
 		      stp_parameter_description_destroy(&desc);
 		    }
 		}

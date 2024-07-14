@@ -86,8 +86,6 @@ main(int  argc,
   float	cyan, magenta, yellow;
   float	m[3][3];
 
-  (void)argc;
-  (void)argv;
 
   puts("ESP Printer Calibration Tool v1.0");
   puts("Copyright 1999-2000 by Easy Software Products, All Rights Reserved.");
