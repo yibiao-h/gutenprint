@@ -122,6 +122,8 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
 
   4) Added support for the following inkjet printer models:
 
+     Epson SureColor P5000 Commercial Edition (EXPERIMENTAL)
+     Epson SureColor P5000 Standard Edition (EXPERIMENTAL)
      Epson SureLab D700
      Fujifilm DX100
 

@@ -44,6 +44,8 @@ pkgxmldata_DATA =				\
 	pro_ultrachrome_k3v10_base.xml		\
 	pro_ultrachrome_k3v10a.xml		\
 	pro_ultrachrome_k3v10b.xml		\
+        pro_ultrachrome_t913x_ce.xml            \
+        pro_ultrachrome_t913x_se.xml            \
 	pro_x000.xml				\
 	pro_x500.xml				\
 	pro_x600.xml				\
