@@ -81,6 +81,12 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      steps up to maintain the MacOS port, there will be no MacOS
      builds for this (or any future) Gutenprint release.
 
+     MacOS-specific contributions will continue be accepted.
+
+     This includes a workaround for a printer dialog crash on MacOS if
+     the PPD includes support for custom CD/DVD sizes.  This was resolved
+     by removing that option altogether for MacOS builds.
+
   1) Support for the following Dye-sublimation & thermal printers
      has been added:
 

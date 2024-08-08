@@ -987,6 +987,7 @@ print_one_option(gpFile fp, stp_vars_t *v, const stp_string_list_t *po,
       print_close_ui = 0;
       gpprintf(fp, "*CloseUI: *Stp%s\n\n", desc->name);
 
+#ifndef __APPLE__ /* This leads to outright _crashes_ on apple platforms */
       /*
        * Add custom option code and value parameter...
        */
@@ -995,7 +996,7 @@ print_one_option(gpFile fp, stp_vars_t *v, const stp_string_list_t *po,
       gpprintf(fp, "*ParamCustomStp%s Value/%s: 1 points %d %d\n\n",
 	       desc->name, _("Value"), (int) desc->bounds.dimension.lower,
 	       (int) desc->bounds.dimension.upper);
-
+#endif
       break;
     case STP_PARAMETER_TYPE_INT:
       gpprintf(fp, "*OPOptionHints Stp%s: \"input spinbox\"\n", lparam->name);
