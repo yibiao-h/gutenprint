@@ -79,10 +79,10 @@
 #define PX(pt,dpi)	(int)(((stp_dimension_t)(pt) * (stp_resolution_t)(dpi) / (stp_resolution_t)72) + 0.5f)
 #define PT(px,dpi)	((stp_resolution_t)(px) * (stp_resolution_t)72 / (stp_dimension_t)(dpi))
 
-#define PT1(px,dpi)     (PT(px,dpi)+1)
-#define PT2(px,dpi)     (PT(px,dpi)+2)
-#define PT3(px,dpi)     (PT(px,dpi)+3)
-#define PT4(px,dpi)     (PT(px,dpi)+4)
+#define PT1(px,dpi)     (PT(px,dpi)+2)
+#define PT2(px,dpi)     (PT(px,dpi)+4)
+#define PT3(px,dpi)     (PT(px,dpi)+6)
+#define PT4(px,dpi)     (PT(px,dpi)+8)
 
 #define LIST(list_t, list_name, items_t, items_name) \
 	static const list_t list_name = \
