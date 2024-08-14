@@ -3225,7 +3225,7 @@ msgstr "Принтер создаёт копии"
 
 #: src/main/print-dyesub.c:12689 src/main/print-dyesub.c:12690
 msgid "Use legacy dyesub gamma curve"
-msgstr "Использовать устаревшую кривую гамма-распределения dyesub"
+msgstr "использовать устаревшую гамма-кривую dyesub"
 
 #: src/main/print-dyesub.c:12724 src/main/print-dyesub.c:12732
 #: src/main/print-dyesub.c:12740 src/main/print-dyesub.c:12748
