@@ -241,6 +241,7 @@ typedef struct
   int use_lut;
   int quality;
   int mediaver;
+  int mediatype;
 } hiti_privdata_t;
 
 typedef struct
@@ -9990,6 +9991,10 @@ static void hiti_printer_start(stp_vars_t *v, int model)
           flags |= 0x04;
           flags |= (pd->privdata.hiti.mediaver << 24);
   }
+  if (pd->privdata.hiti.mediatype) {
+          flags |= 0x08;
+          flags |= (pd->privdata.hiti.mediatype << 24);
+  }
 
   if (!strcmp(pd->pagesize, "B7"))
 	  pgcode = 8;
@@ -10036,12 +10041,27 @@ static void hiti_p520l_printer_start(stp_vars_t *v)
   hiti_printer_start(v, 520);
 }
 
+static const dyesub_stringitem_t hiti_520l_media_types[] =
+{
+  { "Standard",    N_ ("Standard") },
+  { "Metallic",    N_ ("Metallic") },
+  { "HighDensity", N_ ("High Density") },
+  { "Transparent", N_ ("Transparent") }
+};
+LIST(dyesub_stringlist_t, hiti_520l_media_types_list, dyesub_stringitem_t, hiti_520l_media_types);
+
 static const stp_parameter_t hiti_p520l_parameters[] =
 {
   {
     "UseLUT", N_("Internal Color Correction"), "Color=Yes,Category=Advanced Printer Setup",
     N_("Use Internal Color Correction"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "MediaType", N_("Media Type"), "Color=No,Category=Advanced Printer Setup",
+    N_("Media Type"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
 };
@@ -10070,6 +10090,20 @@ hiti_p520l_load_parameters(const stp_vars_t *v, const char *name,
       description->deflt.boolean = 1;
       description->is_active = 1;
     }
+  else if (strcmp(name, "MediaType") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+
+      const dyesub_stringlist_t *mlist = &hiti_520l_media_types_list;
+      for (i = 0; i < mlist->n_items; i++)
+        {
+	  const dyesub_stringitem_t *m = &(mlist->item[i]);
+	  stp_string_list_add_string(description->bounds.str,
+				       m->name, m->text); /* Do *not* want this translated, otherwise use gettext(m->text) */
+	}
+      description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
+      description->is_active = 1;
+    }
   else
   {
      return 0;
@@ -10080,10 +10114,21 @@ hiti_p520l_load_parameters(const stp_vars_t *v, const char *name,
 static int hiti_p520l_parse_parameters(stp_vars_t *v)
 {
   dyesub_privdata_t *pd = get_privdata(v);
+  const char *media = stp_get_string_parameter(v, "MediaType");
 
   /* No need to set global params if there's no privdata yet */
   if (!pd)
     return 1;
+
+  if (strcmp(media, "Standard") == 0) {
+    pd->privdata.hiti.mediatype = 0;
+  } else if (strcmp(media, "Metallic") == 0) {
+    pd->privdata.hiti.mediatype = 5;
+  } else if (strcmp(media, "HighDensity") == 0) {
+    pd->privdata.hiti.mediatype = 6;
+  } else if (strcmp(media, "Transparent") == 0) {
+    pd->privdata.hiti.mediatype = 7;
+  }
 
   pd->privdata.hiti.use_lut = stp_get_boolean_parameter(v, "UseLUT");
 
