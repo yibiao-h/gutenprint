@@ -9949,6 +9949,7 @@ static const dyesub_pagesize_t hiti_p520l_page[] =
   DEFINE_PAPER_SIMPLE( "w432h432", "6x6", PT(1844,300), PT(1844,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w432h576", "6x8", PT(1844,300), PT(2434,300), DYESUB_PORTRAIT),
   DEFINE_PAPER( "w432h576-div2", "4x6*2", PT(1844,300), PT1(2434,300), 0, 0, 0, PT1(0,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER( "w432h576-div4", "2x6*4", PT(1844,300), PT1(2434,300), 0, 0, 0, PT2(0,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w432h648", "6x9", PT(1844,300), PT(2740,300), DYESUB_PORTRAIT),
 };
 
@@ -9965,6 +9966,7 @@ static const dyesub_printsize_t hiti_p520l_printsize[] =
   { "300x300", "w432h432", 1844, 1844},
   { "300x300", "w432h576", 1844, 2434},
   { "300x300", "w432h576-div2", 1844, 2492},
+  { "300x300", "w432h576-div4", 1844, 2492},
   { "300x300", "w432h648", 1844, 2740},
 };
 
@@ -10014,6 +10016,8 @@ static void hiti_printer_start(stp_vars_t *v, int model)
 	  pgcode = 3;
   else if (!strcmp(pd->pagesize, "w432h576-div2"))
 	  pgcode = 7;
+  else if (!strcmp(pd->pagesize, "w432h576-div4"))
+	  pgcode = 17;
   else if (!strcmp(pd->pagesize, "w432h648"))
 	  pgcode = 6;
   else
