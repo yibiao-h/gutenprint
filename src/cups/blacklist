@@ -372,6 +372,9 @@
 # HiTi M610
 0x0d16 0x0010 blacklist
 
+# Joyspace U826
+0x0d16 0x0510 blacklist
+
 # HiTi P910L
 0x0d16 0x000e blacklist
 

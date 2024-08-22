@@ -101,12 +101,9 @@ struct hiti_cmd {
 #define CMD_ERDC_UNKD  0x800D /* XX Unknown (1 arg) */
 #define CMD_ERDC_RTLV  0x800E /* Request T/L Voltage */
 #define CMD_ERDC_RRVC  0x800F /* Read Ribbon Vendor Code */
-#define CMD_ERDC_UNK0  0x8010 /* Used when printer doesn't support RRVC? */
-#define CMD_ERDC_UNK1  0x8011 /* Unknown Query RE, 1 arg == QUALITY? */
+#define CMD_ERDC_UNK0  0x8010 /* Used when printer doesn't support RRVC? NOT p525/u826 */
+#define CMD_ERDC_UNK1  0x8011 /* XX p52x Unknown Query, 1 arg == QUALITY? Always 0x0 */
 #define CMD_ERDC_RHA   0x801C /* Read Highlight Adjustment (6 resp) RE */
-
-// 8008 seen in Windows Comm @ 3211  (0 len response)
-// 8011 seen in Windows Comm @ 3369 (1 arg req (always 00), 4 len response)
 
 /* Extended Format Data */
 #define CMD_EFD_SF     0x8100 /* Sublimation Format */
@@ -283,6 +280,11 @@ struct hiti_jc_qjc {
 #define PRINT_TYPE_6x4_2UP  9
 #define PRINT_TYPE_6x2     10
 #define PRINT_TYPE_5x7_2UP 11
+#define PRINT_TYPE_6x4_3UP 16 // ("4x6-split_3up")
+#define PRINT_TYPE_6x9_4UP 17 // ("6x9-2up2split")
+#define PRINT_TYPE_6x9_6UP 24 // ("6x9-2up3split")
+#define PRINT_TYPE_6x5     20
+#define PRINT_TYPE_6x6     21
 
 struct hiti_heattable_hdr_v1 {  /* P51x */
 	uint8_t type;
@@ -403,7 +405,10 @@ struct hiti_gpjobhdr {
 
 #define PAYLOAD_FLAG_YMCPLANAR 0x01
 #define PAYLOAD_FLAG_NOCORRECT 0x02
-#define PAYLOAD_FLAG_MEDIAVER  0x03
+#define PAYLOAD_FLAG_MEDIAVER  0x04
+#define PAYLOAD_FLAG_MEDIATYPE 0x08
+
+#define PAYLOAD_FLAG_DATA_SHIFT 24
 
 #define HDR_COOKIE 0x54485047
 
@@ -419,7 +424,7 @@ struct hiti_efd_sf {
 /*@11*/	uint8_t  colorSeq;  /* See SF_COLORSEQ_* */
 /*@12*/	uint8_t  copies;
 /*@13*/	uint8_t  printMode; /* See SF_PRINTMODE_* */
-/*@14*/	uint8_t  zero[4]; /* P461 only */
+/*@14*/	uint8_t  zero[4]; /* P461, U286 only */
 } __attribute__((packed));
 
 /* SF_COLORSEQ is actually:
@@ -528,9 +533,9 @@ struct hiti_matrix {
 STATIC_ASSERT(sizeof(struct hiti_matrix) == 512);
 
 struct hiti_ribbon {
-	uint16_t unk;  // 01 08 (p461)
+	uint16_t unk;  // 01 08 (p461, u826)
 	uint8_t type;  /* RIBBON_TYPE_XXX */
-	uint16_t unk2; // 00 07 (p461)
+	uint16_t unk2; // 00 07 (p461, u826)
 } __attribute__((packed));
 
 #define RIBBON_TYPE_4x6    0x01
@@ -539,9 +544,9 @@ struct hiti_ribbon {
 #define RIBBON_TYPE_6x8    0x04
 
 struct hiti_paper {
-	uint8_t unk;
+	uint8_t unk;   // 01 on U286 w/6x8
 	uint8_t type;  /* PAPER_TYPE_XXX */
-	uint16_t unk2;
+	uint16_t unk2; // 00 07 on U826 w/6x8)
 } __attribute__((packed));
 
 #define PAPER_TYPE_X4INCH  0xf0  // XXX hack
@@ -551,9 +556,14 @@ struct hiti_paper {
 
 /* Private data structure */
 enum {
-	HT_COLORMODE_INVERT = 0,
-	HT_COLORMODE_CLASSIC = 1,
-	HT_COLORMODE_IDPASS_VIVID = 2,
+	HT_COLORMODE_NULL = 0,
+	HT_COLORMODE_INVERT = 1,
+	HT_COLORMODE_CLASSIC = 2,
+	HT_COLORMODE_IDPASS_VIVID = 3,
+
+	HT_COLORMODE_METALLIC = 5,
+	HT_COLORMODE_HIGHDENSITY = 6,
+	HT_COLORMODE_TRANSPARENT = 7,
 };
 
 enum {
@@ -619,7 +629,7 @@ struct hiti_ctx {
 	struct hiti_paper  paper;
 	struct hiti_calibration calibration;
 	uint8_t  led_calibration[10]; // XXX convert to struct
-	uint8_t  unk_8010[15]; // XXX
+	uint8_t  unk_8010[17]; // XXX !sheet. 17 on U826, 15 on rest
 	uint8_t  unk_800c[4]; // XXX
 	struct hiti_erdc_rs erdc_rs;
 	uint8_t  hilight_adj[6]; // XXX convert to struct, not P51x!
@@ -682,6 +692,11 @@ static const char* hiti_modelcode(int type, int subtype) {
 		return "rd";
 	case P_HITI_750:
 		return "rh";
+	case P_HITI_826:
+		if (subtype)
+			return "ro1";
+		else
+			return "ro";
 	default:
 		ERROR("Unknown HiTi type %d\n", type);
 		return "XX";
@@ -935,6 +950,13 @@ static unsigned int hiti_ribboncounts(uint8_t code, uint8_t type)
 		case RIBBON_TYPE_6x9: return 220; // XXX guess
 		default: return 999;
 		}
+	} else if (type == P_HITI_826) {
+		switch(code) {
+		case RIBBON_TYPE_4x6: return 400;
+		case RIBBON_TYPE_5x7: return 200;
+		case RIBBON_TYPE_6x8: return 200;
+		default: return 999;
+		}
 	}
 
 	return 999;
@@ -963,7 +985,7 @@ static const char* hiti_regions(uint8_t code)
 	case 0x16: return "IN";
 	case 0x17: return "DB";
 	case 0xf0: // Seen on P510S
-	case 0x01: // Seen on P520L and P525L
+	case 0x01: // Seen on P520L, P525L, U826
 	default:
 		return "Unknown";
 	}
@@ -1400,12 +1422,12 @@ static int hiti_attach(void *vctx, struct dyesub_connection *conn, uint8_t jobid
 			if (strncmp(ctx->version, "1.22", 4) < 0 &&
 			    strncmp(ctx->version, "1.17", 4) > 0)  /* V1.18 -> v1.21 have a known USB CLEAR_ENDPOINT_HALT issue */
 				WARNING("Printer firmware %s has a known USB bug, please update to at least v1.22\n", ctx->version);
-			else if (strncmp(ctx->version, "1.28", 4) < 0)
-				WARNING("Printer firmware %s out of date (vs %s), please update.\n", ctx->version, "v1.28");
+			else if (strncmp(ctx->version, "1.29", 4) < 0)
+				WARNING("Printer firmware %s out of date (vs %s), please update.\n", ctx->version, "v1.29");
 			break;
 		case P_HITI_525:
-			if (strncmp(ctx->version, "1.03.0.6", 8) < 0)
-				WARNING("Printer firmware %s out of date (vs %s), please update.\n", ctx->version, "v1.03.0.6");
+			if (strncmp(ctx->version, "1.04", 4) < 0)
+				WARNING("Printer firmware %s out of date (vs %s), please update.\n", ctx->version, "v1.04");
 			break;
 		case P_HITI_530:
 			if (strncmp(ctx->version, "1.02.0", 6) < 0)
@@ -1418,6 +1440,10 @@ static int hiti_attach(void *vctx, struct dyesub_connection *conn, uint8_t jobid
 		case P_HITI_750:
 			if (strncmp(ctx->version, "1.21.0", 6) < 0)
 				WARNING("Printer firmware %s out of date (vs %s), please update.\n", ctx->version, "v1.21.0");
+			break;
+		case P_HITI_826:
+			if (strncmp(ctx->version, "1.07.0", 6) < 0)
+				WARNING("Printer firmware %s out of date (vs %s), please update.\n", ctx->version, "v1.07.0");
 			break;
 		default:
 			break;
@@ -1433,7 +1459,7 @@ static int hiti_attach(void *vctx, struct dyesub_connection *conn, uint8_t jobid
 		}
 
 		ctx->ribbon.type = RIBBON_TYPE_4x6;
-		ctx->ribbonvendor = 0x1005; /* CHC, type 2 */
+		ctx->ribbonvendor = 0x101f; /* CHC, type 0x1f */
 		if (getenv("MEDIA_CODE") && strlen(getenv("MEDIA_CODE"))) {
 			// set fake fw version?
 			ctx->ribbon.type = strtol(getenv("MEDIA_CODE"), NULL, 16);
@@ -1470,7 +1496,7 @@ static void hiti_cleanup_job(const void *vjob) {
 	free((void*)job);
 }
 
-static void *hiti_get_heat_data(struct hiti_ctx *ctx, uint8_t mode, int ribbonvendor, int *len)
+static void *hiti_get_heat_data(struct hiti_ctx *ctx, uint8_t mode, uint8_t colormode, int ribbonvendor, int *len)
 {
 	int ret;
 	void *buf;
@@ -1489,11 +1515,24 @@ static void *hiti_get_heat_data(struct hiti_ctx *ctx, uint8_t mode, int ribbonve
 		return NULL;
 	}
 
-	if (mode) {
-		modename = "q";
-	} else {
-		modename = "t";
-	} // XXX 'p' 'r' and 'o' ??
+	switch (colormode) {
+	case HT_COLORMODE_METALLIC:
+		modename = "m";
+		break;
+	case HT_COLORMODE_HIGHDENSITY:
+		modename = "h";
+		break;
+	case HT_COLORMODE_TRANSPARENT:
+		modename = "r";
+		break;
+	default:
+		if (mode) {
+			modename = "q";
+		} else {
+			modename = "t";
+		} // XXX p/o ??
+		break;
+	}
 
 	if (mediatype == 0x1000) {
 		medianame = "c";
@@ -1503,8 +1542,8 @@ static void *hiti_get_heat_data(struct hiti_ctx *ctx, uint8_t mode, int ribbonve
 
 	// XXX special case!  hea0qcra.bin/heatqcra.bin, and hea0tcra.bin/heattcra.bin, and they differ!
 
-	DEBUG("Locating heat table for model %d, mode %02x, media %02x, ver %02x\n",
-	      ctx->conn->type, mode, mediatype >> 8, mediaver);
+	DEBUG("Locating heat table for model %d, mode %02x/%02x media %02x, ver %02x\n",
+	      ctx->conn->type, mode, colormode, mediatype >> 8, mediaver);
 
 	while (mediaver >= 0) {
 		char full[2048];
@@ -1550,8 +1589,8 @@ static uint8_t *hiti_get_correction_data(struct hiti_ctx *ctx, uint8_t mode, int
 	int mediaver = ribbonvendor & RRVC_VERSION_MASK;
 	int mediatype = ribbonvendor & RRVC_VENDOR_MASK;
 
-	const char *modelname = hiti_modelcode(ctx->conn->type, ctx->erdc_rs.hwFeature1 & 0x80); // XXX P52x only
-	const char *colorname;
+	const char *modelname = hiti_modelcode(ctx->conn->type, ctx->erdc_rs.hwFeature1 & 0x80);
+	const char *colorname = NULL;
 	const char *modename;
 	const char *medianame;
 	char fname_base[24] = {0};
@@ -1564,13 +1603,27 @@ static uint8_t *hiti_get_correction_data(struct hiti_ctx *ctx, uint8_t mode, int
 
 	if (ctx->conn->type == P_HITI_CS2XX) {
 		colorname = "B"; // XXX many more, investigate more carefully.
-	} else if (colormode == HT_COLORMODE_CLASSIC) {
-		colorname = "CL";
-	} else if (colormode == HT_COLORMODE_IDPASS_VIVID) {
-		colorname = "P";
-	} else {
-		colorname = "I";
-	} // XXX PR, L, LR, C, SO, B, M, H, T, and more?
+	} else if (ctx->conn->type == P_HITI_520 ||
+		   ctx->conn->type == P_HITI_525 ||
+		   ctx->conn->type == P_HITI_826) {
+		if (colormode == HT_COLORMODE_METALLIC)
+			colorname = "M";
+		else if (colormode == HT_COLORMODE_HIGHDENSITY)
+			colorname = "H";
+		else if (colormode == HT_COLORMODE_TRANSPARENT)
+			colorname = "T";
+	}
+
+	if (!colorname) {
+		if (colormode == HT_COLORMODE_CLASSIC) {
+			colorname = "CL";
+		} else if (colormode == HT_COLORMODE_IDPASS_VIVID) {
+			colorname = "P";
+		} else {
+			colorname = "I";
+		} // XXX PR, L, LR, C, SO, B, and more?
+	}
+
 
 	if (mode) {
 		modename = "Q";
@@ -1593,14 +1646,14 @@ static uint8_t *hiti_get_correction_data(struct hiti_ctx *ctx, uint8_t mode, int
 
 		/* Build base name */
 		if (mediaver >= 0)
-			snprintf(fname_base, sizeof(fname_base)-1, "C%s%s%c%s%s.bin", medianame, modename,
+			snprintf(fname_base, sizeof(fname_base)-1, "C%s%s%s%c%s.bin",
+				 medianame, modename, colorname,
 				 mediaver < 10 ? '0' + mediaver : 'a' + mediaver - 10,
-				 colorname,  modelname);
+				 modelname);
 		else
-			snprintf(fname_base, sizeof(fname_base)-1, "C%s%s%s%s.bin", medianame, modename, colorname,  modelname);
+			snprintf(fname_base, sizeof(fname_base)-1, "C%s%s%s%s.bin", medianame, modename, colorname, modelname);
 
 		snprintf(full, sizeof(full), "%s/%s", corrtable_path, fname_base);
-
 		ret = dyesub_read_file2(full, buf, CORRECTION_FILE_SIZE, &len, 1);
 		if (!ret && len == CORRECTION_FILE_SIZE) {
 			break;
@@ -2006,6 +2059,7 @@ static int hiti_read_parse(void *vctx, const void **vjob, int data_fd, int copie
 	case P_HITI_520:
 	case P_HITI_525:
 	case P_HITI_530:
+	case P_HITI_826:
 		if (job->hdr.model != 520) {
 			ERROR("Unrecognized header!\n");
 			hiti_cleanup_job(job);
@@ -2083,6 +2137,7 @@ static int hiti_read_parse(void *vctx, const void **vjob, int data_fd, int copie
 	case RIBBON_TYPE_4x6:
 		if (job->hdr.code != PRINT_TYPE_6x4 &&
 		    job->hdr.code != PRINT_TYPE_6x4_2UP &&
+		    job->hdr.code != PRINT_TYPE_6x4_3UP &&
 		    job->hdr.code != PRINT_TYPE_6x2) {
 			ERROR("Invalid ribbon type vs job (%02x/%02x)\n",
 			      ctx->ribbon.type, job->hdr.code);
@@ -2105,30 +2160,44 @@ static int hiti_read_parse(void *vctx, const void **vjob, int data_fd, int copie
 	case RIBBON_TYPE_6x8:
 		if (job->hdr.code != PRINT_TYPE_6x4 &&
 		    job->hdr.code != PRINT_TYPE_6x4_2UP &&
+		    job->hdr.code != PRINT_TYPE_6x4_3UP &&
+		    job->hdr.code != PRINT_TYPE_6x5 &&
+		    job->hdr.code != PRINT_TYPE_6x6 &&
 		    job->hdr.code != PRINT_TYPE_6x8 &&
 		    job->hdr.code != PRINT_TYPE_6x2 &&
-		    job->hdr.code != PRINT_TYPE_6x9_2UP) {
+		    job->hdr.code != PRINT_TYPE_6x9_2UP &&
+		    job->hdr.code != PRINT_TYPE_6x9_4UP &&
+		    job->hdr.code != PRINT_TYPE_6x9_6UP) {
 			ERROR("Invalid ribbon type vs job (%02x/%02x)\n",
 			      ctx->ribbon.type, job->hdr.code);
 			hiti_cleanup_job(job);
 			return CUPS_BACKEND_CANCEL;
 		}
-		if (job->hdr.code == PRINT_TYPE_6x4)
+		if (job->hdr.code == PRINT_TYPE_6x4 ||
+		    job->hdr.code == PRINT_TYPE_6x4_2UP ||
+		    job->hdr.code == PRINT_TYPE_6x4_3UP)
 			job->common.can_combine = 1;
 		break;
 	case RIBBON_TYPE_6x9:
 		if (job->hdr.code != PRINT_TYPE_6x4 &&
 		    job->hdr.code != PRINT_TYPE_6x4_2UP &&
+		    job->hdr.code != PRINT_TYPE_6x4_3UP &&
+		    job->hdr.code != PRINT_TYPE_6x5 &&
+		    job->hdr.code != PRINT_TYPE_6x6 &&
 		    job->hdr.code != PRINT_TYPE_6x8 &&
 		    job->hdr.code != PRINT_TYPE_6x2 &&
 		    job->hdr.code != PRINT_TYPE_6x9 &&
-		    job->hdr.code != PRINT_TYPE_6x9_2UP) {
+		    job->hdr.code != PRINT_TYPE_6x9_2UP &&
+		    job->hdr.code != PRINT_TYPE_6x9_4UP &&
+		    job->hdr.code != PRINT_TYPE_6x9_6UP) {
 			ERROR("Invalid ribbon type vs job (%02x/%02x)\n",
 			      ctx->ribbon.type, job->hdr.code);
 			hiti_cleanup_job(job);
 			return CUPS_BACKEND_CANCEL;
 		}
-		if (job->hdr.code == PRINT_TYPE_6x4)
+		if (job->hdr.code == PRINT_TYPE_6x4 ||
+		    job->hdr.code == PRINT_TYPE_6x4_2UP ||
+		    job->hdr.code == PRINT_TYPE_6x4_3UP)
 			job->common.can_combine = 1;
 		break;
 	default:
@@ -2137,13 +2206,17 @@ static int hiti_read_parse(void *vctx, const void **vjob, int data_fd, int copie
 		return CUPS_BACKEND_CANCEL;
 	}
 
-	/* Set color mode.  XXX move into GP header somehow? */
-	job->colormode = HT_COLORMODE_IDPASS_VIVID;
+	/* Set color mode / media class */
+	if (job->hdr.payload_flag & PAYLOAD_FLAG_MEDIATYPE) {
+		job->colormode = job->hdr.payload_flag >> PAYLOAD_FLAG_DATA_SHIFT;
+	} else {
+		job->colormode = HT_COLORMODE_IDPASS_VIVID;
+	}
 
 	int ribbonvendor = ctx->ribbonvendor;
 	if (job->hdr.payload_flag & PAYLOAD_FLAG_MEDIAVER) {
 		ctx->ribbonvendor &= ~RRVC_VERSION_MASK;
-		ctx->ribbonvendor |= ((job->hdr.payload_flag >> 24) & RRVC_VERSION_MASK);
+		ctx->ribbonvendor |= ((job->hdr.payload_flag >> PAYLOAD_FLAG_DATA_SHIFT) & RRVC_VERSION_MASK);
 	}
 
 	/* Convert input packed BGR data into YMC planar, if needed */
@@ -2243,7 +2316,7 @@ static int hiti_read_parse(void *vctx, const void **vjob, int data_fd, int copie
 	}
 
 	/* Read in heat table for job */
-	job->heattable_buf = hiti_get_heat_data(ctx, job->hdr.quality, ribbonvendor, &job->heattable_len);
+	job->heattable_buf = hiti_get_heat_data(ctx, job->hdr.quality, job->colormode, ribbonvendor, &job->heattable_len);
 
 	if (job->heattable_buf &&
 	    ctx->heattable_type == HEATTABLE_TYPE_V2) {
@@ -2400,7 +2473,16 @@ static int hiti_main_loop(void *vctx, const void *vjob, int wait_for_return)
 	// QJC
 	// then SF again
 
-	// XXX msg 8011 sent here on P52x (and maybe others?)
+	if (ctx->conn->type == P_HITI_520 || ctx->conn->type == P_HITI_525 || ctx->conn->type == P_HITI_826) {
+		/* XXX Unknown.  Maybe other models too? */
+		uint8_t val = 0;
+		uint8_t resp[4]; // 00 01 00 06
+		resplen = sizeof(resp);
+		ret = hiti_docmd_resp(ctx, CMD_ERDC_UNK1, &val,
+				      sizeof(val), resp, &resplen);
+		if (ret)
+			return CUPS_BACKEND_FAILED;
+	}
 
 	/* Initialize jobid structure */
 	jobid.lun = 0;
@@ -2445,7 +2527,7 @@ static int hiti_main_loop(void *vctx, const void *vjob, int wait_for_return)
 
 	/* If we don't have a heat file or the heat transfer failed, revert to default tables */
 	if (!job->heattable_len || ret) {
-		if (ctx->conn->type != P_HITI_525) {
+		if (ctx->conn->type != P_HITI_525 && ctx->conn->type != P_HITI_826) {
 			uint8_t chs[2] = { 0, 1 }; /* Reverts to default tables */
 			resplen = 0;
 			ret = hiti_docmd(ctx, CMD_EFD_CHS, chs, sizeof(chs), &resplen);
@@ -3304,7 +3386,7 @@ static void *hiti_combine_jobs(const void *vjob1,
 	const struct hiti_printjob *job2 = vjob2;
 	struct hiti_printjob *newjob = NULL;
 	uint16_t newrows;
-	uint16_t newpad;
+	int32_t newpad;
 	uint16_t newmode;
 
 	if (!job1 || !job2)
@@ -3320,16 +3402,25 @@ static void *hiti_combine_jobs(const void *vjob1,
 	JOB_EQUIV(hdr.payload_flag);
 	JOB_EQUIV(hdr.payload_len);
 
-	if (job1->hdr.cols == 1548 && job1->hdr.rows == 1072) {
-		/* 2x 3.5x5" -> 1x 5x7" cut */
+	if (job1->hdr.cols == 1844 && job1->hdr.rows == 1072) {
+		/* 2x 3.5x5" -> 1x 5x7-div2 */
 		newrows = 2152;
 		newpad = 8;
 		newmode = PRINT_TYPE_5x7_2UP;
 	} else if (job1->hdr.cols == 1844 && job1->hdr.rows == 1240) {
-		/* 2x 4x6 -> 1x 8x6" cut */
+		/* 2x 4x6 -> 1x 8x6-div2 */
 		newrows = 2492;
 		newpad = 12;
 		newmode = PRINT_TYPE_6x9_2UP;
+	} else if (job1->hdr.cols == 1844 && job1->hdr.rows == 1248) {
+		/* 2x 4x6-div2 -> 1x 8x6-div4 */
+		/* 2x 4x6-div3 -> 1x 8x6-div6 */
+		newrows = 2492;
+		newpad = -4; // XXX better handle this?
+		if (job1->hdr.code == PRINT_TYPE_6x4_3UP)
+			newmode = PRINT_TYPE_6x9_6UP;
+		else
+			newmode = PRINT_TYPE_6x9_4UP;
 	} else {
 		goto done;
 	}
@@ -3375,24 +3466,27 @@ static void *hiti_combine_jobs(const void *vjob1,
 	/* Copy over Y planes */
 	memcpy(newjob->databuf + newjob->datalen, job1->databuf, planelen);
 	newjob->datalen += planelen;
-	memset(newjob->databuf + newjob->datalen, 0, newpad);
-	newjob->datalen += newpad;;
+	if (newpad > 0)
+		memset(newjob->databuf + newjob->datalen, 0, newpad);
+	newjob->datalen += newpad;
 	memcpy(newjob->databuf + newjob->datalen, job2->databuf, planelen);
 	newjob->datalen += planelen;
 
 	/* Copy over M planes */
 	memcpy(newjob->databuf + newjob->datalen, job1->databuf + planelen, planelen);
 	newjob->datalen += planelen;
-	memset(newjob->databuf + newjob->datalen, 0, newpad);
-	newjob->datalen += newpad;;
+	if (newpad > 0)
+		memset(newjob->databuf + newjob->datalen, 0, newpad);
+	newjob->datalen += newpad;
 	memcpy(newjob->databuf + newjob->datalen, job2->databuf + planelen, planelen);
 	newjob->datalen += planelen;
 
 	/* Copy over C planes */
 	memcpy(newjob->databuf + newjob->datalen, job1->databuf + planelen + planelen, planelen);
 	newjob->datalen += planelen;
-	memset(newjob->databuf + newjob->datalen, 0, newpad);
-	newjob->datalen += newpad;;
+	if (newpad > 0)
+		memset(newjob->databuf + newjob->datalen, 0, newpad);
+	newjob->datalen += newpad;
 	memcpy(newjob->databuf + newjob->datalen, job2->databuf + planelen + planelen, planelen);
 	newjob->datalen += planelen;
 
@@ -3432,6 +3526,7 @@ static const struct device_id hiti_devices[] = {
 	{ 0x0d16, 0x0009, P_HITI_720, NULL, "hiti-p720l"},
 	{ 0x0d16, 0x000a, P_HITI_720, NULL, "hiti-p728l"},
 	{ 0x0d16, 0x0501, P_HITI_750, NULL, "hiti-p750l"},
+	{ 0x0d16, 0x0510, P_HITI_826, NULL, "joyspace-u826"}, /* OEM variant of P525 */
 	{ 0x0d16, 0xc000, P_HITI_51X, NULL, "yashica-yp120"},
 	{ 0x0d16, 0xd000, P_HITI_51X, NULL, "touchtunes-p510tt"},
 	{ 0, 0, 0, NULL, NULL}
@@ -3444,7 +3539,7 @@ static const struct device_id hiti_devices[] = {
 
 const struct dyesub_backend hiti_backend = {
 	.name = "HiTi Photo Printers",
-	.version = "0.75",
+	.version = "0.82",
 	.uri_prefixes = hiti_prefixes,
 	.cmdline_usage = hiti_cmdline,
 	.cmdline_arg = hiti_cmdline_arg,
@@ -3463,7 +3558,8 @@ const struct dyesub_backend hiti_backend = {
 
 /* TODO:
 
-   - Figure out 5x6, 6x5, and 6x6 prints (need 6x8 or 6x9 media!)
+   - Figure out 5x5 prints
+   - Figure out "region 0x1" on P52x/U826
    - Confirm 6x2" print dimensions (windows?)
    - Job control (QJC, RSJ) -- and canceling?
    - Set highlight adjustment & H/V alignment from cmdline
@@ -3478,7 +3574,7 @@ const struct dyesub_backend hiti_backend = {
       * Rework to take advantage of auto-vectorization?
       * Pre-compute then cache entire map on disk?
       * Use external "Cube LUT" implementation?
-   - Commands UNK_8008, UNK_8010, UNK_800C UNK_8011, EST_SEHT, CMD_EDM_*
+   - Commands UNK_8008, UNK_8010, UNK_800C, EST_SEHT, CMD_EDM_*
    - Test with P720, P750
    - Incorporate changes for CS-series card printers
    - More "Matrix table" decoding work
@@ -3493,8 +3589,6 @@ const struct dyesub_backend hiti_backend = {
    - More work on P461 Prinhome
      - Quality mode
      - Windows supports media types 2 & 3 too, manually specified
-   - Figure out when to use Heat tables with 'p', 'm', and 'r' quality tags
-   - Figure out what the H, M, and T quality codes mean on correction files
-   - Figure out how to send over the "raw" matte overcoat data.  (Partial matte is now possible?)
-
+   - Figure out when to use Heat tables with 'p' quality tags
+   - Figure out how to send over the "raw" matte overcoat data.  (Partial matte is now possible on P52x?)
 */
