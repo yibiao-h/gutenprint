@@ -2,8 +2,7 @@ FROM fedora
 
 RUN INSTALL_PKGS=" \
        which git tar wget hostname cups cups-devel automake libtool \
-       autoconf gettext pkgconf-pkg-config gettext-devel \
-       openjade doxygen \
+       autoconf gettext pkgconf-pkg-config gettext-devel doxygen \
        docbook-utils docbook-utils-pdf ImageMagick xml-common \
        libusb-devel gimp-devel make flex byacc zpaq time \
        valgrind texi2html file bzip2 xz" && \

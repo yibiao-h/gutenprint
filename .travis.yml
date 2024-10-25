@@ -56,12 +56,6 @@ matrix:
               - doxygen
               - dvips-fontdata-n2bk
               - imagemagick
-              - jade
-              - jadetex
-              - openjade
-              - sgml-base
-              - sgml-data
-              - sgmltools-lite
               - texi2html
             - gcc-8
       script: scripts/travis/smoke

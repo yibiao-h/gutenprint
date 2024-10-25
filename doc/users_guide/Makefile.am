@@ -465,29 +465,6 @@ veryclean:
 maintainer-clean-local:
 	$(CLEAN_MANUALS)
 
-#
-# This is my (so far failed) attempt to create an index for this documentation.
-#
-#
-#index.sgml:
-#	$(PERL) /usr/share/sgml/docbook/docbook-dsssl-stylesheets-1.64/bin/collateindex.pl -N -o index.sgml
-#
-#	$(JADE)	-V html-index \
-#		-t sgml \
-#		-c /usr/share/sgml/CATALOG.jade_dsl \
-#		-c /usr/share/sgml/CATALOG.docbook-dsssl-stylesheets \
-#		-c /usr/share/sgml/CATALOG.gnome \
-#		-c /usr/share/sgml/CATALOG.docbook_4 \
-#		-c /usr/share/sgml/CATALOG.docbook_3  \
-#		-D /usr/share/sgml/docbook/docbook-dsssl-stylesheets-1.64 \
-#		-d /usr/share/sgml/docbook-toys/suse-both.dsl \
-#		-o index.sgml \
-#		gimp-print-users-guide-4.1.99-b3.sgml
-#
-#
-# END failed attempt at index creation.
-#
-
 help:
 	@echo "  "
 	@echo "Targets for the complete user's guide:"
