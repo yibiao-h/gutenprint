@@ -2644,9 +2644,12 @@ static const char *mitsud90_prefixes[] = {
 
 static const struct device_id mitsud90_devices[] = {
 	{ 0x06d3, 0x3b60, P_MITSU_D90, NULL, "mitsubishi-d90dw"},
+	{ 0x06d3, 0x3b62, P_MITSU_D90, NULL, "mitsubishi-d90dwsl"},
 	{ 0x06d3, 0x3b80, P_MITSU_M1, NULL, "mitsubishi-cpm1"},
 	{ 0x06d3, 0x3b80, P_MITSU_M1, NULL, "mitsubishi-cpm15"}, // Duplicate for the M15
 	{ 0x06d3, 0x3b50, P_MITSU_W5000, NULL, "mitsubishi-cpw5000"},
+
+
 //	{ 0x04cb, 0x1234, P_FUJI_ASK500, NULL, "fujifilm-ask500"},
 	{ 0, 0, 0, NULL, NULL}
 };
@@ -2654,7 +2657,7 @@ static const struct device_id mitsud90_devices[] = {
 /* Exported */
 const struct dyesub_backend mitsud90_backend = {
 	.name = "Mitsubishi CP-D90/CP-M1/CP-W5000",
-	.version = "0.52"  " (lib " LIBMITSU_VER ")",
+	.version = "0.53"  " (lib " LIBMITSU_VER ")",
 	.flags = BACKEND_FLAG_DUMMYPRINT,
 	.uri_prefixes = mitsud90_prefixes,
 	.devices = mitsud90_devices,

@@ -206,6 +206,9 @@
 # Mitsubishi CP-D90DW
 0x06d3 0x3b60 blacklist
 
+# Mitsubishi CP-D90DW-SL
+0x06d3 0x3b62 blacklist
+
 # Mitsubishi CP-M1
 0x06d3 0x3b80 blacklist
 
@@ -386,6 +389,9 @@
 
 # Magicard Enduro+
 0x0c1f 0x880a blacklist
+
+# Nidec Copal DPB-1500
+0x07ce 0xc005 blacklist
 
 # Nidec Copal DPB-4000
 # Fujifilm ASK-4000
