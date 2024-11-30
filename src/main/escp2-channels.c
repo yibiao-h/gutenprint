@@ -409,7 +409,7 @@ load_inkgroup(const char *name)
 	stp_xml_parse_file_from_path_uncached_safe(name, "escp2InkGroup", NULL);
       stp_mxml_node_t *child = node->child;
       igl = stp_zalloc(sizeof(inkgroup_t));
-      stp_refcache_add_item("escpInkgroup", name, igl);
+      stp_refcache_add_item("escp2Inkgroup", name, igl);
       size_t count = 0;
       while (child)
 	{
