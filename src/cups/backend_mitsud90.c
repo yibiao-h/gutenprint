@@ -284,7 +284,7 @@ struct mitsud90_job_resp {
 } __attribute__((packed));
 
 struct mitsud90_job_hdr {
-	uint8_t  hdr[6]; /* 1b 53 50 30 00 33 */
+	uint8_t  hdr[6]; /* 1b 53 50 30 00 ??  -- 03 on D90SL, 33 on rest */
 	uint16_t cols;   /* BE */
 	uint16_t rows;   /* BE */
 	uint8_t  waittime; /* 0-100 */
@@ -980,8 +980,9 @@ static int mitsud90_attach(void *vctx, struct dyesub_connection *conn, uint8_t j
 	} else if (ctx->conn->type == P_MITSU_D90) {
 		// XXX figure out if printer can handle panorama!  (FW "2.10" is needed)
 		//
-		// CP-D90DW v2.10 is 415A81/415G11 (revA/B)   ME is 419E11
-		// CP-D90DW-P v2.10 is 415B94/415E54 (revA/B) ME is 419E42
+		// CP-D90DW    v2.10 is 415A81/415G11 (revA/B)   ME is 419E11
+		// CP-D90DW-P  v2.10 is 415B94/415E54 (revA/B)   ME is 419E42
+		// CP-D90DW-SL v3.10 is 415D71                   ME is 419D61
 		// D90DW-P and D90DW share same USB VID/PID. Unclear if any functional or runtime difference.
 	} else if (ctx->conn->type == P_FUJI_ASK500) {
 		// Completely unknown.
@@ -1675,6 +1676,12 @@ top:
 	if ((ret = send_data(ctx->conn,
 			     (uint8_t*) &job->hdr, sizeof(job->hdr))))
 		return CUPS_BACKEND_FAILED;
+
+	/* Override code in plane command if needed */
+	if (ctx->conn->type == P_MITSU_D90 &&
+	    ctx->conn->usb_pid == 0x3b62) {
+		job->databuf[3] = 0x0f;
+	}
 
 	/* Send Plane header */
 	if ((ret = send_data(ctx->conn,
@@ -2648,8 +2655,6 @@ static const struct device_id mitsud90_devices[] = {
 	{ 0x06d3, 0x3b80, P_MITSU_M1, NULL, "mitsubishi-cpm1"},
 	{ 0x06d3, 0x3b80, P_MITSU_M1, NULL, "mitsubishi-cpm15"}, // Duplicate for the M15
 	{ 0x06d3, 0x3b50, P_MITSU_W5000, NULL, "mitsubishi-cpw5000"},
-
-
 //	{ 0x04cb, 0x1234, P_FUJI_ASK500, NULL, "fujifilm-ask500"},
 	{ 0, 0, 0, NULL, NULL}
 };
@@ -2657,7 +2662,7 @@ static const struct device_id mitsud90_devices[] = {
 /* Exported */
 const struct dyesub_backend mitsud90_backend = {
 	.name = "Mitsubishi CP-D90/CP-M1/CP-W5000",
-	.version = "0.53"  " (lib " LIBMITSU_VER ")",
+	.version = "0.56"  " (lib " LIBMITSU_VER ")",
 	.flags = BACKEND_FLAG_DUMMYPRINT,
 	.uri_prefixes = mitsud90_prefixes,
 	.devices = mitsud90_devices,
@@ -2711,6 +2716,7 @@ const struct dyesub_backend mitsud90_backend = {
 						     Z0 is 0x01 (M1 windows) (00 Linux and d90 UNK!)
 						     Z1 is RGB Rate (M1)
 						     Z2 is OP Rate (M1)
+
   [pad to 512b]
 
                 normal  == rows  00  00 00 00 00  00 00 00 00
@@ -2723,7 +2729,7 @@ const struct dyesub_backend mitsud90_backend = {
 		9x6div3 == 2724  02  03 90 01 00  07 14 00 00  00 00 00 00
 		9x6div4 == 2628  03  02 97 01 00  05 22 00 00  07 ad 00 00
 
-    PANORAMA [ZZ 00 03 03] onwards, only shows in 8x20" PANORAMA prints.  Assume 2" overlap.
+    PANORAMA [ZZ 00 JJ II] onwards, only shows in 8x20" PANORAMA prints.  Assume 2" overlap.
     ZZ == 00 (normal) or 01 (panorama)
     JJ == 02 03 (num of panorama panels)
     II == 01 02 03 (which panel # in panorama!)
@@ -2738,7 +2744,7 @@ const struct dyesub_backend mitsud90_backend = {
 
  [[ DATA PLANE HEADER ]]
 
-   1b 5a 54 01 00 09 00 00  00 00 CC CC RR RR 00 00
+   1b 5a 54 XX 00 09 00 00  00 00 CC CC RR RR 00 00
    00 00 00 00 LC LC LR LR
    ...
    [pad to 512b]
@@ -2747,6 +2753,7 @@ const struct dyesub_backend mitsud90_backend = {
    RR RR rows (BE)
    LC LC lamination columns (BE, M1 only, same as cols)
    LR LR lamination rows (BE, M1 only, rows + 12d )
+   XX is 0x0f for D90SL, 0x01 for everything else
 
    D90 family:
     data is *RGB* packed, @ 8bpp.  No padding to 512b!

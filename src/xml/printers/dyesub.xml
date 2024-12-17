@@ -109,7 +109,7 @@
       <printer translate="name" name="Dai Nippon Printing DS620" driver="dnp-ds620" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DP-DS620;" manufacturer="Dai Nippon Printing" model="6003" />
       <printer translate="name" name="Dai Nippon Printing DS820" driver="dnp-ds820" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DP-DS820;" manufacturer="Dai Nippon Printing" model="6007" />
       <printer translate="name" name="Dai Nippon Printing DSRX1" driver="dnp-dsrx1" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DS-RX1;" manufacturer="Dai Nippon Printing" model="6002" />
-      <printer translate="name" name="Dai Nippon Printing SL10" driver="dnp-sl10" manufacturer="Dai Nippon Printing" model="2005">EXPERIMENTAL</printer>
+      <printer translate="name" name="Dai Nippon Printing SL10" driver="dnp-sl10" manufacturer="Dai Nippon Printing" model="2005" />
       <printer translate="name" name="Dai Nippon Printing SL20" driver="dnp-sl20" manufacturer="Dai Nippon Printing" model="2009">EXPERIMENTAL</printer>
       <printer translate="name" name="Dai Nippon Printing QW410" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DP-QW410;" driver="dnp-qw410" manufacturer="Dai Nippon Printing" model="6008" />
       <printer translate="name" name="Dai Nippon Printing DS480" deviceid="MFG:DNP;CMD:DNP;MDL:DPDS480;CLS:PRINTER;DES:DNP_DPDS480" driver="dnp-ds480" manufacturer="Dai Nippon Printing" model="4121" />
