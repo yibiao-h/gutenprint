@@ -269,8 +269,8 @@ void write_pixel (output_t *output, image_t *image);
 void write_colour (output_t *output, image_t *image);
 int decode_tiff (char *in_buffer, int data_length, char *decode_buf,
                  int maxlen);
-int decode_delta (char *in_buffer, int data_length, char *decode_buf,
-		  int maxlen);
+int decode_delta (char *in_buffer, size_t data_length, char *decode_buf,
+		  size_t maxlen);
 void pcl_reset (image_t *i);
 int depth_to_rows (int depth);
 
@@ -846,9 +846,9 @@ int decode_tiff(char *in_buffer,		/* I: Data buffer */
  */
 
 int decode_delta(char *in_buffer,		/* I: Data buffer */
-		 int data_length,		/* I: Length of data */
+		 size_t data_length,		/* I: Length of data */
 		 char *decode_buf,		/* I/O: decoded data */
-		 int maxlen)			/* I: Max length of decode_buf */
+		 size_t maxlen)			/* I: Max length of decode_buf */
 {
 
     unsigned command_byte = 0;
@@ -856,7 +856,7 @@ int decode_delta(char *in_buffer,		/* I: Data buffer */
     unsigned offset_from_last = 0;
     unsigned next_offset = 0;
 
-    int pos = 0;
+    size_t pos = 0;
     int dpos = 0;
 #ifdef DEBUG
     int i = 0;
@@ -886,7 +886,7 @@ int decode_delta(char *in_buffer,		/* I: Data buffer */
 #endif
 	pos++;
 	if (data_length - pos < delta_bytes) {
-	    fprintf(stderr, "ERROR: data overrun in delta (delta %d, remaining %d)\n",
+	    fprintf(stderr, "ERROR: data overrun in delta (delta %d, remaining %zd)\n",
 		    delta_bytes, data_length - pos);
 	}
 	dpos += offset_from_last;
@@ -917,6 +917,9 @@ int decode_delta(char *in_buffer,		/* I: Data buffer */
     }
     fprintf(stderr, "\n");
 #endif
+
+    (void)maxlen;
+
     return(dpos);
 }
 

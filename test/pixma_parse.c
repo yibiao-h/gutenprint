@@ -114,7 +114,7 @@ static int nextcmd( FILE *infile,unsigned char* cmd,unsigned char *buf, unsigned
 
 /* return pointer to color info structure matching name */
 static color_t* get_color(image_t* img,char name){
-	int i;
+	unsigned int i;
 	for(i=0;i<MAX_COLORS;i++)
 		if(img->color[i].name==name)
 			return &(img->color[i]);
@@ -124,7 +124,7 @@ static color_t* get_color(image_t* img,char name){
 #if 0
 /* return pointer to color info structure matching name less 0x80 */
 static color_t* get_color2(image_t* img,char name){
-	int i;
+	unsigned int i;
 	for(i=0;i<MAX_COLORS;i++) {
 	  /*printf("get_color2: %i -- name=%c\n",i,img->color[i].name);*/
 	  if(img->color[i].name==(name)) { /* add 0x80 to get the hex value in the inkset */
@@ -137,7 +137,7 @@ static color_t* get_color2(image_t* img,char name){
 #endif
 
 static int valid_color(unsigned char color){
-	int i;
+	unsigned int i;
 	for(i=0;i<sizeof(valid_colors) / sizeof(valid_colors[0]);i++)
 		if(valid_colors[i] == color)
 			return 1;
@@ -237,7 +237,7 @@ static int analysiseight2twelve2(unsigned char* inbuffer,unsigned char* outbuffe
 static int Raster(image_t* img,unsigned char* buffer,unsigned int len,unsigned char color_name,unsigned int maxw){
 	color_t* color=get_color(img,color_name);
         char* buf = (char*)buffer;
-	int size=0; /* size of unpacked buffer */
+	unsigned int size=0; /* size of unpacked buffer */
 	int cur_line=0; /* line relative to block begin */
 	unsigned char* dst=malloc(len*256); /* the destination buffer */
 	unsigned char* dstr=dst;
@@ -353,7 +353,7 @@ static int Raster(image_t* img,unsigned char* buffer,unsigned int len,unsigned c
 
 
 /* checks if the buffer contains a pixel definition at the given x and y position */
-static inline int inside_range(color_t* c,int x,int y){
+static inline int inside_range(color_t* c,unsigned int x,unsigned int y){
   /* debug*/
   /*  if ((c->name=='C' || c->name=='M' || c->name=='Y' || c->name=='c' || c->name=='m') && x==0 && y==0){
     printf("%c: bpp: %d\n",c->name,c->bpp);
@@ -525,7 +525,7 @@ static void write_line(image_t*img,FILE* fp,int pos_y){
 
 /* create a ppm image from the decoded raster data */
 static void write_ppm(image_t* img,FILE* fp){
-	int i;
+	unsigned int i;
 	/* allocate buffers for dot statistics */
         for(i=0;i<MAX_COLORS;i++){
 	  /*img->color[i].dots=calloc(1,sizeof(int)*(img->color[i].level+1));*/
@@ -595,8 +595,8 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 	image_t* img=calloc(1,sizeof(image_t));
 	unsigned char* buf=malloc(0xFFFF);
 	int returnv=0;
-	int i;
-	int num_colors;
+	unsigned int i;
+	unsigned int num_colors;
 	unsigned int xml_read;
 	xml_read=0;
 

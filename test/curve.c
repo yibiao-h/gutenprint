@@ -484,12 +484,12 @@ const char *spline_curve_2 =
 "</sequence></curve></gutenprint>";
 
 static void
-piecewise_curve_checks(stp_curve_t *curve1, int resample_points, int expected)
+piecewise_curve_checks(stp_curve_t *curve1, int resample_points, size_t expected)
 {
   stp_curve_t *curve2;
   const stp_curve_point_t *curve_points;
   size_t count;
-  int i;
+  size_t i;
   double low;
 
   TEST("get data points of piecewise curve");
@@ -505,7 +505,7 @@ piecewise_curve_checks(stp_curve_t *curve1, int resample_points, int expected)
 	{
 	  TEST_FAIL();
 	  if (!quiet)
-	    printf("Expected %d points, got %lu\n", expected, count);
+	    printf("Expected %zu points, got %lu\n", expected, count);
 	}
       TEST("Comparing data");
       for (i = 0; i < count; i++)
@@ -516,7 +516,7 @@ piecewise_curve_checks(stp_curve_t *curve1, int resample_points, int expected)
 	    {
 	      bad_compare = 1;
 	      if (!quiet)
-		printf("Miscompare at element %d: (%f, %f) (%f, %f)\n", i,
+		printf("Miscompare at element %zu: (%f, %f) (%f, %f)\n", i,
 		       standard_piecewise_sat_adjustment[i].x,
 		       standard_piecewise_sat_adjustment[i].y,
 		       curve_points[i].x, curve_points[i].y);

@@ -49,17 +49,17 @@ typedef struct {
   int page_management_units; /* dpi */
   int relative_horizontal_units; /* dpi */
   int absolute_horizontal_units; /* dpi, assumed to be >= relative */
-  int relative_vertical_units; /* dpi */
-  int absolute_vertical_units; /* dpi, assumed to be >= relative */
+  unsigned int relative_vertical_units; /* dpi */
+  unsigned int absolute_vertical_units; /* dpi, assumed to be >= relative */
   int horizontal_spacing;	/* Horizontal dot spacing */
-  int top_margin; /* dots */
-  int bottom_margin; /* dots */
-  int page_height; /* dots */
+  unsigned int top_margin; /* dots */
+  unsigned int bottom_margin; /* dots */
+  unsigned int page_height; /* dots */
   int dotsize;
   int bpp; /* bits per pixel */
   int current_color;
   int xposition; /* dots */
-  int yposition; /* dots */
+  unsigned int yposition; /* dots */
   int monomode;
   int nozzle_separation;
   int nozzles;
@@ -67,8 +67,8 @@ typedef struct {
   int got_graphics;
   int left_edge;
   int right_edge;
-  int top_edge;
-  int bottom_edge;
+  unsigned int top_edge;
+  unsigned int bottom_edge;
   quadtone_t quadtone;
 } pstate_t;
 
@@ -190,8 +190,8 @@ extern void merge_line(line_type *p, unsigned char *l, int startl, int stopl,
 extern void expand_line (unsigned char *src, unsigned char *dst, int height,
 			 int skip, int left_ignore);
 extern void write_output (FILE *fp_w, int dontwrite, int allblack);
-extern void find_white (unsigned char *buff,int npix, int *left, int *right);
-extern int update_page (unsigned char *buff, int buffsize, int m, int n,
+extern void find_white (unsigned char *buff,unsigned int npix, unsigned int *left, unsigned int *right);
+extern int update_page (unsigned char *buff, unsigned int buffsize, unsigned int m, unsigned int n,
 			int color, int density);
 extern void parse_escp2 (FILE *fp_r);
 extern void reverse_bit_order (unsigned char *buff, int n);
@@ -517,7 +517,7 @@ write_output(FILE *fp_w, int dontwrite, int allblack)
 }
 
 void
-find_white(unsigned char *buff,int npix, int *left, int *right)
+find_white(unsigned char *buff,unsigned int npix, unsigned int *left, unsigned int *right)
 {
 
   /*
@@ -525,8 +525,8 @@ find_white(unsigned char *buff,int npix, int *left, int *right)
    * pixels and fill that info into left and right.
    */
 
-  int i, j, max;
-  int words, bytes, bits, extra;
+  unsigned int i, j, max;
+  unsigned int words, bytes, bits, extra;
 
   *left = *right = 0;
   bits = npix * pstate.bpp;
@@ -606,17 +606,20 @@ find_white(unsigned char *buff,int npix, int *left, int *right)
 
 int
 update_page(unsigned char *buff, /* I - pixel data               */
-	    int buffsize,        /* I - size of buff in bytes     */
-	    int m,              /* I - height of area in pixels */
-	    int n,              /* I - width of area in pixels  */
-	    int color,          /* I - color of pixel data      */
-	    int density         /* I - horizontal density in dpi  */
+	    unsigned int buffsize, /* I - size of buff in bytes     */
+	    unsigned int m,      /* I - height of area in pixels */
+	    unsigned int n,      /* I - width of area in pixels  */
+	    int color,           /* I - color of pixel data      */
+	    int density          /* I - horizontal density in dpi  */
 	    )
 {
-  int y, skip, oldstart, oldstop, mi = 0;
-  int left_white, right_white, width;
+  unsigned int y;
+  int skip, oldstart, oldstop, mi = 0;
+  unsigned int left_white, right_white, width;
   unsigned char *oldline;
   int sep;
+
+  (void)buffsize;
 
   if ((n == 0) || (m == 0))
     return(0);  /* shouldn't happen */
@@ -767,10 +770,10 @@ do									\
 static void
 parse_escp2_data(FILE *fp_r)
 {
-  int i, m = 0, n = 0, c = 0;
+  unsigned int i, m = 0, n = 0, c = 0;
   int currentcolor = 0;
   int density = 0;
-  int bandsize;
+  unsigned int bandsize;
   switch (ch)
     {
     case 'i':

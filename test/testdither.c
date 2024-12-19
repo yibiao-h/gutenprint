@@ -54,8 +54,8 @@
  * Globals...
  */
 
-int		image_type = IMAGE_MIXED;
-int		dither_type = DITHER_COLOR;
+unsigned int	image_type = IMAGE_MIXED;
+unsigned int	dither_type = DITHER_COLOR;
 const char     *dither_name = NULL;
 int		dither_bits = 1;
 int		write_image = 1;
@@ -152,17 +152,13 @@ writefunc(void *file, const char *buf, size_t bytes)
 static int
 image_width(stp_image_t *image)
 {
+  (void)image;
   return dimage_width;
 }
 
 static stp_image_t theImage =
 {
-  NULL,
-  NULL,
-  image_width,
-  NULL,
-  NULL,
-  NULL,
+ .width = image_width,
 };
 
 /*
@@ -514,7 +510,7 @@ run_standard_testdithers(void)
 {
   stp_vars_t *v = stp_vars_create();
   stp_parameter_t desc;
-  int j;
+  unsigned int j;
   int failures = 0;
   int status;
 

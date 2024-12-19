@@ -85,7 +85,7 @@ bitimage_t *scanlines2bitimage (scanline_t *slimg, level_t *levels);
 char conv (char i);
 void save2xbm (const char *filename,char col, bitimage_t *img,
                int xmin, int ymin, int xmax, int ymax);
-int nextcmd (FILE *infile, unsigned char *inbuff, int *cnt);
+int nextcmd (FILE *infile, unsigned char *inbuff, unsigned int *cnt);
 int process(FILE *infile, scanline_t *sf[7], int *xmin_, int *xmax_,
             int *ymin_, int *ymax_, level_t *lv[7]);
 
@@ -174,6 +174,8 @@ int rle_decode(unsigned char *inbuf, int n, unsigned char *outbuf,int max, level
   char cnt;
   int o= 0;
   int i=0,j,num;
+
+  (void)max;
 
   /* Results of the decoding are in the output buffer already.
      We want to organize the decoded numbers to see
@@ -374,7 +376,7 @@ void save2xbm(const char *filename,char col, bitimage_t *img,
   fclose(o);
 }
 
-int nextcmd(FILE *infile,unsigned char *inbuff,int *cnt)
+int nextcmd(FILE *infile,unsigned char *inbuff,unsigned int *cnt)
 {
   unsigned char c1=0,c2=0;
   int c;
@@ -415,7 +417,7 @@ int process(FILE *infile,scanline_t *sf[7],int *xmin_,int *xmax_,int *ymin_,int 
   int col=0;
   int line=0;
   int i;
-  int cnt;
+  unsigned int cnt;
   int cmd;
 
   for (i=0; i<7; i++) sf[i]= sl[i]= 0;

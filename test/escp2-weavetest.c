@@ -108,6 +108,8 @@ print_header(void)
 static void
 flush_pass(stp_vars_t *v, int passno, int vertical_subpass)
 {
+  (void)v;
+  (void)vertical_subpass;
   passes_flushed[passno] = 1;
 }
 

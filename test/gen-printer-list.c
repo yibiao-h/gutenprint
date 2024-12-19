@@ -34,6 +34,9 @@ main(int argc, char **argv)
 {
   int i;
 
+  (void)argc;
+  (void)argv;
+
   stp_init();
   for (i = 0; i < stp_printer_model_count(); i++)
     {
