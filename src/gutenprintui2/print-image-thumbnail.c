@@ -96,28 +96,33 @@ Thumbnail_get_row(stp_image_t *image, unsigned char *data,
   thumbnail_image_t *im = (thumbnail_image_t *) (image->rep);
   const guchar *where = im->data + (row * im->w * im->bpp);
   memcpy(data, where, im->w * im->bpp);
+  (void)byte_limit;
   return STP_IMAGE_STATUS_OK;
 }
 
 static void
 Thumbnail_init(stp_image_t *image)
 {
+  (void)image;
   /* Nothing to do. */
 }
 
 static void
 Thumbnail_reset(stp_image_t *image)
 {
+  (void)image;
 }
 
 static void
 Thumbnail_conclude(stp_image_t *image)
 {
+  (void)image;
 }
 
 static const char *
 Thumbnail_get_appname(stp_image_t *image)
 {
   static char pluginname[] = "Thumbnail V" VERSION " - " RELEASE_DATE;
+  (void)image;
   return pluginname;
 }

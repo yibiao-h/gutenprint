@@ -153,7 +153,7 @@ stpui_get_global_parameter(const char *param)
 static const print_system_t *
 identify_print_system(void)
 {
-  int i;
+  unsigned int i;
   if (!global_printing_system)
     {
       for (i = 0; i < print_system_count; i++)
@@ -606,7 +606,7 @@ static void *
 psearch(const void *key, void *base, size_t nmemb, size_t size,
 	int (*compar)(const void *, const void *))
 {
-  int i;
+  size_t i;
   char *cbase = (char *) base;
   for (i = 0; i < nmemb; i++)
     {
@@ -1092,7 +1092,7 @@ stpui_printrc_save(void)
 	      stpui_plist[stpui_plist_current].name);
       fprintf(fp, "  Show-All-Paper-Sizes: %s\n",
 	      stpui_show_all_paper_sizes ? "True" : "False");
-      for (i = 0; i < global_settings_count; i++)
+      for (i = 0; i < (int)global_settings_count; i++)
 	{
 	  stp_param_string_t *ps = stp_string_list_param(default_parameters, i);
 	  fprintf(fp, "  %s \"%s\"\n", ps->name, ps->text);
@@ -1314,6 +1314,7 @@ static volatile int usr1_interrupt;
 static void
 usr1_handler (int sig)
 {
+  (void)sig;
   usr1_interrupt = 1;
 }
 

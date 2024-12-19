@@ -266,7 +266,7 @@ static void set_media_size(const gchar *new_media_size);
 static const stp_printer_t *tmp_printer = NULL;
 
 static option_t *current_options = NULL;
-static int current_option_count = 0;
+static unsigned int current_option_count = 0;
 
 static unit_t units[] =
   {
@@ -371,6 +371,7 @@ set_stp_curve_values(GtkWidget *widget, option_t *opt)
 static int
 open_curve_editor(GtkObject *button, gpointer xopt)
 {
+  (void)button;
   option_t *opt = (option_t *)xopt;
   if (opt->info.curve.is_visible == FALSE)
     {
@@ -400,6 +401,7 @@ open_curve_editor(GtkObject *button, gpointer xopt)
 static int
 set_default_curve_callback(GtkObject *button, gpointer xopt)
 {
+  (void)button;
   option_t *opt = (option_t *)xopt;
   GtkWidget *gcurve =
     GTK_WIDGET(STPUI_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve);
@@ -414,6 +416,7 @@ set_default_curve_callback(GtkObject *button, gpointer xopt)
 static int
 set_previous_curve_callback(GtkObject *button, gpointer xopt)
 {
+  (void)button;
   option_t *opt = (option_t *)xopt;
   GtkWidget *gcurve =
     GTK_WIDGET(STPUI_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve);
@@ -430,6 +433,7 @@ set_previous_curve_callback(GtkObject *button, gpointer xopt)
 static int
 set_curve_callback(GtkObject *button, gpointer xopt)
 {
+  (void)button;
   option_t *opt = (option_t *)xopt;
   GtkWidget *gcurve =
     GTK_WIDGET(STPUI_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve);
@@ -475,6 +479,7 @@ curve_type_changed(GtkWidget *widget, gpointer xopt)
 static int
 cancel_curve_callback(GtkObject *button, gpointer xopt)
 {
+  (void)button;
   option_t *opt = (option_t *)xopt;
   if (opt->info.curve.is_visible)
     {
@@ -501,6 +506,7 @@ stpui_create_curve(option_t *opt,
 		   gboolean is_optional)
 {
   double lower, upper;
+  (void)deflt;
   opt->checkbox = gtk_check_button_new();
   gtk_table_attach(GTK_TABLE(table), opt->checkbox,
 		   column, column + 1, row, row + 1,
@@ -566,6 +572,7 @@ stpui_create_curve(option_t *opt,
 static int
 open_file_browser(GtkObject *button, gpointer xopt)
 {
+  (void)button;
   option_t *opt = (option_t *)xopt;
   GtkWidget *browser = opt->info.file.f_browser;
   GtkWidget *entry = opt->info.file.f_entry;
@@ -589,6 +596,7 @@ file_entry_callback(GtkWidget *widget, gpointer xopt)
 static int
 file_browser_ok_callback(GtkObject *browser_ok, gpointer xopt)
 {
+  (void)browser_ok;
   option_t *opt = (option_t *)xopt;
   GtkWidget *entry = opt->info.file.f_entry;
   GtkWidget *browser = opt->info.file.f_browser;
@@ -676,6 +684,8 @@ checkbox_callback(GtkObject *button, gpointer xopt)
   invalidate_preview_thumbnail();
   update_adjusted_thumbnail(TRUE);
   preview_update();
+
+  (void)button;
   return 1;
 }
 
@@ -720,6 +730,8 @@ stpui_create_boolean(option_t *opt,
 		     int deflt,
 		     gboolean is_optional)
 {
+  (void)text;
+  (void)deflt;
   opt->checkbox = gtk_check_button_new();
   gtk_table_attach(GTK_TABLE(table), opt->checkbox,
 		   column, column + 1, row, row + 1,
@@ -857,7 +869,7 @@ static void
 populate_options(const stp_vars_t *v)
 {
   stp_parameter_list_t params = stp_get_parameter_list(v);
-  int i;
+  unsigned int i;
   int idx;
   if (current_options)
     {
@@ -1014,6 +1026,7 @@ populate_options(const stp_vars_t *v)
 static void
 destroy_something(GtkWidget *widget, gpointer data)
 {
+  (void)data;
   gtk_widget_destroy(widget);
 }
 
@@ -1031,7 +1044,7 @@ add_reset_button(option_t *opt, GtkWidget *table, gint column, gint row)
 static void
 populate_option_table(GtkWidget *table, int p_class)
 {
-  int i, j;
+  unsigned int i, j;
   int current_pos = 0;
   GtkWidget *previous_sep = NULL;
   int counts[STP_PARAMETER_LEVEL_INVALID][STP_PARAMETER_TYPE_INVALID];
@@ -1054,7 +1067,7 @@ populate_option_table(GtkWidget *table, int p_class)
        * Specialize the core parameters (page size is the only one we want)
        * Yuck.
        */
-      if (!desc->read_only && desc->p_class == p_class &&
+      if (!desc->read_only && desc->p_class == (stp_parameter_class_t)p_class &&
 	  (desc->p_class != STP_PARAMETER_CLASS_CORE ||
 	   strcmp(desc->name, "PageSize") == 0))
 	{
@@ -1106,7 +1119,7 @@ populate_option_table(GtkWidget *table, int p_class)
       option_t *opt = &(current_options[i]);
       const stp_curve_t *xcurve;
       const stp_parameter_t *desc = opt->fast_desc;
-      if (!desc->read_only && desc->p_class == p_class &&
+      if (!desc->read_only && desc->p_class == (stp_parameter_class_t)p_class &&
 	  (desc->p_class != STP_PARAMETER_CLASS_CORE ||
 	   strcmp(desc->name, "PageSize") == 0))
 	{
@@ -1255,7 +1268,7 @@ populate_option_table(GtkWidget *table, int p_class)
 static void
 set_options_active(const char *omit)
 {
-  int i;
+  unsigned int i;
   for (i = 0; i < current_option_count; i++)
     {
       option_t *opt = &(current_options[i]);
@@ -1354,6 +1367,8 @@ set_options_active(const char *omit)
 static void
 color_button_callback(GtkWidget *widget, gpointer data)
 {
+  (void)widget;
+  (void)data;
   invalidate_preview_thumbnail();
   update_adjusted_thumbnail(TRUE);
 }
@@ -1419,6 +1434,8 @@ create_top_level_structure(void)
 static gint
 drawing_area_resize_callback(GtkWidget *widget, GdkEventConfigure *event)
 {
+  (void)widget;
+
   preview_size_vert = event->height - 1;
   preview_size_horiz = event->width - 1;
   invalidate_preview_thumbnail();
@@ -1812,7 +1829,7 @@ create_printer_dialog (void)
 	}
     }
 
-  for (i = 0; i < stp_string_list_count(manufacturer_list); i++)
+  for (i = 0; i < (int)stp_string_list_count(manufacturer_list); i++)
     {
       const stp_param_string_t *param =
 	stp_string_list_param(manufacturer_list, i);
@@ -2943,6 +2960,7 @@ set_orientation(int orientation)
 static void
 position_button_callback(GtkWidget *widget, gpointer data)
 {
+  (void)widget;
   reset_preview();
   pv->invalid_mask |= p2gint(data);
   preview_update ();
@@ -3071,7 +3089,7 @@ set_file_active(option_t *opt, gboolean active, gboolean do_toggle)
 static void
 do_color_updates (void)
 {
-  int i;
+  unsigned int i;
   for (i = 0; i < current_option_count; i++)
     {
       option_t *opt = &(current_options[i]);
@@ -3307,6 +3325,7 @@ do_all_updates(void)
 static void
 copy_count_callback(GtkAdjustment *adjustment, gpointer data)
 {
+  (void)data;
   gint copy_count = adjustment->value;
   stpui_plist_set_copy_count(pv, copy_count);
   update_standard_print_command();
@@ -3315,6 +3334,8 @@ copy_count_callback(GtkAdjustment *adjustment, gpointer data)
 static void
 auto_paper_size_callback(GtkWidget *widget, gpointer data)
 {
+  (void)widget;
+  (void)data;
   auto_paper_size =
     gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(auto_paper_size_button));
   pv->auto_size_roll_feed_paper = auto_paper_size;
@@ -3359,6 +3380,8 @@ static void
 queue_callback (GtkWidget *widget,
 		gpointer   data)
 {
+  (void)widget;
+  (void)data;
   int i;
   int count = stp_string_list_count(stpui_system_print_queues);
   const gchar *result =
@@ -3455,7 +3478,8 @@ plist_callback (GtkWidget *widget,
 static void
 show_all_paper_sizes_callback(GtkWidget *widget, gpointer data)
 {
-  int i;
+  unsigned int i;
+  (void)data;
   stpui_show_all_paper_sizes =
     gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
   for (i = 0; i < current_option_count; i++)
@@ -3478,6 +3502,7 @@ custom_media_size_callback(GtkWidget *widget,
   gdouble min_width_limit, min_height_limit;
   gdouble new_printed_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
   gdouble new_value = SCALE(new_printed_value, units[pv->unit].scale);
+  (void)data;
   invalidate_frame ();
   invalidate_preview_thumbnail ();
   reset_preview ();
@@ -3529,7 +3554,7 @@ set_media_size(const gchar *new_media_size)
 	  (pap->paper_unit == PAPERSIZE_METRIC_EXTENDED ||
 	   pap->paper_unit == PAPERSIZE_ENGLISH_EXTENDED))
 	{
-	  int i;
+	  unsigned int i;
 	  stp_parameter_t desc;
 	  stp_describe_parameter(pv->v, "PageSize", &desc);
 	  stp_set_string_parameter(pv->v, "PageSize", desc.deflt.str);
@@ -3623,6 +3648,7 @@ set_media_size(const gchar *new_media_size)
 static gboolean
 refresh_all_options(gpointer data)
 {
+  (void)data;
   do_all_updates();
   do_all_updates();		/* Update twice to pick up cascading changes */
   return FALSE;
@@ -3631,6 +3657,7 @@ refresh_all_options(gpointer data)
 static void
 combo_callback(GtkWidget *widget, gpointer data)
 {
+  (void)widget;
   option_t *option = (option_t *)data;
   const gchar *new_value =
     stpui_combo_get_name(option->info.list.combo, option->info.list.params);
@@ -3663,6 +3690,7 @@ static void
 orientation_callback (GtkWidget *widget,
 		      gpointer   data)
 {
+  (void)widget;
   reset_preview ();
 
   if (pv->orientation != p2gint(data))
@@ -3702,6 +3730,7 @@ output_type_callback (GtkWidget *widget,
 static void
 command_type_callback(GtkWidget *widget, gpointer data)
 {
+  (void)widget;
   if (strcmp((const char *) data, "Standard") == 0)
     {
       gtk_widget_set_sensitive(standard_cmd_entry, TRUE);
@@ -3785,7 +3814,7 @@ unit_callback (GtkWidget *widget,
 static void
 destroy_dialogs (void)
 {
-  int i;
+  unsigned int i;
   gtk_widget_destroy (color_adjust_dialog);
   gtk_widget_destroy (setup_dialog);
   gtk_widget_destroy (print_dialog);
@@ -3802,7 +3831,7 @@ destroy_dialogs (void)
 static void
 dialogs_set_sensitive (gboolean sensitive)
 {
-  int i;
+  unsigned int i;
   gtk_widget_set_sensitive (color_adjust_dialog, sensitive);
   gtk_widget_set_sensitive (setup_dialog, sensitive);
   gtk_widget_set_sensitive (print_dialog, sensitive);
@@ -3958,6 +3987,7 @@ setup_update (void)
 static void
 ppd_file_callback(GtkWidget *widget, gpointer data)
 {
+  (void)data;
   const gchar *name = gtk_entry_get_text(GTK_ENTRY(widget));
   if (name && pv && pv->v)
     {
@@ -4145,6 +4175,8 @@ manufacturer_callback(GtkWidget      *widget, /* I - Driver list */
 		      GdkEventButton *event,
 		      gpointer        data)
 {
+  (void)event;
+  (void)data;
   static int calling_manufacturer_callback = 0;
   gchar *text;
   if (calling_manufacturer_callback)
@@ -4169,6 +4201,8 @@ print_driver_callback (GtkWidget      *widget, /* I - Driver list */
 		       GdkEventButton *event,
 		       gpointer        data)   /* I - Data */
 {
+  (void)column;
+  (void)event;
   char *tmp;
   static int calling_print_driver_callback = 0;
   if (calling_print_driver_callback)
@@ -4260,7 +4294,7 @@ static void
 fill_buffer_writefunc(void *priv, const char *buffer, size_t bytes)
 {
   int mask = 0;
-  int i;
+  size_t i;
 
   priv_t *p = (priv_t *) priv;
   unsigned char *where = p->base_addr + p->offset;
@@ -4279,8 +4313,8 @@ fill_buffer_writefunc(void *priv, const char *buffer, size_t bytes)
     }
   else if (strcmp(p->output_type, "RGB") == 0)
     {
-      int pixels = bytes / 3;
-      if (bytes + p->offset > p->limit)
+      unsigned int pixels = bytes / 3;
+      if ((off_t)bytes + p->offset > p->limit)
 	bytes = p->limit - p->offset;
       if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(red_button)))
 	mask |= 1;
@@ -4305,8 +4339,8 @@ fill_buffer_writefunc(void *priv, const char *buffer, size_t bytes)
     }
   else if (strcmp(p->output_type, "CMY") == 0)
     {
-      int pixels = bytes / 3;
-      if (bytes + p->offset > p->limit)
+      unsigned int pixels = bytes / 3;
+      if ((off_t)bytes + p->offset > p->limit)
 	bytes = p->limit - p->offset;
       if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(cyan_button)))
 	mask |= 1;
@@ -4331,8 +4365,8 @@ fill_buffer_writefunc(void *priv, const char *buffer, size_t bytes)
     }
   else
     {
-      int pixels = bytes / 4;
-      if (bytes + p->offset > p->limit)
+      unsigned int pixels = bytes / 4;
+      if ((off_t)bytes + p->offset > p->limit)
 	bytes = p->limit - p->offset;
       if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(cyan_button)))
 	mask |= 1;
@@ -4924,6 +4958,7 @@ do_preview_thumbnail (void)
 static gboolean
 idle_preview_thumbnail(gpointer data)
 {
+  (void)data;
   if (thumbnail_data && adjusted_thumbnail_data && do_update_thumbnail)
     {
       thumbnail_update_pending = TRUE;
@@ -5067,6 +5102,8 @@ preview_button_callback (GtkWidget      *widget,
 			 GdkEventButton *event,
 			 gpointer        data)
 {
+  (void)widget;
+  (void)data;
   if (event->type == GDK_BUTTON_PRESS)
     {
       if (preview_active == 0)
@@ -5119,7 +5156,8 @@ preview_motion_callback (GtkWidget      *widget,
 			 GdkEventMotion *event,
 			 gpointer        data)
 {
-
+  (void)widget;
+  (void)data;
   gdouble old_top  = stp_get_top (pv->v);
   gdouble old_left = stp_get_left (pv->v);
   gdouble new_top  = old_top;
@@ -5205,7 +5243,7 @@ preview_motion_callback (GtkWidget      *widget,
 static void
 color_update (GtkAdjustment *adjustment)
 {
-  int i;
+  unsigned int i;
   for (i = 0; i < current_option_count; i++)
     {
       option_t *opt = &(current_options[i]);
@@ -5229,7 +5267,7 @@ color_update (GtkAdjustment *adjustment)
 static void
 dimension_update (GtkAdjustment *adjustment)
 {
-  int i;
+  unsigned int i;
   gdouble unit_scaler = units[pv->unit].scale;
   for (i = 0; i < current_option_count; i++)
     {
@@ -5255,7 +5293,7 @@ dimension_update (GtkAdjustment *adjustment)
 static void
 integer_update (GtkAdjustment *adjustment)
 {
-  int i;
+  unsigned int i;
   for (i = 0; i < current_option_count; i++)
     {
       option_t *opt = &(current_options[i]);
@@ -5472,6 +5510,7 @@ set_one_default(option_t *opt)
 static void
 reset_callback(GtkObject *button, gpointer xopt)
 {
+  (void)button;
   option_t *opt = (option_t *)xopt;
   if (opt)
     {
@@ -5486,7 +5525,7 @@ reset_callback(GtkObject *button, gpointer xopt)
 static void
 set_printer_defaults (void)
 {
-  int i;
+  unsigned int i;
   for (i = 0; i < current_option_count; i++)
     {
       option_t *opt = &(current_options[i]);
@@ -5502,7 +5541,7 @@ set_printer_defaults (void)
 static void
 set_color_defaults (void)
 {
-  int i;
+  unsigned int i;
   for (i = 0; i < current_option_count; i++)
     {
       option_t *opt = &(current_options[i]);

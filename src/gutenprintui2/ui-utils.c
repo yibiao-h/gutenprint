@@ -57,6 +57,7 @@ dialog_delete_callback (GtkWidget *widget,
 {
   StpuiBasicCallback cancel_callback;
   GtkWidget     *cancel_widget;
+  (void)event;
 
   cancel_callback =
     (StpuiBasicCallback) g_object_get_data (G_OBJECT (widget),
@@ -806,6 +807,7 @@ stpui_create_new_combo(option_t *option, GtkWidget *table,
 {
   GtkWidget *event_box = gtk_event_box_new();
   GtkWidget *combo = gtk_combo_new();
+  (void)is_optional;
 
   option->checkbox = gtk_check_button_new();
   gtk_table_attach(GTK_TABLE(table), option->checkbox,
@@ -866,6 +868,7 @@ stpui_create_scale_entry(option_t    *opt,
 			 const gchar *tooltip,
 			 gboolean     is_optional)
 {
+  (void)is_optional;
   opt->checkbox = gtk_check_button_new();
   gtk_table_attach(GTK_TABLE(table), opt->checkbox,
 		   column, column + 1, row, row + 1,

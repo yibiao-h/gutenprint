@@ -222,6 +222,7 @@ stpui_gamma_curve_get_type (void)
 	sizeof (StpuiGammaCurve),
 	0,		/* n_preallocs */
 	(GInstanceInitFunc) stpui_gamma_curve_init,
+        NULL,           /* value_table */
       };
 
       gamma_curve_type = g_type_register_static (GTK_TYPE_VBOX, "StpuiGammaCurve",
@@ -234,6 +235,7 @@ static void
 stpui_gamma_curve_class_init (StpuiGammaCurveClass *class, void *classdata)
 {
   GtkObjectClass *object_class;
+  (void)classdata;
 
   parent_class = g_type_class_peek_parent (class);
 
@@ -246,6 +248,7 @@ stpui_gamma_curve_init (StpuiGammaCurve *curve, gpointer g_class)
 {
   GtkWidget *vbox;
   int i;
+  (void)g_class;
 
   curve->gamma = 1.0;
 
@@ -346,6 +349,7 @@ button_toggled_callback (GtkWidget *w, gpointer data)
 static void
 gamma_cancel_callback (GtkWidget *w, gpointer data)
 {
+  (void)w;
   StpuiGammaCurve *c = data;
 
   gtk_widget_destroy (c->gamma_dialog);

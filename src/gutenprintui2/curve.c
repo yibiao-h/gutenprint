@@ -99,6 +99,7 @@ stpui_curve_get_type (void)
 	sizeof (StpuiCurve),
 	0,		/* n_preallocs */
 	(GInstanceInitFunc) stpui_curve_init,
+        NULL,           /* value_table */
       };
 
       curve_type = g_type_register_static (GTK_TYPE_DRAWING_AREA,
@@ -112,6 +113,7 @@ static void
 stpui_curve_class_init (StpuiCurveClass *class, void *classdata)
 {
   GObjectClass *gobject_class = G_OBJECT_CLASS (class);
+  (void)classdata;
 
   parent_class = g_type_class_peek_parent (class);
 
@@ -184,6 +186,7 @@ static void
 stpui_curve_init (StpuiCurve *curve, gpointer g_class)
 {
   gint old_mask;
+  (void)g_class;
 
   curve->cursor_type = GDK_TOP_LEFT_ARROW;
   curve->pixmap = NULL;
