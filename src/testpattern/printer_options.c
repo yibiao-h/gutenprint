@@ -29,7 +29,8 @@
 int
 main(int argc, char **argv)
 {
-  int i, j, k;
+  int i;
+  size_t j, k;
   int first_arg = 1;
   stp_string_list_t *printer_list = NULL;
   stp_parameter_level_t max_level = STP_PARAMETER_LEVEL_ADVANCED4;
@@ -50,7 +51,7 @@ main(int argc, char **argv)
   for (i = 0; i < stp_printer_model_count(); i++)
     {
       stp_parameter_list_t params;
-      int nparams;
+      unsigned int nparams;
       stp_parameter_t desc;
       const stp_printer_t *printer = stp_get_printer_by_index(i);
       const char *driver = stp_printer_get_driver(printer);
