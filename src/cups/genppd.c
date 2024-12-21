@@ -284,6 +284,12 @@ print_ppd_header(gpFile fp, ppd_type_t ppd_type, int model, const char *driver,
 		 const char *language, const stp_string_list_t *po,
 		 char **all_langs)
 {
+  (void)model;
+  (void)family;
+  (void)device_id;
+  (void)ppd_location;
+  (void)all_langs;
+
   char short_long_name[(PPD_MAX_SHORT_NICKNAME) + 1];
  /*
   * Write a standard header...
@@ -376,6 +382,15 @@ print_ppd_header_3(gpFile fp, ppd_type_t ppd_type, int model,
 		   const char *language, const stp_string_list_t *po,
 		   char **all_langs)
 {
+  (void)po;
+  (void)ppd_location;
+  (void)manufacturer;
+  (void)long_name;
+  (void)ppd_type;
+  (void)model;
+  (void)driver;
+  (void)family;
+
   int i;
   gpputs(fp, "*FileSystem:	False\n");
   gpputs(fp, "*LandscapeOrientation: Plus90\n");
@@ -439,6 +454,13 @@ print_ppd_header_2(gpFile fp, ppd_type_t ppd_type, int model, const char *driver
 		   const char *language, const stp_string_list_t *po,
 		   char **all_langs)
 {
+  (void)po;
+  (void)all_langs;
+  (void)device_id;
+  (void)manufacturer;
+  (void)long_name;
+  (void)ppd_type;
+
   gpprintf(fp, "*StpDriverName:	\"%s\"\n", driver);
   gpprintf(fp, "*StpDriverModelFamily:	\"%d_%s\"\n", model, family);
   gpprintf(fp, "*StpPPDLocation: \"%s\"\n", ppd_location);
@@ -762,8 +784,10 @@ print_group_close(
     stp_parameter_class_t p_class,	/* I - Option class */
     stp_parameter_level_t p_level,	/* I - Option level */
     const char		 *language,	/* I - language */
-    const stp_string_list_t    *po)		/* I - Message catalog */
+    const stp_string_list_t    *po)	/* I - Message catalog */
 {
+  (void)po;
+  (void)language;
   print_group(fp, "Close", p_class, p_level, NULL, NULL);
 }
 
@@ -1047,6 +1071,7 @@ print_one_localization(gpFile fp, const stp_string_list_t *po,
   int i;
   const stp_param_string_t *opt;
   char		dimstr[255];		/* Dimension string */
+  (void)lparam;
 
   gpprintf(fp, "*%s.Translation Stp%s/%s: \"\"\n", lang,
 	   desc->name, stp_i18n_lookup(po, desc->text));
@@ -1198,8 +1223,8 @@ write_ppd(
     const char		*filename,	/* I - input filename */
     int			compress)	/* I - compress output */
 {
-  int		i, j, k, l;		/* Looping vars */
-  int		num_opts;		/* Number of printer options */
+  unsigned int	i, j, k, l;		/* Looping vars */
+  unsigned int	num_opts;		/* Number of printer options */
   stp_resolution_t	xdpi, ydpi;	/* Resolution info */
   stp_vars_t	*v;			/* Variable info */
   const char	*driver;		/* Driver name */
@@ -1217,7 +1242,7 @@ write_ppd(
   int printer_is_color = 0;
   int simplified = ppd_type == PPD_SIMPLIFIED;
   int skip_color = ppd_type == PPD_NO_COLOR_OPTS;
-  int maximum_level = simplified ?
+  unsigned int maximum_level = simplified ?
     STP_PARAMETER_LEVEL_BASIC : STP_PARAMETER_LEVEL_ADVANCED4;
   char		*default_resolution = NULL;  /* Default resolution mapped name */
   stp_string_list_t *resolutions = stp_string_list_create();

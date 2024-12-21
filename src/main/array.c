@@ -252,7 +252,7 @@ stp_array_create_from_xmltree(stp_mxml_node_t *array)  /* The array node */
 {
   const char *stmp;                          /* Temporary string */
   stp_mxml_node_t *child;                       /* Child sequence node */
-  int x_size, y_size;
+  unsigned int x_size, y_size;
   size_t count;
   stp_sequence_t *seq = NULL;
   stp_array_t *ret = NULL;

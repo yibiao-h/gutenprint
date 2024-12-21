@@ -1181,6 +1181,7 @@ stp_pack_uncompressed(stp_vars_t *v,
 		      int *first,
 		      int *last)
 {
+  (void)v;
   find_first_and_last(line, length, first, last);
   memcpy(comp_buf, line, length);
   *comp_ptr = comp_buf + length;
@@ -1200,6 +1201,7 @@ stp_pack_tiff(stp_vars_t *v,
 	      int *last)
 {
   unsigned char *comp_pti = comp_buf;
+  (void)v;
   if (first && last)
     find_first_and_last(line, length, first, last);
 

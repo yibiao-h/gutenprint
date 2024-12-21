@@ -33,6 +33,9 @@
  * Include necessary headers...
  */
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
 #if 0
 #define ENABLE_CUPS_LOAD_SAVE_OPTIONS
 #endif
@@ -80,19 +83,19 @@ typedef struct
 {
   cups_raster_t		*ras;		/* Raster stream to read from */
   int			page;		/* Current page number */
-  int			row;		/* Current row number */
+  unsigned int		row;		/* Current row number */
   int			left;
   int			right;
   int			bottom;
   int			top;
-  int			width;
-  int			height;
+  unsigned int		width;
+  unsigned int		height;
   int			left_trim;
   int			right_trim;
   int			top_trim;
   int			bottom_trim;
-  int			adjusted_width;
-  int			adjusted_height;
+  unsigned int		adjusted_width;
+  unsigned int		adjusted_height;
   stp_dimension_t	d_left;
   stp_dimension_t	d_right;
   stp_dimension_t	d_bottom;
@@ -186,7 +189,7 @@ set_special_parameter(stp_vars_t *v, const char *name, int choice)
 	    fprintf(stderr, "DEBUG: Gutenprint:   Clear special parameter %s\n",
 		    name);
 	}
-      else if (choice >= stp_string_list_count(desc.bounds.str))
+      else if (choice >= (int)stp_string_list_count(desc.bounds.str))
 	{
 	  if (! suppress_messages)
 	    stp_i18n_printf(po, _("ERROR: Unable to set Gutenprint option %s "
@@ -251,10 +254,10 @@ print_debug_block(const stp_vars_t *v, const cups_image_t *cups)
   fprintf(stderr, "DEBUG: Gutenprint:   Tumble = %d\n", cups->header.Tumble);
   fprintf(stderr, "DEBUG: Gutenprint:   cupsWidth = %d\n", cups->header.cupsWidth);
   fprintf(stderr, "DEBUG: Gutenprint:   cupsHeight = %d\n", cups->header.cupsHeight);
-  fprintf(stderr, "DEBUG: Gutenprint:   cups->width = %d\n", cups->width);
-  fprintf(stderr, "DEBUG: Gutenprint:   cups->height = %d\n", cups->height);
-  fprintf(stderr, "DEBUG: Gutenprint:   cups->adjusted_width = %d\n", cups->adjusted_width);
-  fprintf(stderr, "DEBUG: Gutenprint:   cups->adjusted_height = %d\n", cups->adjusted_height);
+  fprintf(stderr, "DEBUG: Gutenprint:   cups->width = %u\n", cups->width);
+  fprintf(stderr, "DEBUG: Gutenprint:   cups->height = %u\n", cups->height);
+  fprintf(stderr, "DEBUG: Gutenprint:   cups->adjusted_width = %u\n", cups->adjusted_width);
+  fprintf(stderr, "DEBUG: Gutenprint:   cups->adjusted_height = %u\n", cups->adjusted_height);
   fprintf(stderr, "DEBUG: Gutenprint:   cupsMediaType = %d\n", cups->header.cupsMediaType);
   fprintf(stderr, "DEBUG: Gutenprint:   cupsBitsPerColor = %d\n", cups->header.cupsBitsPerColor);
   fprintf(stderr, "DEBUG: Gutenprint:   cupsBitsPerPixel = %d\n", cups->header.cupsBitsPerPixel);
@@ -288,6 +291,7 @@ validate_options(stp_vars_t *v, cups_image_t *cups)
   stp_parameter_list_t params = stp_get_parameter_list(v);
   int nparams = stp_parameter_list_count(params);
   int i;
+  (void)cups;
   if (! suppress_messages)
     fprintf(stderr, "DEBUG: Gutenprint:   Validating options\n");
   for (i = 0; i < nparams; i++)
@@ -1554,7 +1558,7 @@ static stp_image_status_t
 Image_get_row(stp_image_t   *image,	/* I - Image */
 	      unsigned char *data,	/* O - Row */
 	      size_t	    byte_limit,	/* I - how many bytes in data */
-	      int           row)	/* I - Row number (unused) */
+	      int           row)	/* I - Row number */
 {
   cups_image_t	*cups;			/* CUPS image */
   int		i;			/* Looping var */
@@ -1565,6 +1569,7 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
   static int warned = 0;                /* Error warning printed? */
   int new_percent;
   int left_margin, right_margin;
+  (void)byte_limit;
 
   if ((cups = (cups_image_t *)(image->rep)) == NULL)
     {
@@ -1589,7 +1594,7 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
     if (! suppress_messages && ! suppress_verbose_messages)
       fprintf(stderr, "DEBUG2: Gutenprint: Reading %d %d\n",
 	      bytes_per_line, cups->row);
-    while (cups->row <= row && cups->row < cups->header.cupsHeight)
+    while (cups->row <= (unsigned int)row && cups->row < cups->header.cupsHeight)
       {
 	if (left_margin > 0)
 	  {
