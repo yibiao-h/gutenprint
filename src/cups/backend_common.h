@@ -37,6 +37,9 @@
 
 #include <libusb.h>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic   ignored "-Wcast-qual"
+
 /* For Integration into gutenprint */
 #if defined(HAVE_CONFIG_H)
 #include <config.h>
