@@ -824,7 +824,7 @@ int sinfonia_button_set(struct sinfonia_usbdev *dev, int enable)
 
 	if ((ret = sinfonia_docmd(dev,
 				(uint8_t*)&cmd, sizeof(cmd),
-				(uint8_t*)&cmd, sizeof(resp),
+				(uint8_t*)&resp, sizeof(resp),
 				&num))) {
 		return ret;
 	}
