@@ -128,7 +128,7 @@ stp_sequence_copy(stp_sequence_t *dest, const stp_sequence_t *source)
 void
 stp_sequence_reverse(stp_sequence_t *dest, const stp_sequence_t *source)
 {
-  int i;
+  unsigned int i;
   CHECK_SEQUENCE(dest);
   CHECK_SEQUENCE(source);
 
@@ -191,7 +191,7 @@ stp_sequence_get_bounds(const stp_sequence_t *sequence,
 static void
 scan_sequence_range(stp_sequence_t *sequence)
 {
-  int i;
+  unsigned int i;
   sequence->rlo = sequence->bhi;
   sequence->rhi = sequence->blo;
   if (sequence->size)
@@ -324,7 +324,7 @@ stp_sequence_create_from_xmltree(stp_mxml_node_t *da)
   stp_sequence_t *ret = NULL;
   size_t point_count;
   double low, high;
-  int i;
+  unsigned int i;
 
   ret = stp_sequence_create();
 
@@ -446,7 +446,7 @@ stp_xmltree_create_from_sequence(const stp_sequence_t *seq)   /* The sequence */
 
   stp_mxml_node_t *seqnode;
 
-  int i;                 /* loop counter */
+  unsigned int i;                 /* loop counter */
 
   pointcount = stp_sequence_get_size(seq);
   stp_sequence_get_bounds(seq, &low, &high);
@@ -499,7 +499,7 @@ int								\
 stp_sequence_set_##name##_data(stp_sequence_t *sequence,	\
                                size_t count, const t *data)	\
 {								\
-  int i;							\
+  unsigned int i;                                               \
   CHECK_SEQUENCE(sequence);					\
   if (count < 2)						\
     return 0;							\
@@ -528,7 +528,7 @@ DEFINE_DATA_SETTER(unsigned short, ushort, isfinite_null)
 const t *								      \
 stp_sequence_get_##name##_data(const stp_sequence_t *sequence, size_t *count) \
 {									      \
-  int i;								      \
+  unsigned int i;							      \
   CHECK_SEQUENCE(sequence);						      \
   if (sequence->blo < (double) lb || sequence->bhi > (double) ub)	      \
     return NULL;							      \

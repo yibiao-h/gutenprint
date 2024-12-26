@@ -1,4 +1,3 @@
-
 /*
  *
  *   Print plug-in Lexmark driver for the GIMP.
@@ -911,6 +910,7 @@ static const lexmark_inkname_t *
 lexmark_get_ink_type(const char *name, int printing_color, const lexmark_cap_t * caps)
 {
   int i = 0;
+  (void)printing_color;
   const lexmark_inkname_t *ink_type = caps->ink_types;
 
   if (name)
@@ -924,6 +924,8 @@ static const lexmark_inkparam_t *
 lexmark_get_ink_parameter(const char *name, int printing_color, const lexmark_cap_t * caps, const stp_vars_t *nv)
 {
   const lexmark_inkname_t *ink_type = lexmark_get_ink_type(name, printing_color, caps);
+  (void)caps;
+  (void)nv;
 
   if (ink_type->name == NULL) {
     return (NULL); /* not found ! */
@@ -936,6 +938,7 @@ lexmark_get_ink_parameter(const char *name, int printing_color, const lexmark_ca
 static const paper_t *
 get_media_type(const char *name, const lexmark_cap_t * caps)
 {
+  (void)caps;
   int i;
   if (name)
     {
@@ -950,10 +953,10 @@ get_media_type(const char *name, const lexmark_cap_t * caps)
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-function"
-#pragma GCC diagnostic ignored "-Wpedantic"
 static inline int
 lexmark_source_type(const stp_vars_t *v, const char *name, const lexmark_cap_t * caps)
 {
+  (void)caps;
   if (name)
     {
       if (!strcmp(name,"Auto"))    return 4;
@@ -1032,12 +1035,14 @@ lexmark_size_type(const stp_vars_t *v, const lexmark_cap_t * caps)
 
 static int lexmark_get_phys_resolution_vertical(int model)
 {
+  (void)model;
   return 600;
 }
 
 #if 0
 static int lexmark_get_phys_resolution_horizontal(int model)
 {
+  (void)model;
   return 1200;
 }
 #endif
@@ -1077,18 +1082,21 @@ lexmark_print_bidirectional(const stp_vars_t *v, int model, const char *resoluti
 static const char *
 lexmark_lum_adjustment(const lexmark_cap_t * caps, const stp_vars_t *v)
 {
+  (void)v;
   return (caps->lum_adjustment);
 }
 
 static const char *
 lexmark_hue_adjustment(const lexmark_cap_t * caps, const stp_vars_t *v)
 {
+  (void)v;
   return (caps->hue_adjustment);
 }
 
 static const char *
 lexmark_sat_adjustment(const lexmark_cap_t * caps, const stp_vars_t *v)
 {
+  (void)v;
   return (caps->sat_adjustment);
 }
 
@@ -1385,6 +1393,15 @@ lexmark_init_printer(const stp_vars_t *v, const lexmark_cap_t * caps,
 		     int top, int left,
 		     int use_dmt)
 {
+  (void)printing_color;
+  (void)source_str;
+  (void)xdpi;
+  (void)ydpi;
+  (void)page_width;
+  (void)page_height;
+  (void)top;
+  (void)left;
+  (void)use_dmt;
 
   /* because the details of the header sequence are not known, we simply write it as one image. */
 
@@ -2439,6 +2456,10 @@ lexmark_write(const stp_vars_t *v,		/* I - Print file or command */
   int anyCol=0;
   int colIndex;
   int rwidth; /* real with used at printing (includes shift between even & odd nozzles) */
+
+  (void)ydpi;
+  (void)dmt;
+
   /* stp_dprintf(STP_DBG_LEXMARK, v, "<%c>",("CMYKcmy"[coloridx])); */
   stp_dprintf(STP_DBG_LEXMARK, v, "pass length %d\n", pass_length);
 

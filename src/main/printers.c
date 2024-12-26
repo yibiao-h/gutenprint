@@ -152,6 +152,7 @@ stpi_printer_freefunc(void *item)
 static void
 stpi_printvars_freefunc(void *item)
 {
+  (void)item;
 }
 
 static const char *
@@ -1303,6 +1304,7 @@ static int
 stpi_xml_process_printdef(stp_mxml_node_t *printdef, const char *file) /* The printdef node */
 {
   stp_mxml_node_t *family;                          /* Family child node */
+  (void)file;
 
   family = printdef->child;
   while (family)

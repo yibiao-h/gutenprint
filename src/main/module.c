@@ -305,6 +305,8 @@ stp_module_open(const char *modulename /* Module filename */)
 
   if (module)
     DLCLOSE(module);
+#else
+  (void)modulename;
 #endif
   return 1;
 }

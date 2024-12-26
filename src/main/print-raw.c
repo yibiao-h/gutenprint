@@ -113,6 +113,7 @@ raw_list_parameters(const stp_vars_t *v)
 {
   stp_parameter_list_t *ret = stp_parameter_list_create();
   int i;
+  (void)v;
   for (i = 0; i < the_parameter_count; i++)
     stp_parameter_list_add_param(ret, &(the_parameters[i]));
   return ret;
@@ -123,6 +124,7 @@ raw_parameters(const stp_vars_t *v, const char *name,
 	       stp_parameter_t *description)
 {
   int		i;
+  (void)v;
   description->p_type = STP_PARAMETER_TYPE_INVALID;
   if (name == NULL)
     return;
@@ -196,6 +198,7 @@ raw_limit(const stp_vars_t *v,			/* I */
   *height = 65535;
   *min_width = 1;
   *min_height =	1;
+  (void)v;
 }
 
 static void
@@ -204,6 +207,7 @@ raw_describe_resolution(const stp_vars_t *v,
 {
   *x = 72;
   *y = 72;
+  (void)v;
 }
 
 static const char *

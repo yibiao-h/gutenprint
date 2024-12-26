@@ -107,7 +107,7 @@ stpi_path_check(const struct dirent *module, /* File to check */
 		const char *check_path,	     /* Path to search */
 		const char *check_suffix)    /* Suffix */
 {
-  int namelen;                              /* Filename length */
+  unsigned int namelen;                     /* Filename length */
   int status = 0;                           /* Error status */
   int savederr;                             /* Saved errno */
   char *filename;                           /* Filename */
