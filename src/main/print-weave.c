@@ -1394,6 +1394,7 @@ stp_fill_uncompressed(stp_vars_t *v, int row, int subpass,
 int
 stp_compute_tiff_linewidth(stp_vars_t *v, int n)
 {
+  (void)v;
   /*
    * It's possible for the "compression" to actually expand the line by
    * roughly one part in 128.
@@ -1404,6 +1405,7 @@ stp_compute_tiff_linewidth(stp_vars_t *v, int n)
 int
 stp_compute_uncompressed_linewidth(stp_vars_t *v, int n)
 {
+  (void)v;
   return (8 * ((n + 7) / 8));
 }
 

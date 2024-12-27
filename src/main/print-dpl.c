@@ -790,6 +790,7 @@ dpl_list_parameters (const stp_vars_t * v)
 {
   stp_parameter_list_t *ret;
   int i;
+  (void)v;
 
   ret = stp_parameter_list_create ();
   for (i = 0; i < the_parameter_count; i++)
@@ -983,12 +984,14 @@ dpl_limit (const stp_vars_t * v,	/* I */
 static const char *
 dpl_describe_output (const stp_vars_t * v)
 {
+  (void)v;
   return "Grayscale";
 }
 
 static const stp_papersize_t *
 dpl_describe_papersize(const stp_vars_t *v, const char *name)
 {
+  (void)v;
   return stpi_get_listed_papersize(name, "labels");
 }
 
@@ -1384,6 +1387,7 @@ dpl_pcx (stp_vars_t * v,	/* I - Print file or command */
   int i;
   int max_dpi = 0;
   int dpi_adjust = 0;
+  (void)last_plane;
 
   /* Each line has to be 4 inches long */
   dpl_describe_resolution (v, &xdpi, &ydpi);

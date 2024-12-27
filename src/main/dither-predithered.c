@@ -38,6 +38,7 @@ print_color_very_fast(const stpi_dither_t *d, stpi_dither_channel_t *dc,
 {
   int i, j;
   unsigned char *tptr = dc->ptr + d->ptr_offset;
+  (void)y;
 
   /*
    * Lay down all of the bits in the pixel.
@@ -66,6 +67,7 @@ stpi_dither_predithered(stp_vars_t *v,
   int one_bit_only = 1;
 
   int xerror, xstep, xmod;
+  (void)duplicate_line;
 
   if ((zero_mask & ((1 << CHANNEL_COUNT(d)) - 1)) ==
       ((1 << CHANNEL_COUNT(d)) - 1))

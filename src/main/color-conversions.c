@@ -263,6 +263,8 @@ adjust_hsl(unsigned short *rgbout, lut_t *lut, double ssat, double isat,
   size_t sat_count = CURVE_CACHE_FAST_COUNT(&(lut->sat_map));
   double h, s, l;
   double oh;
+  (void)split_saturation;
+
   rgbout[0] ^= 65535;
   rgbout[1] ^= 65535;
   rgbout[2] ^= 65535;

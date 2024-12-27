@@ -435,6 +435,8 @@ stp_xml_process_papersize_def(stp_mxml_node_t *paperdef, const char *file,
   stp_mxml_node_t *paper;                           /* paper node pointer */
   stp_papersize_t *outpaper;         /* Generated paper */
 
+  (void)file;
+
   paper = paperdef->child;
   while (paper)
     {

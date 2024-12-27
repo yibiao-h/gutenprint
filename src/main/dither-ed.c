@@ -59,6 +59,8 @@ update_dither(stpi_dither_t *d, int channel, int width,
   int i, dist, dist1;
   int delta, delta1;
   int offset;
+  (void)width;
+
   if (tmp == 0)
     return error0[direction];
   if (tmp > 65535)
@@ -139,6 +141,8 @@ print_color(const stpi_dither_t *d, stpi_dither_channel_t *dc, int x, int y,
   int dither_value = adjusted;
   stpi_ink_defn_t *lower;
   stpi_ink_defn_t *upper;
+
+  (void)y;
 
   if (base <= 0 || density <= 0 ||
       (adjusted <= 0 && !(stpi_dither_type & D_ADAPTIVE_BASE)))

@@ -175,6 +175,8 @@ print_color_ordered_new(const stpi_dither_t *d, stpi_dither_channel_t *dc,
   const stpi_new_ordered_t *ord = (const stpi_new_ordered_t *) o->ord_new;
   unsigned short swhere = (unsigned short) val;
   unsigned short *where = ord ? ord->lut + (val * levels) : &swhere;
+  (void)y;
+
   /*
    * Look for the appropriate range into which the input value falls.
    */
@@ -212,6 +214,7 @@ print_color_ordered(const stpi_dither_t *d, stpi_dither_channel_t *dc, int val,
   int j;
   unsigned bits;
   int levels = dc->nlevels - 1;
+  (void)y;
 
   /*
    * Look for the appropriate range into which the input value falls.
@@ -343,6 +346,7 @@ stpi_dither_ordered(stp_vars_t *v,
   int one_level_only = 1;
 
   int xerror, xstep, xmod;
+  (void)duplicate_line;
 
   if ((zero_mask & ((1 << CHANNEL_COUNT(d)) - 1)) ==
       ((1 << CHANNEL_COUNT(d)) - 1))

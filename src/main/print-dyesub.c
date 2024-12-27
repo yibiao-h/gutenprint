@@ -13273,6 +13273,7 @@ dyesub_limit(const stp_vars_t *v,			/* I */
 	    stp_dimension_t *width, stp_dimension_t *height,
 	    stp_dimension_t *min_width, stp_dimension_t *min_height)
 {
+  (void)v;
   *width  = SHRT_MAX;
   *height = SHRT_MAX;
   *min_width  = 1;
@@ -13427,6 +13428,7 @@ dyesub_free_image(dyesub_print_vars_t *pv, stp_image_t *image)
   unsigned short** image_data = pv->image_data;
   int image_px_height = pv->image_rows;
   int i;
+  (void)image;
 
   for (i = 0; i< image_px_height; i++)
     if (image_data[i])
@@ -13482,6 +13484,7 @@ dyesub_render_pixel_u8(unsigned short *src, char *dest,
 		       dyesub_print_vars_t *pv,
 		       int plane)
 {
+  (void)pv;
   /* Scale down to output bit depth */
   *dest = src[plane] / 257;
 }
@@ -13509,6 +13512,8 @@ dyesub_render_row_packed_u8(stp_vars_t *v,
 {
   int w;
   unsigned short *src;
+  (void)v;
+  (void)caps;
 
   for (w = 0; w < pv->outw_px; w++)
     {
@@ -13537,6 +13542,8 @@ dyesub_render_row_interlaced_u8(stp_vars_t *v,
 {
   int w;
   unsigned short *src;
+  (void)v;
+  (void)caps;
 
   for (w = 0; w < pv->outw_px; w++)
     {
@@ -13963,6 +13970,7 @@ dyesub_job_start(const stp_vars_t *v, stp_image_t *image)
 {
   const dyesub_cap_t *caps;
   stp_vars_t *nv = stp_vars_create_copy(v);
+  (void)image;
 
   caps = dyesub_get_model_capabilities(v, stp_get_model_id(nv));
 
@@ -13978,6 +13986,7 @@ dyesub_job_end(const stp_vars_t *v, stp_image_t *image)
 {
   const dyesub_cap_t *caps;
   stp_vars_t *nv = stp_vars_create_copy(v);
+  (void)image;
 
   caps = dyesub_get_model_capabilities(v, stp_get_model_id(nv));
 

@@ -242,6 +242,8 @@ eventone_update(stpi_dither_channel_t *dc, eventone_t *et,
   distance_t *etd = &sp->et_dis[x];
   int t = etd->r_sq + etd->dy;		/* r^2 from dot above */
   int u = sp->dis.r_sq + sp->dis.dy;	/* r^2 from dot on this line */
+  (void)direction;
+
   if (u < t)
     {				/* If dot from this line is close */
       t = u;				/* Use it instead */
@@ -277,6 +279,7 @@ diffuse_error(stpi_dither_channel_t *dc, eventone_t *et, int x, int direction)
   dc->errs[0][x + MAX_SPREAD - (direction * 2)] += dc->v * 1;
   dc->v -= dc->v * 9 / 16;
 #endif
+  (void)et;
 }
 
 static inline int

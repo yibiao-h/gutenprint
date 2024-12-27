@@ -35,6 +35,7 @@
 static inline unsigned
 ditherpoint(const stpi_dither_t *d, stp_dither_matrix_impl_t *mat, int x)
 {
+  (void)d;
   if (mat->fast_mask)
     return mat->matrix[(mat->last_y_mod +
 			((x + mat->x_offset) & mat->fast_mask))];

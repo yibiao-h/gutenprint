@@ -525,6 +525,8 @@ static void
 set_color(stp_vars_t *v, stp_pass_t *pass, int color)
 {
   escp2_privdata_t *pd = get_privdata(v);
+  (void)pass;
+
   if (pd->last_color != color && ! pd->use_extended_commands)
     {
       int ncolor = pd->channels[color]->color;
@@ -544,6 +546,7 @@ set_horizontal_position(stp_vars_t *v, stp_pass_t *pass, int vertical_subpass)
   int microoffset = (vertical_subpass & (pd->horizontal_passes - 1)) *
     pd->image_scaled_width / pd->image_printed_width;
   int pos = pd->image_left_position + microoffset;
+  (void)pass;
 
   if (pos != 0)
     {
@@ -560,6 +563,8 @@ static void
 send_print_command(stp_vars_t *v, stp_pass_t *pass, int ncolor, int nlines)
 {
   escp2_privdata_t *pd = get_privdata(v);
+  (void)pass;
+
   int lwidth = (pd->image_printed_width + (pd->horizontal_passes - 1)) /
     pd->horizontal_passes;
   if (pd->command_set == MODEL_COMMAND_PRO || pd->variable_dots)

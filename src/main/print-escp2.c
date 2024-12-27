@@ -1331,6 +1331,7 @@ escp2_ink_type_by_res(const stp_vars_t *v, const res_t *res)
 static inline double
 escp2_density_by_res(const stp_vars_t *v, const res_t *res)
 {
+  (void)v;
   if (res)
     {
       if (res->v &&
@@ -1691,6 +1692,7 @@ verify_papersize(const stp_vars_t *v, const stp_papersize_t *pt)
 static int
 verify_inktype(const stp_vars_t *v, const inkname_t *inks)
 {
+  (void)v;
   if (inks->inkset == INKSET_EXTENDED)
     return 0;
   else
@@ -1965,6 +1967,9 @@ fill_transition_parameters(const stp_vars_t *v,
 			   int color)
 {
   const stp_vars_t *paper_adj = get_media_adjustment(v);
+  (void)v;
+  (void)color;
+
   description->is_active = 1;
   description->bounds.dbl.lower = 0;
   description->bounds.dbl.upper = 1.0;
@@ -3939,6 +3944,7 @@ adjusted_vertical_resolution(const stp_vars_t *v, const res_t *res)
 static int
 adjusted_horizontal_resolution(const stp_vars_t *v, const res_t *res)
 {
+  (void)v;
   /* XXX -- How do we handle 300 DPI base? */
   if (res->vres % 90 == 0)
     return res->hres;

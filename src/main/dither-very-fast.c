@@ -38,6 +38,8 @@ print_color_very_fast(const stpi_dither_t *d, stpi_dither_channel_t *dc,
 		      unsigned bits, int length)
 {
   int j;
+  (void)y;
+
   if (bits && val >= ditherpoint(d, &(dc->dithermat), x))
     {
       unsigned char *tptr = dc->ptr + d->ptr_offset;
@@ -71,6 +73,7 @@ stpi_dither_very_fast(stp_vars_t *v,
   int one_bit_only = 1;
 
   int xerror, xstep, xmod;
+  (void)duplicate_line;
 
   if ((zero_mask & ((1 << CHANNEL_COUNT(d)) - 1)) ==
       ((1 << CHANNEL_COUNT(d)) - 1))

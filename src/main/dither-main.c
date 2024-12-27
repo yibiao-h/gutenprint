@@ -115,6 +115,8 @@ stp_dither_list_parameters(const stp_vars_t *v)
 {
   stp_parameter_list_t *ret = stp_parameter_list_create();
   int i;
+  (void)v;
+
   for (i = 0; i < dither_parameter_count; i++)
     stp_parameter_list_add_param(ret, &(dither_parameters[i]));
   return ret;
@@ -125,6 +127,8 @@ stp_dither_describe_parameter(const stp_vars_t *v, const char *name,
 			      stp_parameter_t *description)
 {
   int i;
+  (void)v;
+
   description->p_type = STP_PARAMETER_TYPE_INVALID;
   if (name == NULL)
     return;

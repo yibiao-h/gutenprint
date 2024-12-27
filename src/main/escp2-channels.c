@@ -34,6 +34,8 @@ load_subchannel(stp_mxml_node_t *node, stp_mxml_node_t *root, physical_subchanne
 {
   const char *name;
   stp_mxml_node_t *child = node->child;
+  (void)root;
+
   name = stp_mxmlElementGetAttr(node, "color");
   if (name)
     icl->color = stp_xmlstrtol(name);
@@ -298,6 +300,7 @@ load_shades(stp_mxml_node_t *node, stp_mxml_node_t *root, inklist_t *ikl)
 {
   stp_mxml_node_t *child = node->child;
   int count = 0;
+  (void)root;
 
   while (child)
     {

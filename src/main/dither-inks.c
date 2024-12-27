@@ -68,6 +68,8 @@ insert_channel(stp_vars_t *v, stpi_dither_t *d, int channel)
 {
   unsigned oc = d->channel_count;
   int i;
+  (void)v;
+
   d->channel_index =
     stp_realloc (d->channel_index, sizeof(unsigned) * (channel + 1));
   d->subchannel_count =

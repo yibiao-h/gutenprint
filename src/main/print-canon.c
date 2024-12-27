@@ -2565,7 +2565,7 @@ canon_size_type(const stp_vars_t *v, const canon_cap_t * caps)
   const stp_papersize_t *pp = stpi_get_papersize_by_size(list,
 							stp_get_page_height(v),
 							stp_get_page_width(v));
-
+  (void)caps;
   stp_dprintf(STP_DBG_CANON, v,"canon: entered canon_size_type\n");
 
   if (pp)
@@ -5464,6 +5464,8 @@ static int
 canon_start_job(const stp_vars_t *v, stp_image_t *image)
 {
   const canon_cap_t * caps = canon_get_model_capabilities(v);
+  (void)image;
+
   /* output XML for iP2700 and other devices */
   if (caps->features & CANON_CAP_XML) {
     int length=strlen(prexml_iP2700); /* 680 */
@@ -5476,6 +5478,8 @@ static int
 canon_end_job(const stp_vars_t *v, stp_image_t *image)
 {
   const canon_cap_t * caps = canon_get_model_capabilities(v);
+  (void)image;
+
   canon_cmd(v,ESC40,0,0);
   /* output XML for iP2700 and other devices */
   if (caps->features & CANON_CAP_XML) {
@@ -6580,9 +6584,11 @@ canon_write(stp_vars_t *v,		/* I - Print file or command */
 	    int           bits,
             int           ink_flags)
 {
-
   unsigned char color;
   int newlength = canon_compress(v,pd,line,length,offset,pd->comp_buf,bits,ink_flags);
+  (void)caps;
+  (void)width;
+
   if(!newlength)
       return 0;
   /* send packed empty lines if any */
@@ -6644,13 +6650,16 @@ canon_write_line(stp_vars_t *v)
 
 
 /* write one multiraster block */
-static void canon_write_block(stp_vars_t* v,canon_privdata_t* pd,unsigned char* start, unsigned char* end){
-    unsigned int length = end - start;
-    if(!length)
-        return;
-    stp_zfwrite("\033(F", 3, 1, v);
-    stp_put16_le(length, v);
-    stp_zfwrite((const char *)start, length, 1, v);
+static void canon_write_block(stp_vars_t* v,canon_privdata_t* pd,unsigned char* start, unsigned char* end)
+{
+  unsigned int length = end - start;
+  (void)pd;
+
+  if(!length)
+     return;
+  stp_zfwrite("\033(F", 3, 1, v);
+  stp_put16_le(length, v);
+  stp_zfwrite((const char *)start, length, 1, v);
 }
 
 
@@ -6723,6 +6732,7 @@ canon_flush_pass(stp_vars_t *v, int passno, int vertical_subpass)
 
   int color, line, written = 0, linelength = 0, lines = 0;
   int idx[4]={3, 0, 1, 2}; /* color numbering is different between canon_write and weaving */
+  (void)vertical_subpass;
 
   stp_dprintf(STP_DBG_CANON, v,"canon_flush_pass: ----pass=%d,---- \n", passno);
   (pd->emptylines) = 0;

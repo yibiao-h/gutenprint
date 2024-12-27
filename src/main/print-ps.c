@@ -190,6 +190,8 @@ ps_option_to_param(const stp_vars_t *v, stp_parameter_t *param,
 static int
 ppd_whitespace_callback(stp_mxml_node_t *node, int where)
 {
+  (void)node;
+  (void)where;
   return 0;
 }
 
@@ -659,6 +661,7 @@ ps_limit(const stp_vars_t *v,  		/* I */
 	 stp_dimension_t *min_width,
 	 stp_dimension_t *min_height)
 {
+  (void)v;
   *width =	(stp_dimension_t) INT_MAX;
   *height =	(stp_dimension_t) INT_MAX;
   *min_width =	1;

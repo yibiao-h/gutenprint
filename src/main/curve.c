@@ -1026,6 +1026,8 @@ static int
 stpi_curve_check_parameters(stp_curve_t *curve, size_t points)
 {
   double blo, bhi;
+  (void)points;
+
   if (curve->gamma && curve->wrap_mode)
     {
       stp_deprintf(STP_DBG_CURVE_ERRORS,

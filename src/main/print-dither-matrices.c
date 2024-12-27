@@ -386,6 +386,8 @@ stp_dither_set_iterated_matrix(stp_vars_t *v, size_t edge, size_t iterations,
 			       int x_shear, int y_shear)
 {
   stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
+  (void)prescaled;
+
   preinit_matrix(v);
   stp_dither_matrix_iterated_init(&(d->dither_matrix), edge, iterations, data);
   postinit_matrix(v, x_shear, y_shear);

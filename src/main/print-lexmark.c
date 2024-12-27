@@ -985,6 +985,7 @@ lexmark_head_offset(const stp_vars_t *v,
 		    lexmark_lineoff_t *lineoff_buffer)  /* o */
 {
   int i;
+  (void)ink_type;
 
   stp_dprintf(STP_DBG_LEXMARK, v, "  size %d,  size_v %d, size_v[0] %d\n", (int)sizeof(*lineoff_buffer), (int)sizeof(lineoff_buffer->v), (int)sizeof(lineoff_buffer->v[0]));
   memcpy(lineoff_buffer, ink_parameter->head_offset, sizeof(*lineoff_buffer));

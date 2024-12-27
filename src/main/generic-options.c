@@ -192,6 +192,7 @@ stp_list_generic_parameters(const stp_vars_t *v)
 {
   stp_parameter_list_t *ret = stp_parameter_list_create();
   int i;
+  (void)v;
   for (i = 0; i < the_parameter_count; i++)
     stp_parameter_list_add_param(ret, &(the_parameters[i]));
   return ret;
@@ -202,6 +203,8 @@ stpi_describe_generic_parameter(const stp_vars_t *v, const char *name,
 				stp_parameter_t *description)
 {
   int		i;
+  (void)v;
+
   description->p_type = STP_PARAMETER_TYPE_INVALID;
   if (name == NULL)
     return;
