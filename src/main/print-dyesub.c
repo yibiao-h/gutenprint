@@ -3245,12 +3245,15 @@ static unsigned short short_to_packed_bcd(unsigned short val)
   i = val % 10;
   bcd = i;
   val /= 10;
+
   i = val % 10;
   bcd |= (i << 4);
   val /= 10;
+
   i = val % 10;
   bcd |= (i << 8);
   val /= 10;
+
   i = val % 10;
   bcd |= (i << 12);
 
@@ -3333,7 +3336,7 @@ static void kodak_605_printer_init(stp_vars_t *v)
   dyesub_privdata_t *pd = get_privdata(v);
 
   stp_zfwrite("\x01\x40\x0a\x00\x01", 1, 5, v);
-  stp_put16_be(short_to_packed_bcd(pd->copies), v); /* Number of copies in BCD */
+  stp_put16_le(pd->copies, v);
   stp_put16_le(pd->w_size, v);
   stp_put16_le(pd->h_size, v);
 
