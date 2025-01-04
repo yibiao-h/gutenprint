@@ -12746,6 +12746,12 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_LEVEL_INTERNAL, 1, 0, STP_CHANNEL_NONE, 0, 1
   },
   {
+    "Collate", N_("Collate the Job"), "Color=No,Category=Job Mode",
+    N_("Collate the Job"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_CORE,
+    STP_PARAMETER_LEVEL_INTERNAL, 1, 0, STP_CHANNEL_NONE, 1, 0
+  },
+  {
     "LegacyDyesubGamma", N_("Use legacy dyesub gamma curve"), "Color=Yes,Category=Advanced Printer Setup",
     N_("Use legacy dyesub gamma curve"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
@@ -13109,6 +13115,14 @@ dyesub_parameters(const stp_vars_t *v, const char *name,
     {
       description->deflt.boolean = dyesub_feature(caps, DYESUB_FEATURE_NATIVECOPIES);
       description->is_active = 1;
+    }
+  else if (strcmp(name, "Collate") == 0)
+    {
+      if (dyesub_feature(caps, DYESUB_FEATURE_NATIVECOPIES) && dyesub_feature(caps, DYESUB_FEATURE_HASBACKEND))
+        {
+          description->deflt.boolean = 1;
+          description->is_active = 1;
+        }
     }
   else if (strcmp(name, "LegacyDyesubGamma") == 0)
     {

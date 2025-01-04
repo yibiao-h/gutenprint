@@ -101,6 +101,7 @@ const char *special_options[] =
   "OutputOrder",
   "Quality",
   "Duplex",
+  "Collate",
   NULL
 };
 
@@ -1687,6 +1688,26 @@ write_ppd(
     }
   stp_parameter_description_destroy(&desc);
 
+  /* Collation */
+  stp_describe_parameter(v, "Collate", &desc);
+  if (desc.is_active)
+    {
+      gpprintf(fp, "*OpenUI *%s/%s: PickOne\n",
+               desc.name, stp_i18n_lookup(po, desc.text));
+      gpprintf(fp, "*OrderDependency: 10 AnySetup *%s\n", desc.name);
+      gpprintf(fp, "*OPOptionHints %s: \"checkbox\"\n", desc.name);
+      gpprintf(fp, "*Default%s: %s\n", desc.name,
+               desc.deflt.boolean ? "True" : "False");
+      gpprintf(fp, "*StpDefault%s: %s\n", desc.name,
+               desc.deflt.boolean ? "True" : "False");
+      gpprintf(fp, "*%s %s/%s: \"\"\n",
+               desc.name, "False", _("No"));
+      gpprintf(fp, "*%s %s/%s: \"\"\n",
+               desc.name, "True", _("Yes"));
+      gpprintf(fp, "*CloseUI: *%s\n\n", desc.name);
+    }
+  stp_parameter_description_destroy(&desc);
+
   gpprintf(fp, "*OpenUI *StpiShrinkOutput/%s: PickOne\n",
 	   _("Shrink Page If Necessary to Fit Borders"));
   gpputs(fp, "*OPOptionHints StpiShrinkOutput: \"radiobuttons\"\n");
@@ -1962,6 +1983,15 @@ write_ppd(
 		}
 	    }
 	  stp_parameter_description_destroy(&desc);
+
+          /* Collation */
+	  stp_describe_parameter(v, "Collate", &desc);
+	  if (desc.is_active)
+            {
+              gpprintf(fp, "*%s.Translation Collate/%s: \"\"\n", lang, _("Collate the Job"));
+              gpprintf(fp, "*%s.Collate %s/%s: \"\"\n", lang, "True", _("Yes"));
+              gpprintf(fp, "*%s.Collate %s/%s: \"\"\n", lang, "False", _("No"));
+            }
 
 	  gpprintf(fp, "*%s.Translation StpiShrinkOutput/%s: \"\"\n", lang,
 		   _("Shrink Page If Necessary to Fit Borders"));
