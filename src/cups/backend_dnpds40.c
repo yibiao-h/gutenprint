@@ -156,7 +156,7 @@ struct dnpds40_cmd {
 	uint8_t arg1[6];
 	uint8_t arg2[16];
 	uint8_t arg3[8]; /* Decimal value of arg4's length, or empty */
-	uint8_t arg4[0]; /* Extra payload if arg3 is non-empty
+	uint8_t arg4[];  /* Extra payload if arg3 is non-empty
 			    Doesn't have to be sent in the same URB */
 
 	/* All unused elements are set to 0x20 (ie ascii space) */
@@ -3052,12 +3052,13 @@ top:
 
 		dnpds40_cleanup_string((char*)resp, len);
 		i = atoi((char*)resp);
-		free(resp);
 		if (i != 0) {
-			INFO("Printer Not ready for panorama printing, waiting.. (%d)\n", i);
+			INFO("Printer Not ready for panorama printing, waiting.. (%d = %s)\n", i, dnpds40_panorama_status((char*)resp));
+			free(resp);
 			sleep(1);
 			goto top;
 		}
+		free(resp);
 	}
 	if (job->is_pano)
 		ctx->pano++;
@@ -4635,7 +4636,7 @@ static const struct device_id dnpcitizen_devices[] = {
 
 const struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS-series / Citizen C-series",
-	.version = "0.157",
+	.version = "0.158",
 	.uri_prefixes = dnpds40_prefixes,
 	.devices = dnpcitizen_devices,
 	.cmdline_usage = dnpds40_cmdline,
