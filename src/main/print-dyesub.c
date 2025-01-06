@@ -6574,8 +6574,9 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
   stp_putc(0x01, v);  /* Mark as 8bpp BGR rather than 16bpp YMC cooked */
   stp_putc(pd->privdata.m70x.use_lut, v);  /* Use LUT? */
   stp_putc(0x01, v);  /* Tell the backend the data's in the proper order */
+  stp_putc(pd->copies, v); /* Number of copies to create */
   /* end extension */
-  dyesub_nputc(v, 0x00, 447); /* Pad to 512-byte block */
+  dyesub_nputc(v, 0x00, 446); /* Pad to 512-byte block */
 }
 
 static void mitsu_cpd70x_printer_init(stp_vars_t *v)
@@ -7104,7 +7105,6 @@ static void mitsu_cpdneo_printer_init(stp_vars_t *v, int m1)
   if (m1) {
     stp_putc(0x01, v);  /* Tells backend that we need to process this */
     stp_put16_be(2, v);
-    dyesub_nputc(v, 0x00, 14);
   } else {
     if (strcmp(pd->pagesize,"w432h1008") == 0 ||
         strcmp(pd->pagesize,"w432h1440") == 0) {
@@ -7114,9 +7114,10 @@ static void mitsu_cpdneo_printer_init(stp_vars_t *v, int m1)
       stp_putc(0x00, v); /* No panorama */
       stp_put16_be(0, v);
     }
-    dyesub_nputc(v, 0x00, 14);
   }
-  dyesub_nputc(v, 0x00, 7);
+  /* @ 0x3b */
+  dyesub_nputc(v, 0x00, 20);
+  stp_putc(pd->copies, v); /* EXTENSION */
 
   /* @0x50, zero fill to 512 byte boundary. */
   dyesub_nputc(v, 0x00, 512 - 80);
@@ -7633,7 +7634,8 @@ static void mitsu_cpw5k_printer_init(stp_vars_t *v)
   stp_putc(pd->privdata.m70x.use_lut, v);
   stp_putc(pd->privdata.m70x.sharpen, v); /* Horizontal */
   stp_putc(pd->privdata.m70x.sharpen, v); /* Vertical */
-  dyesub_nputc(v, 0x00, 512-21);
+  stp_putc(pd->copies, v); /* EXTENSION */
+  dyesub_nputc(v, 0x00, 512-22);
 
   /* Plane header */
   stp_putc(0x1b, v);
