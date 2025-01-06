@@ -1,7 +1,7 @@
 /*
  *   Magicard card printer family CUPS backend
  *
- *   (c) 2017-2024 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2017-2025 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -610,6 +610,8 @@ static int magicard_read_parse(void *vctx, const void **vjob, int data_fd, int c
 			/* Strip out the image format, replace it with backend */
 //		} else if (!strncmp("ESS", ptr, 3)) {
 //			/* Strip out copies */
+			// XXX implement me properly.
+			copies = 1;
 		} else if (!strcmp("X-GP-RK", ptr)) {
 			x_gp_rk = 1;
 		} else if (!strncmp("ICC", ptr,3)) {
@@ -939,7 +941,7 @@ static const struct device_id magicard_devices[] = {
 
 const struct dyesub_backend magicard_backend = {
 	.name = "Magicard family",
-	.version = "0.20",
+	.version = "0.21",
 	.uri_prefixes = magicard_prefixes,
 	.devices = magicard_devices,
 	.cmdline_arg = magicard_cmdline_arg,

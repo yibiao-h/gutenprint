@@ -1,7 +1,7 @@
 /*
  *   Kodak 8800/9810 Photo Printer CUPS backend
  *
- *   (c) 2021-2024 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2021-2025 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -182,8 +182,7 @@ struct rosetta_block {
 
 /* Private data structure */
 struct kodak8800_printjob {
-	size_t jobsize;
-	int copies;
+	struct dyesub_job_common common;
 
 	int copies_offset;
 	uint8_t *databuf;
@@ -635,7 +634,7 @@ static int kodak8800_read_parse(void *vctx, const void **vjob, int data_fd, int 
 		kodak8800_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
 	}
-	job->jobsize += sizeof(struct rosetta_header);
+	job->common.jobsize += sizeof(struct rosetta_header);
 
 	/* Sanity check header */
 	if (memcmp(job->databuf, "\x1bMndROSETTA V001", 16)) {
@@ -653,7 +652,7 @@ static int kodak8800_read_parse(void *vctx, const void **vjob, int data_fd, int 
 	}
 	/* Read in the data blocks */
 	while (1) {
-		struct rosetta_block *block = (struct rosetta_block *)(job->databuf + job->jobsize);
+		struct rosetta_block *block = (struct rosetta_block *)(job->databuf + job->common.jobsize);
 		uint32_t payload_len = 0;
 
 		/* Read in block header */
@@ -666,7 +665,7 @@ static int kodak8800_read_parse(void *vctx, const void **vjob, int data_fd, int 
 			return CUPS_BACKEND_CANCEL;
 		}
 		payload_len = be32_to_cpu(block->payload_len);
-//		INFO("block %d @ %d \n", payload_len + sizeof(struct rosetta_block), job->jobsize);
+//		INFO("block %d @ %d \n", payload_len + sizeof(struct rosetta_block), job->common.jobsize);
 
 		/* Read in block payload */
 		ret = read(data_fd, block->payload, payload_len);
@@ -677,12 +676,12 @@ static int kodak8800_read_parse(void *vctx, const void **vjob, int data_fd, int 
 			kodak8800_cleanup_job(job);
 			return CUPS_BACKEND_CANCEL;
 		}
-		job->jobsize += sizeof(struct rosetta_block);
-		job->jobsize += payload_len;
+		job->common.jobsize += sizeof(struct rosetta_block);
+		job->common.jobsize += payload_len;
 
 		/* Work out our copies offset */
 		if (!memcmp(block->cmd, "FlsPgCopies", 11)) {
-			job->copies_offset = job->jobsize - payload_len;
+			job->copies_offset = job->common.jobsize - payload_len;
 		}
 		/* If this is the last block, we're done! */
 		if (!memcmp(block->cmd, "MndEndJob", 9))
@@ -694,13 +693,16 @@ static int kodak8800_read_parse(void *vctx, const void **vjob, int data_fd, int 
 		uint32_t tmp = 0;
 		memcpy(&tmp, job->databuf + job->copies_offset, sizeof(tmp));
 		tmp = be32_to_cpu(tmp);
-		if ((int)tmp < copies) {
+	        /* Use larger of our copy counts */
+		if ((int)tmp > copies) {
 			tmp = be32_to_cpu(copies);
 			memcpy(job->databuf + job->copies_offset, &tmp, sizeof(tmp));
+		} else {
+			copies = tmp;
 		}
 	}
 
-	job->copies = copies;
+	job->common.copies = copies;
 	*vjob = job;
 
 	return CUPS_BACKEND_OK;
@@ -753,14 +755,14 @@ static int kodak8800_main_loop(void *vctx, const void *vjob, int wait_for_return
 
 	/* Sent over data blocks */
 	uint32_t offset = 0;
-	while (offset < job->jobsize) {
+	while (offset < job->common.jobsize) {
 		uint32_t max_blocksize;
 		ret = rtp1_getmaxxfer(ctx, &max_blocksize);
 		if (ret)
 			return ret;
 
-		if (job->jobsize - offset < max_blocksize)
-			max_blocksize = job->jobsize - offset;
+		if (job->common.jobsize - offset < max_blocksize)
+			max_blocksize = job->common.jobsize - offset;
 
 		ret = rtp1_docmd(ctx, rtp_sendimagedata,
 				 job->databuf + offset, max_blocksize,
@@ -926,7 +928,7 @@ static const struct device_id kodak8800_devices[] = {
 /* Exported */
 const struct dyesub_backend kodak8800_backend = {
 	.name = "Kodak 8800/9810",
-	.version = "0.07",
+	.version = "0.08",
 	.uri_prefixes = kodak8800_prefixes,
 	.devices = kodak8800_devices,
 	.cmdline_usage = kodak8800_cmdline,

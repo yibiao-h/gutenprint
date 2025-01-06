@@ -1,7 +1,7 @@
 /*
  *   Sony UP-D series (new) Photo Printer CUPS backend
  *
- *   (c) 2019-2024 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2019-2025 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -384,11 +384,14 @@ static int updneo_read_parse(void *vctx, const void **vjob, int data_fd, int cop
 		if (job->databuf[i] == 0x02 &&
 		    job->databuf[i+1] == 0x00 &&
 		    job->databuf[i+2] == 0x09) {
-			job->databuf[i+4] = copies;
+			if (job->databuf[i+4] < copies)
+				job->databuf[i+4] = copies;
+			else
+				copies = job->databuf[i+4];
 			break;
 		}
 	}
-	job->common.copies = 1;  /* Printer makes copies */
+	job->common.copies = copies;
 
 	*vjob = job;
 
@@ -538,7 +541,6 @@ static void updneo_dump_status(struct updneo_ctx *ctx, struct updneo_sts *sts)
 static int updneo_main_loop(void *vctx, const void *vjob, int wait_for_return) {
 	struct updneo_ctx *ctx = vctx;
 	int ret;
-	int copies;
 
 	const struct updneo_printjob *job = vjob;
 
@@ -546,8 +548,6 @@ static int updneo_main_loop(void *vctx, const void *vjob, int wait_for_return) {
 		return CUPS_BACKEND_FAILED;
 	if (!job)
 		return CUPS_BACKEND_FAILED;
-
-	copies = job->common.copies;
 
 top:
 
@@ -609,15 +609,7 @@ retry:
 		}
 	}
 
-	/* Clean up */
-	if (terminate)
-		copies = 1;
-
-	INFO("Print complete (%d copies remaining)\n", copies - 1);
-
-	if (copies && --copies) {
-		goto top;
-	}
+	INFO("Print complete\n");
 
 	/* Needed by the UP-D898!  But should be safe for
 	   all models */
@@ -712,7 +704,7 @@ static const struct device_id sonyupdneo_devices[] = {
 
 const struct dyesub_backend sonyupdneo_backend = {
 	.name = "Sony UP-D Neo",
-	.version = "0.20",
+	.version = "0.21",
 	.flags = BACKEND_FLAG_BADISERIAL, /* UP-D898MD at least */
 	.uri_prefixes = sonyupdneo_prefixes,
 	.devices = sonyupdneo_devices,

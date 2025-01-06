@@ -1,7 +1,7 @@
 /*
  *   Sony UP-D series Photo Printer CUPS backend
  *
- *   (c) 2013-2024 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2025 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -90,6 +90,7 @@ struct upd_printjob {
 
 	uint8_t *databuf;
 	int datalen;
+	uint32_t copies_offset;
 
 	uint16_t rows;
 	uint16_t cols;
@@ -673,11 +674,13 @@ static int upd_read_parse(void *vctx, const void **vjob, int data_fd, int copies
 		uint16_t tmp;
 		memcpy(&tmp, job->databuf + copies_offset, sizeof(tmp));
 		tmp = be16_to_cpu(tmp);
-		if (tmp < copies) {  /* Use whichever one is larger */
+		if (tmp < copies) {  /* Use larger of our copy counts */
 			tmp = cpu_to_be16(copies);
 			memcpy(job->databuf + copies_offset, &tmp, sizeof(tmp));
+		} else {
+			job->common.copies = tmp;
 		}
-		job->common.copies = 1;
+		job->copies_offset = copies_offset;
 	}
 
 	if (!job->datalen) {
@@ -724,7 +727,11 @@ static int upd_main_loop(void *vctx, const void *vjob, int wait_for_return) {
 	if (!job)
 		return CUPS_BACKEND_FAILED;
 
-	copies = job->common.copies;
+	/* Hardware copies or not? */
+	if (job->copies_offset)
+		copies = 1;
+	else
+		copies = job->common.copies;
 
 top:
 	/* Send Unknown CMD.  Resets? */
@@ -989,6 +996,7 @@ static const struct device_id sonyupd_devices[] = {
 	{ 0x054c, 0x02d4, P_SONY_UPCR10, NULL, "sony-upcx1"},
 	{ 0x054c, 0x035f, P_SONY_UPDR150, NULL, "sony-updr200"},
 	{ 0x054c, 0x068c, P_SONY_UPD711, NULL, "sony-upd711"},
+	{ 0x07ce, 0xc005, P_NDC, NULL, "ndc-dpb-1500"},
 	{ 0x07ce, 0xc007, P_NDC, NULL, "ndc-dpb-4000"},
 	{ 0x07ce, 0xc007, P_NDC, NULL, "fujifilm-ask-4000"},
 	// DNP Q8?
@@ -1001,7 +1009,7 @@ static const struct device_id sonyupd_devices[] = {
 
 const struct dyesub_backend sonyupd_backend = {
 	.name = "Sony UP-D",
-	.version = "0.55",
+	.version = "0.56",
 	.uri_prefixes = sonyupd_prefixes,
 	.devices = sonyupd_devices,
 	.cmdline_arg = upd_cmdline_arg,

@@ -1,7 +1,7 @@
 /*
  *   Mitsubishi CP-D90DW Photo Printer CUPS backend
  *
- *   (c) 2019-2024 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2019-2025 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -314,7 +314,8 @@ struct mitsud90_job_hdr {
 		uint16_t overlap; /* always 0x0258, ie 600 or 2 inches */
 		uint8_t  unk[4];  /* 00 0c 00 06 */
 	} pano __attribute__((packed));
-	uint8_t zero_c[6];
+	uint8_t zero_c[5];
+	uint8_t copies;   /* EXTENSION */
 /*@x50*/uint8_t unk_m1;   /* 00 on d90 & m1 Linux, 01 on m1 (windows) */
 	uint8_t rgbrate;  /* M1 only, see below */
 	uint8_t oprate;   /* M1 only, see below */
@@ -369,7 +370,8 @@ struct mitsuw5k_job_hdr {
 	uint8_t	colorconv;  //	1: off,	0: internal
 	uint8_t  sharp_H;    // 0-8 or 0xff (ie printer)
 	uint8_t  sharp_V;    // 0-8 or 0xff (ie printer)
-/*@21*/	uint8_t  pad[512-21];
+	uint8_t  copies;     // EXTENSION
+/*@22*/	uint8_t  pad[512-22];
 } __attribute__((packed));
 
 struct mitsuw5k_plane_hdr {
@@ -1203,6 +1205,13 @@ static int mitsud90_read_parse(void *vctx, const void **vjob, int data_fd, int c
 		/* Note the job has an OPTIONAL start block.
 		   We check for that later */
 
+		job->common.copies = hdr->copies;
+		hdr->copies = 0;
+
+		/* Use larger of our copy counts */
+		if (job->common.copies < copies)
+			job->common.copies = copies;
+
 		goto read_data;
 	}
 
@@ -1377,6 +1386,15 @@ read_data:
 		}
 		job->hdr.colorcorr = 1; // XXX not sure if right for ASK500?
 	}
+
+	job->common.copies = job->hdr.copies;
+
+        /* Use larger of our copy counts */
+        if (job->common.copies < copies)
+                job->common.copies = copies;
+
+	/* Clear header to pristine shape */
+	job->hdr.copies = 0;
 
 	if (job->is_pano) {
 		int rval;
@@ -2662,7 +2680,7 @@ static const struct device_id mitsud90_devices[] = {
 /* Exported */
 const struct dyesub_backend mitsud90_backend = {
 	.name = "Mitsubishi CP-D90/CP-M1/CP-W5000",
-	.version = "0.56"  " (lib " LIBMITSU_VER ")",
+	.version = "0.57"  " (lib " LIBMITSU_VER ")",
 	.flags = BACKEND_FLAG_DUMMYPRINT,
 	.uri_prefixes = mitsud90_prefixes,
 	.devices = mitsud90_devices,

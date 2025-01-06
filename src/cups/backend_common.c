@@ -1,7 +1,7 @@
 /*
  *   CUPS Backend common code
  *
- *   Copyright (c) 2007-2024 Solomon Peachy <pizza@shaftnet.org>
+ *   Copyright (c) 2007-2025 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -29,7 +29,7 @@
 #include <signal.h>
 #include <strings.h>  /* For strncasecmp */
 
-#define BACKEND_VERSION "0.132G"
+#define BACKEND_VERSION "0.133G"
 
 #ifndef CORRTABLE_PATH
 #ifdef PACKAGE_DATA_DIR
@@ -1016,7 +1016,7 @@ static void dump_stats(struct dyesub_backend *backend, struct printerstats *stat
 void print_license_blurb(void)
 {
 	const char *license = "\n\
-Copyright 2007-2024 Solomon Peachy <pizza AT shaftnet DOT org>\n\
+Copyright 2007-2025 Solomon Peachy <pizza AT shaftnet DOT org>\n\
 \n\
 This program is free software; you can redistribute it and/or modify it\n\
 under the terms of the GNU General Public License as published by the Free\n\
@@ -1202,7 +1202,7 @@ static int handle_input(struct dyesub_backend *backend, void *backend_ctx,
 	}
 
 	/* Time for the main processing loop */
-	INFO("Printing started (%d copies)\n", ncopies);
+	INFO("Printing started\n");
 
 	/* Emit a verbose marker dump */
 	ret = query_markers(backend, backend_ctx, 1);
@@ -1347,7 +1347,7 @@ int main (int argc, char **argv)
 
 	DEBUG("Multi-Call Dye-sublimation CUPS Backend version %s\n",
 	      BACKEND_VERSION);
-	DEBUG("Copyright 2007-2024 Solomon Peachy\n");
+	DEBUG("Copyright 2007-2025 Solomon Peachy\n");
 	DEBUG("This free software comes with ABSOLUTELY NO WARRANTY! \n");
 	DEBUG("Licensed under the GNU GPL.  Run with '-G' for more details.\n");
 	DEBUG("\n");
@@ -1364,12 +1364,13 @@ int main (int argc, char **argv)
 		}
 		if (argv[base])
 			jobid = atoi(argv[base]);
-		if (argv[base + 3])
-			ncopies = atoi(argv[base + 3]);
-		if (argc > 6)
+		if (argc > 6) {
 			fname = argv[base + 5];
-		else
+			if (argv[base + 3])
+				ncopies = atoi(argv[base + 3]);
+		} else {
 			fname = "-";
+		}
 
 		/* Figure out backend based on URI */
 		{
@@ -1807,7 +1808,7 @@ struct dyesub_joblist *dyesub_joblist_create(const struct dyesub_backend *backen
 	list->num_entries = 0;
 
 	if (collate)
-		list->copies = ncopies;
+		list->copies = ncopies; // XXX
 	else
 		list->copies = 1;
 

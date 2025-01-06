@@ -175,7 +175,7 @@ struct shinkos1245_cmd_tone {
 		struct {
 			uint8_t pad[5];
 		} end_data;
-	};
+	} data;
 } __attribute__((packed));
 
 #define TONE_CURVE_DATA_BLOCK_SIZE 64
@@ -645,8 +645,8 @@ static int get_tonecurve(struct shinkos1245_ctx *ctx, int type, int table, char 
 	cmd.tone[2] = 0x4e;
 	cmd.tone[3] = 0x45;
 	cmd.cmd2[0] = 0x72;
-	cmd.read_write.tone_table = type;
-	cmd.read_write.param_table = table;
+	cmd.data.read_write.tone_table = type;
+	cmd.data.read_write.param_table = table;
 
 	ret = shinkos1245_do_cmd(ctx, &cmd, sizeof(cmd),
 				&resp, sizeof(resp), &num);
@@ -771,8 +771,8 @@ static int set_tonecurve(struct shinkos1245_ctx *ctx, int type, int table, char 
 	cmd.tone[2] = 0x4e;
 	cmd.tone[3] = 0x45;
 	cmd.cmd2[0] = 0x77;
-	cmd.read_write.tone_table = type;
-	cmd.read_write.param_table = table;
+	cmd.data.read_write.tone_table = type;
+	cmd.data.read_write.param_table = table;
 
 	ret = shinkos1245_do_cmd(ctx, &cmd, sizeof(cmd),
 				&resp, sizeof(resp), &num);

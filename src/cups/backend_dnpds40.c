@@ -1,7 +1,7 @@
 /*
  *   Citizen / DNP Photo Printer CUPS backend
  *
- *   (c) 2013-2024 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2025 Solomon Peachy <pizza@shaftnet.org>
  *
  *   Development of this backend was sponsored by:
  *
@@ -2425,7 +2425,7 @@ parsed:
 		return CUPS_BACKEND_CANCEL;
 	}
 
-	/* Use the larger of the copy arguments */
+	/* Use larger of the copy arguments */
 	if (!job->is_pano && job->common.copies < copies)
 		job->common.copies = copies;
 

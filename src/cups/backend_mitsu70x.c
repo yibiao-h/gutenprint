@@ -1,7 +1,7 @@
 /*
  *   Mitsubishi CP-D70/D707 Photo Printer CUPS backend
  *
- *   (c) 2013-2024 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2025 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -328,7 +328,8 @@ struct mitsu70x_hdr {
 	uint8_t  mode;     /* 0 for cooked YMC planar, 1 for packed BGR */
 	uint8_t  use_lut;  /* in BGR mode, 0 disables, 1 enables */
 	uint8_t  reversed; /* 1 tells the backend the row data is correct */
-	uint8_t  pad[447];
+	uint8_t  copies;   /* 1-255 */
+	uint8_t  pad[446];
 } __attribute__((packed));
 
 STATIC_ASSERT(sizeof(struct mitsu70x_hdr) == 512);
@@ -1059,12 +1060,18 @@ repeat:
 
 	job->sharpen = mhdr.sharpen - 1;
 	job->reverse = !mhdr.reversed;
+	job->common.copies = mhdr.copies;
+
+        /* Use larger of our copy counts */
+        if (job->common.copies < copies)
+                job->common.copies = copies;
 
 	/* Clean up header back to pristine. */
 	mhdr.use_lut = 0;
 	mhdr.mode = 0;
 	mhdr.sharpen = 0;
 	mhdr.reversed = 0;
+	mhdr.copies = 0;
 
 	/* Work out total printjob size */
 	job->cols = be16_to_cpu(mhdr.cols);
@@ -2639,7 +2646,7 @@ static const struct device_id mitsu70x_devices[] = {
 /* Exported */
 const struct dyesub_backend mitsu70x_backend = {
 	.name = "Mitsubishi CP-D70 family",
-	.version = "0.114" " (lib " LIBMITSU_VER ")",
+	.version = "0.115" " (lib " LIBMITSU_VER ")",
 	.flags = BACKEND_FLAG_DUMMYPRINT,
 	.uri_prefixes = mitsu70x_prefixes,
 	.devices = mitsu70x_devices,

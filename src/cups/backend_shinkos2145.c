@@ -912,7 +912,7 @@ static int shinkos2145_read_parse(void *vctx, const void **vjob, int data_fd, in
 		return ret;
 	}
 
-	/* Use whicever copy count is larger */
+	/* Use larger of our copy counts */
 	if (job->common.copies < copies)
 		job->common.copies = copies;
 

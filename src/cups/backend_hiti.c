@@ -952,7 +952,7 @@ static unsigned int hiti_ribboncounts(uint8_t code, uint8_t type)
 		}
 	} else if (type == P_HITI_826) {
 		switch(code) {
-		case RIBBON_TYPE_4x6: return 400;
+		case RIBBON_TYPE_4x6: return 500;
 		case RIBBON_TYPE_5x7: return 200;
 		case RIBBON_TYPE_6x8: return 200;
 		default: return 999;
@@ -2034,7 +2034,7 @@ static int hiti_read_parse(void *vctx, const void **vjob, int data_fd, int copie
 		return CUPS_BACKEND_CANCEL;
 	}
 
-	/* Use whicever copy count is larger */
+	/* Use larger of our copy counts */
 	if (job->common.copies < (int)job->hdr.copies)
 		job->common.copies = job->hdr.copies;
 
@@ -3527,6 +3527,7 @@ static const struct device_id hiti_devices[] = {
 	{ 0x0d16, 0x000a, P_HITI_720, NULL, "hiti-p728l"},
 	{ 0x0d16, 0x0501, P_HITI_750, NULL, "hiti-p750l"},
 	{ 0x0d16, 0x0510, P_HITI_826, NULL, "joyspace-u826"}, /* OEM variant of P525 */
+	{ 0x0d16, 0x0510, P_HITI_826, NULL, "swiftfoto-ksf10r"}, /* OEM variant of P525 */
 	{ 0x0d16, 0xc000, P_HITI_51X, NULL, "yashica-yp120"},
 	{ 0x0d16, 0xd000, P_HITI_51X, NULL, "touchtunes-p510tt"},
 	{ 0, 0, 0, NULL, NULL}
@@ -3539,7 +3540,7 @@ static const struct device_id hiti_devices[] = {
 
 const struct dyesub_backend hiti_backend = {
 	.name = "HiTi Photo Printers",
-	.version = "0.82",
+	.version = "0.83",
 	.uri_prefixes = hiti_prefixes,
 	.cmdline_usage = hiti_cmdline,
 	.cmdline_arg = hiti_cmdline_arg,

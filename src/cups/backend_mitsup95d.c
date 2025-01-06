@@ -1,7 +1,7 @@
 /*
  *   Mitsubishi P93D/P95D Monochrome Thermal Photo Printer CUPS backend
  *
- *   (c) 2016-2024 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2016-2025 Solomon Peachy <pizza@shaftnet.org>
  *
  *   Development of this backend was sponsored by:
  *
@@ -340,11 +340,14 @@ top:
 		}
 
 		/* Update printjob header to reflect number of requested copies */
-		if (job->hdr2[13] != 0xff)
+		if (job->hdr2[13] != 0xff) {
+		        /* Use larger of our copy counts */
 			if (copies > job->hdr2[13])
 				job->hdr2[13] = copies;
-
-		job->common.copies = copies; // XXX use larger?
+			else
+				copies = job->hdr2[13];
+		}
+	        job->common.copies = copies;
 
 		*vjob = job;
 		return CUPS_BACKEND_OK;
@@ -613,7 +616,7 @@ static const struct device_id mitsup95d_devices[] = {
 /* Exported */
 const struct dyesub_backend mitsup95d_backend = {
 	.name = "Mitsubishi P93D/P95D",
-	.version = "0.16",
+	.version = "0.17",
 	.uri_prefixes = mitsup95d_prefixes,
 	.devices = mitsup95d_devices,
 	.cmdline_arg = mitsup95d_cmdline_arg,

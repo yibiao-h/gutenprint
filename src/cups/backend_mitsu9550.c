@@ -1,7 +1,7 @@
 /*
  *   Mitsubishi CP-9xxx Photo Printer Family CUPS backend
  *
- *   (c) 2014-2024 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2014-2025 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -715,13 +715,12 @@ hdr_done:
 	}
 
 	/* Update printjob header to reflect number of requested copies */
-	// XXX use larger?
 	if (job->hdr2_present) {
 		if (be16_to_cpu(job->hdr2.copies) < copies)
 			job->hdr2.copies = cpu_to_be16(copies);
-		copies = 1;
+		else
+			job->common.copies = be16_to_cpu(job->hdr2.copies);
 	}
-	job->common.copies = copies;
 
 	/* All further work is in main loop */
 	if (test_mode >= TEST_MODE_NOPRINT)
@@ -1006,9 +1005,6 @@ static int mitsu9550_main_loop(void *vctx, const void *vjob, int wait_for_return
 	uint8_t *ptr;
 
 	int ret;
-#if 0
-	int copies = 1;
-#endif
 
 	struct mitsu9550_printjob *job = (struct mitsu9550_printjob*) vjob;
 
@@ -1672,7 +1668,7 @@ static const struct device_id mitsu9550_devices[] = {
 /* Exported */
 const struct dyesub_backend mitsu9550_backend = {
 	.name = "Mitsubishi CP9xxx family",
-	.version = "0.71" " (lib " LIBMITSU_VER ")",
+	.version = "0.72" " (lib " LIBMITSU_VER ")",
 	.uri_prefixes = mitsu9550_prefixes,
 	.devices = mitsu9550_devices,
 	.cmdline_usage = mitsu9550_cmdline,
