@@ -29,7 +29,7 @@
 #include <signal.h>
 #include <strings.h>  /* For strncasecmp */
 
-#define BACKEND_VERSION "0.133G"
+#define BACKEND_VERSION "0.134G"
 
 #ifndef CORRTABLE_PATH
 #ifdef PACKAGE_DATA_DIR
@@ -206,7 +206,7 @@ int parse1284_data(const char *device_id, struct deviceid_dict* dict)
 		*ptr = 0;
 		device_id++;
 
-		if (!strlen(key) || strlen(val))
+		if (!strlen(key) || !strlen(val))
 			continue;
 
 		/* Add it to the dictionary */
