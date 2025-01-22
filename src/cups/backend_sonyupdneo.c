@@ -88,6 +88,8 @@ static const char* updneo_decode_errors(uint16_t mde, uint8_t mce, uint8_t sye)
 		return "None";
 	if (mde == 0x0800 || mce == 0x1)
 		return "Cover open";
+	if (mce == 0x08)
+		return "Paper feed error";
 	if (mde == 0x0a00)
 		return "No paper loaded";
 	if (mde == 0x0002)
@@ -118,7 +120,7 @@ static const char *updneo_medias(uint32_t mdi)
 
 	switch(mdi2) {
 	case 0x110: return "UPC-R81MD (Letter)";
-		// UPC-R80MD (A4)
+           // unknown: UPC-R80MD (A4)
 	case 0x200:
 		if ((mdi & 0xfff) == 0x404) {
 			return "UPP-110 Roll"; // UPP-110HD, UPP-110HG, UPP-110S
@@ -146,9 +148,8 @@ static int updneo_attach(void *vctx, struct dyesub_connection *conn, uint8_t job
 			return ret;
 		}
 
-		/* Needed by the UP-D898!  But should be safe for
-		   all models */
-		libusb_reset_device(ctx->conn->dev);
+		if (ctx->native_bpp == 1)  /* Necessary for UP-D898 and 9x1 */
+			libusb_reset_device(ctx->conn->dev);
 	} else {
 		if (ctx->conn->type == P_SONY_UPD898) {
 			strcpy(ctx->sts.scsyi, "100005001000050000000000014500");
@@ -409,12 +410,12 @@ static int updneo_get_status(struct updneo_ctx *ctx)
 	if (!ieee_id)
 		return CUPS_BACKEND_FAILED;
 
+	dlen = parse1284_data(ieee_id, dict);
+
 	/* Don't forget to log! */
 	if (dyesub_debug >= 1) {
-		DEBUG("IEEE1284: %s\n", ieee_id);
+		DEBUG("IEEE1284: (%d) %s\n", dlen, ieee_id);
 	}
-
-	dlen = parse1284_data(ieee_id, dict);
 
 	/* Parse out data */
 	for (i = 0; i < dlen ; i++) {
@@ -427,7 +428,7 @@ static int updneo_get_status(struct updneo_ctx *ctx)
 		} else if (!strcmp("SCSNO", dict[i].key)) {
 			strncpy(ctx->sts.scsno, dict[i].val, sizeof(ctx->sts.scsno) - 1);
 
-			/* Trim trailing '-'s off of serial number (UP-D898, UP-9x1)*/
+			/* Trim trailing '-'s off of serial number (UP-D898, UP-9x1), UP-DR80MD, etc */
 			for (int j = 0; j < (int) sizeof(ctx->sts.scsno); j++) {
 				if (ctx->sts.scsno[j] == '-') {
 					ctx->sts.scsno[j] = 0;
@@ -549,6 +550,7 @@ static int updneo_main_loop(void *vctx, const void *vjob, int wait_for_return) {
 	if (!job)
 		return CUPS_BACKEND_FAILED;
 
+	// XXX update/insert stream to include job->common.copies parameter
 top:
 
 	/* Query printer status */
@@ -611,9 +613,8 @@ retry:
 
 	INFO("Print complete\n");
 
-	/* Needed by the UP-D898!  But should be safe for
-	   all models */
-	libusb_reset_device(ctx->conn->dev);
+	if (ctx->native_bpp == 1)  /* Necessary for UP-D898 and 9x1 */
+		libusb_reset_device(ctx->conn->dev);
 
 	return CUPS_BACKEND_OK;
 }
@@ -704,7 +705,7 @@ static const struct device_id sonyupdneo_devices[] = {
 
 const struct dyesub_backend sonyupdneo_backend = {
 	.name = "Sony UP-D Neo",
-	.version = "0.21",
+	.version = "0.23",
 	.flags = BACKEND_FLAG_BADISERIAL, /* UP-D898MD at least */
 	.uri_prefixes = sonyupdneo_prefixes,
 	.devices = sonyupdneo_devices,
@@ -1028,7 +1029,7 @@ Breakdown:
  +SCJBS  # JoBStatus (?)
   SCSYE  # SYstemError (?)
  +SCMDE  # MeDiaError: 2000 media mismatch, 0A00 no paper, 0800 cover open, 0002 no ribbon
- +SCMCE  # MediaCoverError: 01 cover open
+ +SCMCE  # MediaCoverError: 01 cover open, 08 jam/feed problem?
   SCJBI  # JoBInfo (?)
   SCSYI  # SYstemInfo (?) Includes legal job max dimensions/parameters; up to three dimension sets and a fourth unknown field
  +SCSVI  # print counter(s)?  (XXXXXXYYYYYY, and X = Y so far.  SCSVI and SCMNI are identical so far)
