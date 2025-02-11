@@ -582,14 +582,21 @@ stp_init(void)
       /* Things that are only initialised once */
       /* Set up gettext */
 #ifdef HAVE_LOCALE_H
-      char *locale = stp_strdup(setlocale (LC_ALL, ""));
+      char *locale = setlocale (LC_ALL, "");
+      if (locale)
+        {
+          locale = stp_strdup(locale);
+        }
 #endif
 #ifdef ENABLE_NLS
       bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
 #endif
 #ifdef HAVE_LOCALE_H
-      setlocale(LC_ALL, locale);
-      stp_free(locale);
+      if (locale)
+        {
+          setlocale(LC_ALL, locale);
+          stp_free(locale);
+        }
 #endif
       stpi_init_debug();
       stp_xml_preinit();
