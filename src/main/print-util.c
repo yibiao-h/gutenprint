@@ -590,6 +590,7 @@ stp_init(void)
 #endif
 #ifdef ENABLE_NLS
       bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+      textdomain(PACKAGE);
 #endif
 #ifdef HAVE_LOCALE_H
       if (locale)
