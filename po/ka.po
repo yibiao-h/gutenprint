@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: gutenprint 5.3.5-pre1\n"
 "Report-Msgid-Bugs-To: gimp-print-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-25 12:56-0400\n"
-"PO-Revision-Date: 2025-01-18 22:25+0100\n"
+"PO-Revision-Date: 2025-02-12 05:38+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <(nothing)>\n"
 "Language: ka\n"
@@ -80,7 +80,7 @@ msgstr "ფლოიდ-შტაინბერგი (ჰიბრიდულ
 
 #: src/main/dither-main.c:67
 msgid "Predithered Input"
-msgstr "წინასწარ დიზერინგის მქონე შეყვანა"
+msgstr "პრედიზერინგიანი შეყვანა"
 
 #: src/main/dither-main.c:68
 msgid "Drop Size Segmented"
@@ -304,7 +304,7 @@ msgstr "იისფრის სიმკვრივე"
 #: src/main/print-canon.c:428 src/main/print-escp2.c:489
 #: src/main/print-lexmark.c:324 src/main/print-pcl.c:1640
 msgid "Adjust the cyan density"
-msgstr "იისფრის სიმკვრივის განსაზღვრა"
+msgstr "იისფრის სიმკვრივის გასწორება"
 
 #: src/main/print-canon.c:435 src/main/print-escp2.c:496
 #: src/main/print-lexmark.c:331 src/main/print-pcl.c:1647
@@ -314,7 +314,7 @@ msgstr "ალისფრის სიმკვრივე"
 #: src/main/print-canon.c:436 src/main/print-escp2.c:497
 #: src/main/print-lexmark.c:332 src/main/print-pcl.c:1648
 msgid "Adjust the magenta density"
-msgstr "ალისფრის სიმკვრივის განსაზღვრა"
+msgstr "ალისფრის სიმკვრ-ის გასწორება"
 
 #: src/main/print-canon.c:443 src/main/print-escp2.c:504
 #: src/main/print-lexmark.c:339 src/main/print-pcl.c:1655
@@ -324,12 +324,12 @@ msgstr "ყვითლის სიმკვრივე"
 #: src/main/print-canon.c:444 src/main/print-escp2.c:505
 #: src/main/print-lexmark.c:340 src/main/print-pcl.c:1656
 msgid "Adjust the yellow density"
-msgstr "ყვითლის სიმკვრივის განსაზღვრა"
+msgstr "ყვითლის სიმკვრივის გასწორება"
 
 #: src/main/print-canon.c:451 src/main/print-escp2.c:512
 #: src/main/print-lexmark.c:347 src/main/print-pcl.c:1687
 msgid "Black Density"
-msgstr "შავის სიმკვრივე"
+msgstr "შავის სიმკვრივის"
 
 #: src/main/print-canon.c:452 src/main/print-escp2.c:513
 #: src/main/print-lexmark.c:348 src/main/print-pcl.c:1688
@@ -341,14 +341,14 @@ msgstr "შავის სიმკვრივის განსაზღვ�
 #: src/main/print-lexmark.c:355 src/main/print-lexmark.c:356
 #: src/main/print-pcl.c:1695 src/main/print-pcl.c:1696
 msgid "Light Cyan Transition"
-msgstr "ღია იისფერში გადასვლა"
+msgstr "ღიაიისფრის"
 
 #: src/main/print-canon.c:467 src/main/print-canon.c:468
 #: src/main/print-escp2.c:624 src/main/print-escp2.c:625
 #: src/main/print-lexmark.c:363 src/main/print-lexmark.c:364
 #: src/main/print-pcl.c:1703 src/main/print-pcl.c:1704
 msgid "Light Magenta Transition"
-msgstr "ღია ალისფერში გადასვლა"
+msgstr "ღია ფუქსინის გადვ-ის"
 
 #: src/main/print-canon.c:475 src/main/print-canon.c:476
 msgid "Light Yellow Transition"
@@ -980,7 +980,7 @@ msgstr "შავის გამის მორგება"
 
 #: src/main/print-color.c:352 src/main/print-dyesub.c:12724
 msgid "Cyan Balance"
-msgstr "ცისფრის ბალანსი"
+msgstr "ცისფრის ბალანსის"
 
 #: src/main/print-color.c:353
 msgid "Adjust the cyan gray balance"
@@ -3946,7 +3946,7 @@ msgstr "დასაბეჭდის სიგანის დაყენე�
 
 #: src/gutenprintui2/panel.c:2252
 msgid "Set the height of the print"
-msgstr "დასაბეჭდის სიმაღლის დაყეენბა"
+msgstr "დასაბეჭდის სიმაღლის დაყენება"
 
 #: src/gutenprintui2/panel.c:2258
 msgid ""
@@ -4131,7 +4131,7 @@ msgstr "მნიშვნელობა"
 
 #: src/cups/genppd.c:938 src/cups/genppd.c:1097
 msgid "Fine Adjustment"
-msgstr "ზუსტი მორგება"
+msgstr "სიზუსტე"
 
 #: src/cups/genppd.c:981 src/cups/genppd.c:1117
 #, c-format
@@ -4148,19 +4148,19 @@ msgstr "2-მხრივი ბეჭდვა"
 
 #: src/cups/genppd.c:1665 src/cups/genppd.c:1941
 msgid "Shrink Page If Necessary to Fit Borders"
-msgstr "თუ საჭიროა, საზღვრებში ჩასატევად გვერდის დაპატარავება"
+msgstr "ჩატევა, თუ საჭიროა"
 
 #: src/cups/genppd.c:1670 src/cups/genppd.c:1942
 msgid "Shrink (print the whole page)"
-msgstr "დაპატარავება (მთელი გვერდის დაბეჭდვა)"
+msgstr "დაპატარავება (გვ-ის დაბეჭდვა)"
 
 #: src/cups/genppd.c:1671 src/cups/genppd.c:1943
 msgid "Crop (preserve dimensions)"
-msgstr "ამოჭრა(ზომების გათვალისწინებით)"
+msgstr "ამოჭრა(ზომების შენარჩუნება)"
 
 #: src/cups/genppd.c:1672 src/cups/genppd.c:1944
 msgid "Expand (use maximum page area)"
-msgstr "გაფართოება (გვერდის მაქსიმალურად გამოყენება)"
+msgstr "გაწელვა (მაქს სივრცე)"
 
 #: src/escputil/escputil.c:73
 msgid "Escputil version "

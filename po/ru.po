@@ -3242,7 +3242,7 @@ msgstr "Разобрать по копиям"
 
 #: src/main/print-dyesub.c:12768 src/main/print-dyesub.c:12769
 msgid "Use legacy dyesub gamma curve"
-msgstr "Использовать устаревшую кривую гамма-распределения dyesub"
+msgstr "Использовать устаревшую гамма-кривую dyesub"
 
 #: src/main/print-dyesub.c:12803 src/main/print-dyesub.c:12811
 #: src/main/print-dyesub.c:12819 src/main/print-dyesub.c:12827
