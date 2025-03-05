@@ -373,11 +373,10 @@ typedef struct /* printer specific parameters */
   void (*job_start_func)(stp_vars_t *);
   void (*job_end_func)(stp_vars_t *);
   const stp_parameter_t *parameters;
-  int parameter_count;
+  unsigned int parameter_count;
   int (*load_parameters)(const stp_vars_t *, const char *name, stp_parameter_t *);
   int (*parse_parameters)(stp_vars_t *);
 } dyesub_cap_t;
-
 
 static int dyesub_feature(const dyesub_cap_t *caps, int feature);
 static const dyesub_cap_t* dyesub_get_model_capabilities(const stp_vars_t *v, int model);
@@ -391,55 +390,112 @@ get_privdata(stp_vars_t *v)
   return (dyesub_privdata_t *) stp_get_component_data(v, "Driver");
 }
 
+/****************** Common ink sets *******************/
 static const ink_t cmy_inks[] =
 {
   { "CMY", 3, "CMY", "\1\2\3" },
 };
-
 LIST(ink_list_t, cmy_ink_list, ink_t, cmy_inks);
 
 static const ink_t ymc_inks[] =
 {
   { "CMY", 3, "CMY", "\3\2\1" },
 };
-
 LIST(ink_list_t, ymc_ink_list, ink_t, ymc_inks);
 
 static const ink_t rgb_inks[] =
 {
   { "RGB", 3, "RGB", "\1\2\3" },
 };
-
 LIST(ink_list_t, rgb_ink_list, ink_t, rgb_inks);
 
 static const ink_t bgr_inks[] =
 {
   { "RGB", 3, "RGB", "\3\2\1" },
 };
-
 LIST(ink_list_t, bgr_ink_list, ink_t, bgr_inks);
 
 static const ink_t w_inks[] =
 {
   { "Whitescale", 1, "BW", "\1" },
 };
-
 LIST(ink_list_t, w_ink_list, ink_t, w_inks);
 
-/* Olympus P-10 */
+/****************** Common Resolutions *******************/
+static const dyesub_resolution_t res_300dpi[] =
+{
+  { "300x300", 300, 300},
+};
+LIST(dyesub_resolution_list_t, res_300dpi_list, dyesub_resolution_t, res_300dpi);
+
+static const dyesub_resolution_t res_301dpi[] =
+{
+  { "301x301", 301, 301},
+};
+LIST(dyesub_resolution_list_t, res_301dpi_list, dyesub_resolution_t, res_301dpi);
+
+static const dyesub_resolution_t res_306dpi[] =
+{
+  { "306x306", 306, 306},
+};
+LIST(dyesub_resolution_list_t, res_306dpi_list, dyesub_resolution_t, res_306dpi);
+
 static const dyesub_resolution_t res_310dpi[] =
 {
   { "310x310", 310, 310},
 };
-
 LIST(dyesub_resolution_list_t, res_310dpi_list, dyesub_resolution_t, res_310dpi);
 
+static const dyesub_resolution_t res_320dpi[] =
+{
+  { "320x320", 320, 320},
+};
+LIST(dyesub_resolution_list_t, res_320dpi_list, dyesub_resolution_t, res_320dpi);
+
+static const dyesub_resolution_t res_314dpi[] =
+{
+  { "314x314", 314, 314},
+};
+LIST(dyesub_resolution_list_t, res_314dpi_list, dyesub_resolution_t, res_314dpi);
+
+static const dyesub_resolution_t res_325dpi[] =
+{
+  { "325x325", 325, 325},
+};
+LIST(dyesub_resolution_list_t, res_325dpi_list, dyesub_resolution_t, res_325dpi);
+
+static const dyesub_resolution_t res_334dpi[] =
+{
+  { "334x334", 334, 334},
+};
+LIST(dyesub_resolution_list_t, res_334dpi_list, dyesub_resolution_t, res_334dpi);
+
+static const dyesub_resolution_t res_346dpi[] =
+{
+  { "346x346", 346, 346},
+};
+LIST(dyesub_resolution_list_t, res_346dpi_list, dyesub_resolution_t, res_346dpi);
+
+static const dyesub_resolution_t res_403dpi[] =
+{
+  { "403x403", 403, 403},
+};
+LIST(dyesub_resolution_list_t, res_403dpi_list, dyesub_resolution_t, res_403dpi);
+
+static const dyesub_resolution_t res_423dpi[] =
+{
+  { "423x423", 423, 423},
+};
+LIST(dyesub_resolution_list_t, res_423dpi_list, dyesub_resolution_t, res_423dpi);
+
+/****************** Printer definitions *******************/
+
+/* Olympus P-10 */
 static const dyesub_pagesize_t p10_page[] =
 {
   DEFINE_PAPER_SIMPLE( "w288h432", "4x6", PT(1280,310), PT(1848,310), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "B7", "3.5x5", PT(1144,310), PT(1591,310), DYESUB_PORTRAIT),
 };
-
 LIST(dyesub_pagesize_list_t, p10_page_list, dyesub_pagesize_t, p10_page);
 
 static const dyesub_printsize_t p10_printsize[] =
@@ -447,7 +503,6 @@ static const dyesub_printsize_t p10_printsize[] =
   { "310x310", "w288h432", 1280, 1848},
   { "310x310", "B7",  1144,  1591},
 };
-
 LIST(dyesub_printsize_list_t, p10_printsize_list, dyesub_printsize_t, p10_printsize);
 
 static void p10_printer_init_func(stp_vars_t *v)
@@ -480,30 +535,19 @@ static const overcoat_t p10_overcoat[] =
   {"Coated",  N_("Coated"),  {1, "\x00"}},
   {"None",    N_("None"),    {1, "\x02"}},
 };
-
 LIST(overcoat_list_t, p10_overcoat_list, overcoat_t, p10_overcoat);
 
-
 /* Olympus P-200 series */
-static const dyesub_resolution_t res_320dpi[] =
-{
-  { "320x320", 320, 320},
-};
-
-LIST(dyesub_resolution_list_t, res_320dpi_list, dyesub_resolution_t, res_320dpi);
-
 static const dyesub_pagesize_t p200_page[] =
 {
   DEFINE_PAPER( "ISOB7", "80x125mm", PT(960,320), PT(1280,320), 16, 17, 33, 33, DYESUB_PORTRAIT),
 };
-
 LIST(dyesub_pagesize_list_t, p200_page_list, dyesub_pagesize_t, p200_page);
 
 static const dyesub_printsize_t p200_printsize[] =
 {
   { "320x320", "ISOB7", 960, 1280},
 };
-
 LIST(dyesub_printsize_list_t, p200_printsize_list, dyesub_printsize_t, p200_printsize);
 
 static void p200_printer_init_func(stp_vars_t *v)
@@ -585,13 +629,6 @@ static void p300_block_init_func(stp_vars_t *v)
 }
 
 /* Olympus P-400 series */
-static const dyesub_resolution_t res_314dpi[] =
-{
-  { "314x314", 314, 314},
-};
-
-LIST(dyesub_resolution_list_t, res_314dpi_list, dyesub_resolution_t, res_314dpi);
-
 static const dyesub_pagesize_t p400_page[] =
 {
   DEFINE_PAPER( "A4", "A4", PT(2400,314), PT(3200,314), 22, 22, 54, 54, DYESUB_PORTRAIT),
@@ -827,13 +864,6 @@ static void ps100_printer_end_func(stp_vars_t *v)
 
 
 /* Canon CP-10 */
-static const dyesub_resolution_t res_300dpi[] =
-{
-  { "300x300", 300, 300},
-};
-
-LIST(dyesub_resolution_list_t, res_300dpi_list, dyesub_resolution_t, res_300dpi);
-
 static const dyesub_pagesize_t cp10_page[] =
 {
   DEFINE_PAPER( "w155h244", "Card 54x86mm", PT(662,300), PT(1040,300), 6, 6, 29, 29, DYESUB_PORTRAIT),
@@ -1107,12 +1137,6 @@ static void cp910_printer_init_func(stp_vars_t *v)
 }
 
 /* Sony DPP-EX5, DPP-EX7 */
-static const dyesub_resolution_t res_403dpi[] =
-{
-  { "403x403", 403, 403},
-};
-
-LIST(dyesub_resolution_list_t, res_403dpi_list, dyesub_resolution_t, res_403dpi);
 
 /* only Postcard pagesize is supported */
 static const dyesub_pagesize_t dppex5_page[] =
@@ -1299,15 +1323,7 @@ static const overcoat_t updr100_overcoat[] =
 
 LIST(overcoat_list_t, updr100_overcoat_list, overcoat_t, updr100_overcoat);
 
-
 /* Sony UP-DR150 */
-static const dyesub_resolution_t res_334dpi[] =
-{
-  { "334x334", 334, 334},
-};
-
-LIST(dyesub_resolution_list_t, res_334dpi_list, dyesub_resolution_t, res_334dpi);
-
 static const dyesub_pagesize_t updr150_page[] =
 {
   DEFINE_PAPER_SIMPLE( "w288h432", "4x6", PT(1382,334), PT(2048,334), DYESUB_LANDSCAPE),
@@ -3097,13 +3113,6 @@ static void cx400_printer_init_func(stp_vars_t *v)
 }
 
 /* Fujifilm NX-500 */
-static const dyesub_resolution_t res_306dpi[] =
-{
-  { "306x306", 306, 306},
-};
-
-LIST(dyesub_resolution_list_t, res_306dpi_list, dyesub_resolution_t, res_306dpi);
-
 static const dyesub_pagesize_t nx500_page[] =
 {
   DEFINE_PAPER( "Postcard", "Postcard", PT(1024,306), PT(1518,306), 21, 21, 29, 29, DYESUB_PORTRAIT),
@@ -3373,13 +3382,6 @@ static const overcoat_t kodak_605_overcoat[] =
 LIST(overcoat_list_t, kodak_605_overcoat_list, overcoat_t, kodak_605_overcoat);
 
 /* Kodak 1400 */
-static const dyesub_resolution_t res_301dpi[] =
-{
-  { "301x301", 301, 301},
-};
-
-LIST(dyesub_resolution_list_t, res_301dpi_list, dyesub_resolution_t, res_301dpi);
-
 static const dyesub_pagesize_t kodak_1400_page[] =
 {
   /* Printer has 1" non-printable area on top and bottom of page, not part of
@@ -4268,14 +4270,6 @@ static void kodak_8500_printer_end(stp_vars_t *v)
 }
 
 /* Mitsubishi P95D/DW */
-static const dyesub_resolution_t res_325dpi[] =
-{
-  { "325x325", 325, 325},
-};
-
-LIST(dyesub_resolution_list_t, res_325dpi_list, dyesub_resolution_t, res_325dpi);
-
-/* All are "custom" page sizes..  bleh.. */
 static const dyesub_pagesize_t mitsu_p95d_page[] =
 {
   DEFINE_PAPER_SIMPLE( "w213h284", "1280x960", PT(960,325), PT(1280,325), DYESUB_LANDSCAPE),
@@ -5462,13 +5456,6 @@ static int mitsu9500_parse_parameters(stp_vars_t *v)
 }
 
 /* Mitsubishi 9550D/DW */
-static const dyesub_resolution_t res_346dpi[] =
-{
-  { "346x346", 346, 346},
-};
-
-LIST(dyesub_resolution_list_t, res_346dpi_list, dyesub_resolution_t, res_346dpi);
-
 static const dyesub_pagesize_t mitsu_cp9550_page[] =
 {
   DEFINE_PAPER_SIMPLE( "B7", "3.5x5", PT(1240,346), PT(1812,346), DYESUB_LANDSCAPE),
@@ -6012,13 +5999,6 @@ static void mitsu_cp9810_printer_end(stp_vars_t *v)
 }
 
 /* Mitsubishi CP30DW */
-static const dyesub_resolution_t res_423dpi[] =
-{
-  { "423x423", 423, 423},
-};
-
-LIST(dyesub_resolution_list_t, res_423dpi_list, dyesub_resolution_t, res_423dpi);
-
 static const dyesub_pagesize_t mitsu_cp30_page[] =
 {
   DEFINE_PAPER_SIMPLE( "w272h204", "S", PT(1200,300), PT(1600,300), DYESUB_LANDSCAPE),
