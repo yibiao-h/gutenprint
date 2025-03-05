@@ -1697,7 +1697,7 @@ static int
 sony_upd895_load_parameters(const stp_vars_t *v, const char *name,
 			    stp_parameter_t *description)
 {
-  int	i;
+  unsigned int i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -1954,7 +1954,7 @@ static int
 sony_upd897_load_parameters(const stp_vars_t *v, const char *name,
 			    stp_parameter_t *description)
 {
-  int	i;
+  unsigned int i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -2100,7 +2100,7 @@ static int
 sony_upd898_load_parameters(const stp_vars_t *v, const char *name,
 			    stp_parameter_t *description)
 {
-  int	i;
+  unsigned int i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -2539,7 +2539,7 @@ static int
 sony_upd711_load_parameters(const stp_vars_t *v, const char *name,
 			    stp_parameter_t *description)
 {
-  int	i;
+  unsigned int i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
                                             stp_get_model_id(v));
 
@@ -3526,7 +3526,7 @@ static int
 kodak_9810_load_parameters(const stp_vars_t *v, const char *name,
 			   stp_parameter_t *description)
 {
-  int	i;
+  unsigned int i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -3917,7 +3917,7 @@ static int
 kodak6900_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
-  int	i;
+  unsigned int i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -4138,7 +4138,7 @@ static int
 kodak_8500_load_parameters(const stp_vars_t *v, const char *name,
 			   stp_parameter_t *description)
 {
-  int	i;
+  unsigned int i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -4414,7 +4414,7 @@ static int
 mitsu_p95d_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
-  int	i;
+  unsigned int i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -4610,7 +4610,7 @@ static int mitsu_p95d_parse_parameters(stp_vars_t *v)
 
   if (usercomment) {
     if (strncmp("None", usercomment->data, usercomment->bytes)) {
-      int i;
+      unsigned int i;
       memcpy(pd->privdata.m95d.usercomment, usercomment->data, usercomment->bytes);
       if (usercomment->bytes < 34)
         pd->privdata.m95d.usercomment[usercomment->bytes] = 0;
@@ -4837,7 +4837,7 @@ static int
 mitsu_p93d_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
-  int	i;
+  unsigned int i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -5002,7 +5002,7 @@ static int mitsu_p93d_parse_parameters(stp_vars_t *v)
 
   if (usercomment) {
     if (strncmp("None", usercomment->data, usercomment->bytes)) {
-      int i;
+      unsigned int i;
       memcpy(pd->privdata.m95d.usercomment, usercomment->data, usercomment->bytes);
       if (usercomment->bytes < 40)
         pd->privdata.m95d.usercomment[usercomment->bytes] = 0;
@@ -5402,7 +5402,7 @@ static int
 mitsu9500_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
-  int	i;
+  unsigned int i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -5507,7 +5507,7 @@ static int
 mitsu9550_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
-  int	i;
+  unsigned int i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -5828,7 +5828,7 @@ static int
 mitsu98xx_load_parameters(const stp_vars_t *v, const char *name,
 			  stp_parameter_t *description)
 {
-  int	i;
+  unsigned int i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -6123,7 +6123,7 @@ static const stp_parameter_t mitsu_cp30_parameters[] =
 static int mitsu_cp30_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
-  int	i;
+  unsigned int i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -6313,7 +6313,7 @@ static int
 mitsu70x_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
-  int	i;
+  unsigned int i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -6364,7 +6364,7 @@ static int
 mitsu707_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
-  int	i;
+  unsigned int i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -6608,7 +6608,7 @@ static int
 mitsu_k60_load_parameters(const stp_vars_t *v, const char *name,
 			  stp_parameter_t *description)
 {
-  int	i;
+  unsigned int i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -6721,7 +6721,7 @@ static int
 dnp_ds4x0_load_parameters(const stp_vars_t *v, const char *name,
 			  stp_parameter_t *description)
 {
-  int	i;
+  unsigned int i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -6922,7 +6922,7 @@ static int
 mitsu_d90_load_parameters(const stp_vars_t *v, const char *name,
 			  stp_parameter_t *description)
 {
-  int	i;
+  unsigned int i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -7244,7 +7244,7 @@ static int
 mitsu_cpm1_load_parameters(const stp_vars_t *v, const char *name,
 			   stp_parameter_t *description)
 {
-  int	i;
+  unsigned int i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -7477,7 +7477,7 @@ static int
 mitsu_cpw5k_load_parameters(const stp_vars_t *v, const char *name,
 			  stp_parameter_t *description)
 {
-  int	i;
+  unsigned int i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -8007,7 +8007,7 @@ static int
 shinko_chcs1245_load_parameters(const stp_vars_t *v, const char *name,
 			   stp_parameter_t *description)
 {
-  int	i;
+  unsigned int i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -8603,7 +8603,7 @@ static int
 ds40_load_parameters(const stp_vars_t *v, const char *name,
 		     stp_parameter_t *description)
 {
-  int	i;
+  unsigned int i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 					stp_get_model_id(v));
 
@@ -9573,7 +9573,7 @@ static int
 ds820_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
-  int	i;
+  unsigned int i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -9628,7 +9628,6 @@ static int ds820_parse_parameters(stp_vars_t *v)
 }
 
 /* DNP QW410 */
-
 static const overcoat_t dnp_qw410_overcoat[] =
 {
   {"Glossy",  N_("Glossy"),  {3, "000"}},
@@ -9806,7 +9805,7 @@ static int
 qw410_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
-  int	i;
+  unsigned int i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -10058,7 +10057,7 @@ static int
 hiti_p520l_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
-  int	i;
+  unsigned int i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -10158,7 +10157,7 @@ static int
 hiti_p720l_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
-  int	i;
+  unsigned int i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -10310,7 +10309,7 @@ static int
 hiti_p461_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
-  int	i;
+  unsigned int i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -10724,7 +10723,7 @@ static int
 magicard_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
-  int	i;
+  unsigned int i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -11009,7 +11008,7 @@ static int magicard_parse_parameters(stp_vars_t *v)
   pd->privdata.magicard.mag_coer = mag_coer && !strcmp("High", mag_coer);
 
   if (magstripe1 && magstripe1->bytes) {
-    int i;
+    unsigned int i;
     memcpy(pd->privdata.magicard.mag1, magstripe1->data, magstripe1->bytes);
     pd->privdata.magicard.mag1[magstripe1->bytes] = 0;
     for (i = 0 ; i < magstripe1->bytes ; i++) {
@@ -11029,7 +11028,7 @@ static int magicard_parse_parameters(stp_vars_t *v)
     }
   }
   if (magstripe2 && magstripe2->bytes) {
-    int i;
+    unsigned int i;
     memcpy(pd->privdata.magicard.mag2, magstripe2->data, magstripe2->bytes);
     pd->privdata.magicard.mag2[magstripe2->bytes] = 0;
     for (i = 0 ; i < magstripe2->bytes ; i++) {
@@ -11049,7 +11048,7 @@ static int magicard_parse_parameters(stp_vars_t *v)
     }
   }
   if (magstripe3 && magstripe3->bytes) {
-    int i;
+    unsigned int i;
     memcpy(pd->privdata.magicard.mag3, magstripe3->data, magstripe3->bytes);
     pd->privdata.magicard.mag3[magstripe3->bytes] = 0;
     for (i = 0 ; i < magstripe3->bytes ; i++) {
@@ -12751,8 +12750,8 @@ static const stp_parameter_t the_parameters[] =
   },
 };
 
-static int the_parameter_count =
-sizeof(the_parameters) / sizeof(const stp_parameter_t);
+static unsigned int the_parameter_count =
+  sizeof(the_parameters) / sizeof(const stp_parameter_t);
 
 typedef struct
 {
@@ -12799,8 +12798,8 @@ static const float_param_t float_parameters[] =
   },
 };
 
-static const int float_parameter_count =
-sizeof(float_parameters) / sizeof(const float_param_t);
+static const unsigned int float_parameter_count =
+  sizeof(float_parameters) / sizeof(const float_param_t);
 
 /*
  * Duplex support - modes available
@@ -12838,7 +12837,7 @@ static const overcoat_t* dyesub_get_overcoat_pattern(stp_vars_t *v)
 		  				stp_get_model_id(v));
   const overcoat_list_t *llist = caps->overcoat;
   const overcoat_t *l = NULL;
-  int i;
+  unsigned int i;
 
   for (i = 0; i < llist->n_items; i++)
     {
@@ -12856,7 +12855,7 @@ static const dyesub_media_t* dyesub_get_mediatype(stp_vars_t *v)
                                               stp_get_model_id(v));
   const dyesub_media_list_t *mlist = caps->media;
   const dyesub_media_t *m = NULL;
-  int i;
+  unsigned int i;
 
   for (i = 0; i < mlist->n_items; i++)
     {
@@ -12872,7 +12871,7 @@ dyesub_printsize(const stp_vars_t *v,
 		   int  *width,
 		   int  *height)
 {
-  int i;
+  unsigned int i;
   const char *page = stp_get_string_parameter(v, "PageSize");
   const char *resolution = stp_get_string_parameter(v, "Resolution");
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
@@ -12905,7 +12904,7 @@ dyesub_list_parameters(const stp_vars_t *v)
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v, stp_get_model_id(v));
 
   stp_parameter_list_t *ret = stp_parameter_list_create();
-  int i;
+  unsigned int i;
 
   for (i = 0; i < the_parameter_count; i++)
     stp_parameter_list_add_param(ret, &(the_parameters[i]));
@@ -12922,7 +12921,7 @@ static void
 dyesub_parameters(const stp_vars_t *v, const char *name,
 	       stp_parameter_t *description)
 {
-  int	i;
+  unsigned int i;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
@@ -13151,7 +13150,7 @@ dyesub_get_pagesize(const stp_vars_t *v, const char *page)
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
   const dyesub_pagesize_list_t *p = caps->pages;
-  int i;
+  unsigned int i;
   if (page == NULL)
     return NULL;
 
@@ -13285,7 +13284,7 @@ dyesub_describe_resolution(const stp_vars_t *v,
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
   							stp_get_model_id(v));
   const dyesub_resolution_list_t *r = caps->resolution;
-  int i;
+  unsigned int i;
 
   *x = -1;
   *y = -1;
@@ -13311,7 +13310,7 @@ dyesub_describe_output_internal(const stp_vars_t *v, dyesub_print_vars_t *pv)
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
   							stp_get_model_id(v));
   const char *output_type;
-  int i;
+  unsigned int i;
 
   pv->ink_channels = 1;
   pv->ink_order = "\1";
