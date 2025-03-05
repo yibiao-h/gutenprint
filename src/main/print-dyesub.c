@@ -50,21 +50,21 @@
 //#define USE_WRONG_APPGAMMA_BY_DEFAULT
 
 #define DYESUB_FEATURE_NONE		 0x00000000
-#define DYESUB_FEATURE_FULL_WIDTH	 0x00000001
-#define DYESUB_FEATURE_FULL_HEIGHT	 0x00000002
-#define DYESUB_FEATURE_BLOCK_ALIGN	 0x00000004
-#define DYESUB_FEATURE_BORDERLESS	 0x00000008
-#define DYESUB_FEATURE_WHITE_BORDER	 0x00000010
-#define DYESUB_FEATURE_PLANE_INTERLACE	 0x00000020
-#define DYESUB_FEATURE_PLANE_LEFTTORIGHT 0x00000040
-#define DYESUB_FEATURE_ROW_INTERLACE	 0x00000080
-#define DYESUB_FEATURE_DUPLEX            0x00000800
-#define DYESUB_FEATURE_MONOCHROME        0x00001000
-#define DYESUB_FEATURE_NATIVECOPIES      0x00002000
-#define DYESUB_FEATURE_HASBACKEND        0x00004000
+#define DYESUB_FEATURE_FULL_WIDTH	 0x00000001 /* Data for nonprinted HORIZONTAL margins must be sent */
+#define DYESUB_FEATURE_FULL_HEIGHT	 0x00000002 /* Data for nonprinted VERTICAL margins must be sent */
+#define DYESUB_FEATURE_BLOCK_ALIGN	 0x00000004 /* Data is sent in BLOCKSIZE chunks */
+#define DYESUB_FEATURE_BORDERLESS	 0x00000008 /* Margins include printable area */
+#define DYESUB_FEATURE_WHITE_BORDER	 0x00000010 /* Margins include printable area, driver filled */
+#define DYESUB_FEATURE_PLANE_INTERLACE	 0x00000020 /* Color info sent one complete plane at a time */
+#define DYESUB_FEATURE_PLANE_LEFTTORIGHT 0x00000040 /* Data is LTR instead of RTL */
+#define DYESUB_FEATURE_ROW_INTERLACE	 0x00000080 /* Color info sent one complete row at a time */
+#define DYESUB_FEATURE_DUPLEX            0x00000800 /* Printer supports duplexing */
+#define DYESUB_FEATURE_MONOCHROME        0x00001000 /* Printer is monochromatic only */
+#define DYESUB_FEATURE_NATIVECOPIES      0x00002000 /* Copy count is embedded in the data stream */
+#define DYESUB_FEATURE_HASBACKEND        0x00004000 /* Printer uses an intelligent backend */
 
-#define DYESUB_PORTRAIT  0
-#define DYESUB_LANDSCAPE 1
+#define DYESUB_PORTRAIT  0 /* Long dimension is Y axis */
+#define DYESUB_LANDSCAPE 1 /* Long dimension is X asis */
 
 #define OP_JOB_START 1
 #define OP_JOB_PRINT 2
@@ -76,6 +76,7 @@
 #ifndef MAX
 #  define MAX(a, b)	(((a) > (b)) ? (a) : (b))
 #endif /* !MAX */
+
 #define PX(pt,dpi)	(int)(((stp_dimension_t)(pt) * (stp_resolution_t)(dpi) / (stp_resolution_t)72) + 0.5f)
 #define PT(px,dpi)	((stp_resolution_t)(px) * (stp_resolution_t)72 / (stp_dimension_t)(dpi))
 
@@ -90,12 +91,9 @@
 	  items_name, sizeof(items_name) / sizeof(items_t) \
 	}
 
-#define MAX_INK_CHANNELS	3
-#define SIZE_THRESHOLD		6
+#define MAX_INK_CHANNELS	3 /* typically RGB or CMY, revisit if we ever do CMYK */
+#define SIZE_THRESHOLD		6 /* We skip scaling when dimensions are below this */
 
-/*
- * Random implementation from POSIX.1-2001 to yield reproducible results.
- */
 typedef struct
 {
   const char *output_type;
@@ -126,21 +124,21 @@ typedef struct {
 } dyesub_pagesize_t;
 
 #define DEFINE_PAPER(__n, __t, __w, __h, __bl, __br, __bt, __bb, __pm)	\
-	{								\
-	  .psize = {							\
-	    .name = __n,						\
-	    .text = N_(__t),						\
-	    .width = __w,						\
-	    .height = __h,						\
-	    .top = __bt,						\
-	    .left = __bl,						\
-	    .bottom = __bb,						\
-	    .right = __br,						\
-	    .paper_unit = PAPERSIZE_ENGLISH_STANDARD,			\
-	    .paper_size_type = PAPERSIZE_TYPE_STANDARD,			\
-	  },								\
-	    .print_mode = __pm,						\
-	    }
+  {								\
+    .psize = {							\
+      .name = __n,						\
+      .text = N_(__t),						\
+      .width = __w,						\
+      .height = __h,						\
+      .top = __bt,						\
+      .left = __bl,						\
+      .bottom = __bb,						\
+      .right = __br,						\
+      .paper_unit = PAPERSIZE_ENGLISH_STANDARD,			\
+      .paper_size_type = PAPERSIZE_TYPE_STANDARD,		\
+    },								\
+    .print_mode = __pm,						\
+  }
 
 #define DEFINE_PAPER_SIMPLE(__n, __t, __w, __h, __pm)	\
 	DEFINE_PAPER(__n, __t, __w, __h, 0, 0, 0, 0, __pm)
@@ -363,7 +361,7 @@ typedef struct /* printer specific parameters */
   const dyesub_pagesize_list_t *pages;
   const dyesub_printsize_list_t *printsize;
   int block_size;  /* Really # of rows in a block */
-  int features;
+  int features;    /* DYESUB_FEATURE_* */
   void (*printer_init_func)(stp_vars_t *);
   void (*printer_end_func)(stp_vars_t *);
   void (*plane_init_func)(stp_vars_t *);
