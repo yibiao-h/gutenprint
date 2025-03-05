@@ -795,8 +795,8 @@ typedef struct lexm_privdata_weave {
  */
 static int model_to_index(int model)
 {
-  int i;
-  int models= sizeof(lexmark_model_capabilities) / sizeof(lexmark_cap_t);
+  unsigned int i;
+  unsigned int models= sizeof(lexmark_model_capabilities) / sizeof(lexmark_cap_t);
   for (i=0; i<models; i++) {
     if (lexmark_model_capabilities[i].model == model) {
       return i;
@@ -984,7 +984,7 @@ lexmark_head_offset(const stp_vars_t *v,
 		    const lexmark_inkparam_t *ink_parameter, /* i */
 		    lexmark_lineoff_t *lineoff_buffer)  /* o */
 {
-  int i;
+  unsigned int i;
   (void)ink_type;
 
   stp_dprintf(STP_DBG_LEXMARK, v, "  size %d,  size_v %d, size_v[0] %d\n", (int)sizeof(*lineoff_buffer), (int)sizeof(lineoff_buffer->v), (int)sizeof(lineoff_buffer->v[0]));
@@ -1181,7 +1181,7 @@ static void
 lexmark_parameters(const stp_vars_t *v, const char *name,
 		   stp_parameter_t *description)
 {
-  int		i;
+  unsigned int i;
 
   const lexmark_cap_t * caps= lexmark_get_model_capabilities(v, stp_get_model_id(v));
   description->p_type = STP_PARAMETER_TYPE_INVALID;

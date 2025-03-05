@@ -286,10 +286,10 @@ static void
 ps_parameters_internal(const stp_vars_t *v, const char *name,
 		       stp_parameter_t *description)
 {
-  int		i;
+  unsigned int i;
   stp_mxml_node_t *option;
   int status = 0;
-  int num_choices;
+  unsigned int num_choices;
   const char *defchoice;
 
   description->p_type = STP_PARAMETER_TYPE_INVALID;
@@ -726,7 +726,7 @@ ps_external_options(const stp_vars_t *v)
   stp_string_list_t *answer;
   char *tmp;
   char *ppd_name = NULL;
-  int i;
+  unsigned int i;
 #ifdef HAVE_LOCALE_H
   char *locale;
 #endif
@@ -857,7 +857,7 @@ ps_external_options(const stp_vars_t *v)
 static void
 ps_print_device_settings(stp_vars_t *v)
 {
-  int i;
+  unsigned int i;
   stp_parameter_list_t param_list = ps_list_parameters(v);
   if (! param_list)
     return;

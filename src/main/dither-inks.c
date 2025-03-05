@@ -64,10 +64,10 @@ stp_dither_get_channel(stp_vars_t *v, unsigned channel, unsigned subchannel)
 }
 
 static void
-insert_channel(stp_vars_t *v, stpi_dither_t *d, int channel)
+insert_channel(stp_vars_t *v, stpi_dither_t *d, unsigned channel)
 {
   unsigned oc = d->channel_count;
-  int i;
+  unsigned int i;
   (void)v;
 
   d->channel_index =
@@ -122,9 +122,9 @@ initialize_channel(stp_vars_t *v, int channel, int subchannel)
 }
 
 static void
-insert_subchannel(stp_vars_t *v, stpi_dither_t *d, int channel, int subchannel)
+insert_subchannel(stp_vars_t *v, stpi_dither_t *d, unsigned channel, unsigned subchannel)
 {
-  int i;
+  unsigned int i;
   unsigned oc = d->subchannel_count[channel];
   unsigned increment = subchannel - oc + 1;
   unsigned old_place = d->channel_index[channel] + oc;
@@ -166,7 +166,7 @@ stpi_dither_finalize(stp_vars_t *v)
   stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
   if (!d->finalized)
     {
-      int i;
+      unsigned int i;
       unsigned rc = 1 + (unsigned) ceil(sqrt(CHANNEL_COUNT(d)));
       unsigned x_n = d->dither_matrix.x_size / rc;
       unsigned y_n = d->dither_matrix.y_size / rc;

@@ -692,7 +692,7 @@ sizeof(curve_parameters) / sizeof(curve_param_t);
 static const color_description_t *
 get_color_description(const char *name)
 {
-  int i;
+  unsigned int i;
   if (name)
     for (i = 0; i < color_description_count; i++)
       {
@@ -705,7 +705,7 @@ get_color_description(const char *name)
 static const channel_depth_t *
 get_channel_depth(const char *name)
 {
-  int i;
+  unsigned int i;
   if (name)
     for (i = 0; i < channel_depth_count; i++)
       {
@@ -718,7 +718,7 @@ get_channel_depth(const char *name)
 static const color_correction_t *
 get_color_correction(const char *name)
 {
-  int i;
+  unsigned int i;
   if (name)
     for (i = 0; i < color_correction_count; i++)
       {
@@ -731,7 +731,7 @@ get_color_correction(const char *name)
 static const color_correction_t *
 get_color_correction_by_tag(color_correction_enum_t correction)
 {
-  int i;
+  unsigned int i;
   for (i = 0; i < color_correction_count; i++)
     {
       if (correction == color_corrections[i].correction)
@@ -878,7 +878,7 @@ compute_gcr_curve(const stp_vars_t *vars)
   double k_trans = 1.0;
   double i_k_trans = 1.0;
   double *tmp_data = stp_malloc(sizeof(double) * lut->steps);
-  int i;
+  unsigned int i;
 
   if (stp_check_float_parameter(vars, "GCRUpper", STP_PARAMETER_DEFAULTED))
     k_upper = stp_get_float_parameter(vars, "GCRUpper");
@@ -941,7 +941,7 @@ initialize_gcr_curve(stp_vars_t *vars)
     {
       double data;
       size_t count;
-      int i;
+      unsigned int i;
       curve = stp_curve_create_copy(stp_get_curve_parameter(vars, "GCRCurve"));
       stp_curve_resample(curve, lut->steps);
       count = stp_curve_count_points(curve);
@@ -1024,8 +1024,8 @@ compute_user_correction(lut_t *lut)
   stp_curve_t *contrast_curve =
     stp_curve_cache_get_curve(&(lut->contrast_correction));
   double brightness = lut->brightness;
-  int i;
-  int isteps = lut->steps;
+  unsigned int i;
+  unsigned int isteps = lut->steps;
   if (isteps > 256)
     isteps = 256;
   tmp = stp_malloc(sizeof(double) * lut->steps);
@@ -1123,8 +1123,8 @@ compute_a_curve_full(lut_t *lut, int channel)
   double ipivot2 = 1.0 - pivot2;
   double xgamma2 = pow(pivot2, print_gamma);
   stp_curve_t *curve = stp_curve_cache_get_curve(&(lut->channel_curves[channel]));
-  int i;
-  int isteps = lut->steps;
+  unsigned int i;
+  unsigned int isteps = lut->steps;
   if (isteps > 256)
     isteps = 256;
   tmp = stp_malloc(sizeof(double) * lut->steps);
@@ -1183,8 +1183,8 @@ compute_a_curve_fast(lut_t *lut, int channel)
 {
   double *tmp;
   stp_curve_t *curve = stp_curve_cache_get_curve(&(lut->channel_curves[channel]));
-  int i;
-  int isteps = lut->steps;
+  unsigned int i;
+  unsigned int isteps = lut->steps;
   if (isteps > 256)
     isteps = 256;
   tmp = stp_malloc(sizeof(double) * lut->steps);
@@ -1205,8 +1205,8 @@ compute_a_curve_simple(lut_t *lut, int channel)
 {
   double *tmp;
   stp_curve_t *curve = stp_curve_cache_get_curve(&(lut->channel_curves[channel]));
-  int i;
-  int isteps = lut->steps;
+  unsigned int i;
+  unsigned int isteps = lut->steps;
   double gamma = 1.0 / (lut->gamma_values[channel] * lut->print_gamma);
   if (isteps > 256)
     isteps = 256;
@@ -1247,7 +1247,7 @@ static void
 invert_curve(stp_curve_t *curve, int invert_output)
 {
   double lo, hi;
-  int i;
+  unsigned int i;
   size_t count;
   const double *data = stp_curve_get_data(curve, &count);
   double f_gamma = stp_curve_get_gamma(curve);

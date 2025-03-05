@@ -60,7 +60,6 @@ buffered_image_get_appname(stp_image_t *image)
 	return priv->image->get_appname(priv->image);
 }
 
-
 static stp_image_status_t
 buffered_image_get_row(stp_image_t* image,unsigned char *data, size_t byte_limit, int row)
 {

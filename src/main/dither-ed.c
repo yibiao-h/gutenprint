@@ -343,7 +343,7 @@ shared_ed_initializer(stpi_dither_t *d,
 		      int ****error,
 		      int **ndither)
 {
-  int i, j;
+  unsigned int i, j;
   for (i = 0; i < CHANNEL_COUNT(d); i++)
     CHANNEL(d, i).error_rows = 2;
   if (!duplicate_line)
@@ -391,7 +391,7 @@ shared_ed_deinitializer(stpi_dither_t *d,
 			int ***error,
 			int *ndither)
 {
-  int i;
+  unsigned int i;
   for (i = 0; i < CHANNEL_COUNT(d); i++)
     {
       STP_SAFE_FREE(error[i]);
@@ -412,7 +412,7 @@ stpi_dither_ed(stp_vars_t *v,
   int		x,
     		length;
   unsigned char	bit;
-  int		i;
+  unsigned int	i;
   int		*ndither;
   int		***error;
 

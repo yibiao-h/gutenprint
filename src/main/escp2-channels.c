@@ -160,8 +160,8 @@ load_inkname(stp_mxml_node_t *node, stp_mxml_node_t *root, inkname_t *inl,
 {
   const char *name;
   stp_mxml_node_t *child = node->child;
-  int channel_count = 0;
-  int aux_channel_count = 0;
+  unsigned int channel_count = 0;
+  unsigned int aux_channel_count = 0;
 
   while (child)
     {

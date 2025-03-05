@@ -36,7 +36,7 @@ static inline void
 print_color_very_fast(const stpi_dither_t *d, stpi_dither_channel_t *dc,
 		      int val, int x, int y, unsigned bit, int length)
 {
-  int i, j;
+  unsigned int i, j;
   unsigned char *tptr = dc->ptr + d->ptr_offset;
   (void)y;
 
@@ -63,7 +63,7 @@ stpi_dither_predithered(stp_vars_t *v,
   int		x,
 		length;
   unsigned char	bit;
-  int i;
+  unsigned int i;
   int one_bit_only = 1;
 
   int xerror, xstep, xmod;

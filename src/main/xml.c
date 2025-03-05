@@ -545,7 +545,7 @@ stp_rawtoxmlstr(const stp_raw_t *raw)
 {
   if (raw && raw->bytes > 0)
     {
-      int i;
+      unsigned int i;
       const unsigned char *data = (const unsigned char *) (raw->data);
       char *answer = stp_malloc((raw->bytes * 4) + 1); /* \012 */
       unsigned char *aptr = (unsigned char *) answer;
@@ -573,8 +573,8 @@ stp_strtoxmlstr(const char *str)
 {
   if (str && strlen(str) > 0)
     {
-      int i;
-      int bytes = strlen(str);
+      unsigned int i;
+      unsigned int bytes = strlen(str);
       const unsigned char *data = (const unsigned char *) (str);
       char *answer = stp_malloc((bytes * 4) + 1); /* "\012" is worst case */
       unsigned char *aptr = (unsigned char *) answer;
@@ -602,7 +602,7 @@ stp_prtraw(const stp_raw_t *raw, FILE *fp)
 {
   if (raw && raw->bytes > 0)
     {
-      int i;
+      unsigned int i;
       const unsigned char *data = (const unsigned char *) (raw->data);
       for (i = 0; i < raw->bytes; i++)
 	{

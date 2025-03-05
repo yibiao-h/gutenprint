@@ -95,7 +95,7 @@ typedef struct {
   const unsigned int ink_types;        /* the used color channels */
   const char* name;                    /* internal name do not translate, must not contain spaces */
   const char* text;                    /* description */
-  const int num_inks;
+  const unsigned int num_inks;
   const canon_inkset_t *inks;          /* ink definition        */
   const int raster_lines_per_block;    /* number of raster lines in every F) command */
   const unsigned int flags;
@@ -126,8 +126,8 @@ typedef struct {
 
 typedef struct {
   const char *name;
-  const short count;
-  const short default_mode;
+  const unsigned short count;
+  const unsigned short default_mode;
   const canon_mode_t *modes;
 } canon_modelist_t;
 

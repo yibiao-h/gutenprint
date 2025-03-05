@@ -69,7 +69,7 @@ static const stpi_dither_algorithm_t dither_algos[] =
   { "SegmentedNew",   N_ ("Drop Size Segmented New"),D_ORDERED_SEGMENTED_NEW }
 };
 
-static const int num_dither_algos = sizeof(dither_algos)/sizeof(stpi_dither_algorithm_t);
+static const unsigned int num_dither_algos = sizeof(dither_algos)/sizeof(stpi_dither_algorithm_t);
 
 
 /*
@@ -107,14 +107,14 @@ static const stp_parameter_t dither_parameters[] =
   },
 };
 
-static const int dither_parameter_count =
-sizeof(dither_parameters) / sizeof(const stp_parameter_t);
+static const unsigned int dither_parameter_count =
+  sizeof(dither_parameters) / sizeof(const stp_parameter_t);
 
 stp_parameter_list_t
 stp_dither_list_parameters(const stp_vars_t *v)
 {
   stp_parameter_list_t *ret = stp_parameter_list_create();
-  int i;
+  unsigned int i;
   (void)v;
 
   for (i = 0; i < dither_parameter_count; i++)
@@ -126,7 +126,7 @@ void
 stp_dither_describe_parameter(const stp_vars_t *v, const char *name,
 			      stp_parameter_t *description)
 {
-  int i;
+  unsigned int i;
   (void)v;
 
   description->p_type = STP_PARAMETER_TYPE_INVALID;
@@ -173,7 +173,7 @@ stpi_set_dither_function(stp_vars_t *v)
   const char *color_correction = stp_get_string_parameter(v,"ColorCorrection");
   const char *algorithm = stp_get_string_parameter(v, "DitherAlgorithm");
   stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
-  int i;
+  unsigned int i;
   d->stpi_dither_type = -1;
   if (stp_check_string_parameter(v, "Quality", STP_PARAMETER_ACTIVE))
     quality = stpi_get_quality_by_name(stp_get_string_parameter(v, "Quality"));
@@ -328,7 +328,7 @@ static void
 stpi_dither_free(void *vd)
 {
   stpi_dither_t *d = (stpi_dither_t *) vd;
-  int j;
+  unsigned int j;
   if (d->aux_freefunc)
     (d->aux_freefunc)(d);
   for (j = 0; j < CHANNEL_COUNT(d); j++)
@@ -413,7 +413,7 @@ stp_dither_init(stp_vars_t *v, stp_image_t *image, int out_width,
 void
 stpi_dither_reverse_row_ends(stpi_dither_t *d)
 {
-  int i;
+  unsigned int i;
   for (i = 0; i < CHANNEL_COUNT(d); i++)
     {
       int tmp = CHANNEL(d, i).row_ends[0];
@@ -465,7 +465,7 @@ stp_dither_internal(stp_vars_t *v, int row, const unsigned short *input,
 		    int duplicate_line, int zero_mask,
 		    const unsigned char *mask)
 {
-  int i;
+  unsigned int i;
   stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
   stpi_dither_finalize(v);
   stp_dither_matrix_set_row(&(d->dither_matrix), row);

@@ -190,7 +190,7 @@ void
 stp_send_command(const stp_vars_t *v, const char *command,
 		 const char *format, ...)
 {
-  int i = 0;
+  unsigned int i = 0;
   char fchar;
   const char *out_str;
   const stp_raw_t *out_raw;

@@ -231,7 +231,7 @@ typedef struct
   unsigned char *comp_buf;
   unsigned char *fold_buf;
   int delay_max;
-  int buf_length_max;
+  unsigned int buf_length_max;
   int length;
   int out_width;
   int out_height;
@@ -408,8 +408,8 @@ static const stp_parameter_t the_parameters[] =
   },
 };
 
-static const int the_parameter_count =
-sizeof(the_parameters) / sizeof(const stp_parameter_t);
+static const unsigned int the_parameter_count =
+ sizeof(the_parameters) / sizeof(const stp_parameter_t);
 
 typedef struct
 {
@@ -480,8 +480,8 @@ static const float_param_t float_parameters[] =
   },
 };
 
-static const int float_parameter_count =
-sizeof(float_parameters) / sizeof(const float_param_t);
+static const unsigned int float_parameter_count =
+  sizeof(float_parameters) / sizeof(const float_param_t);
 
 /*
  * Duplex support - modes available
@@ -971,7 +971,7 @@ const canon_mode_t* suitable_mode_general(stp_vars_t *v,const canon_modeuse_t* m
 #endif
 
 const char* find_ink_type(stp_vars_t *v,const canon_mode_t* mode,const char *printing_mode) {
-  int i,inkfound;
+  unsigned int i,inkfound;
   const char *ink_type = stp_get_string_parameter(v, "InkType");
 
   stp_dprintf(STP_DBG_CANON, v,"DEBUG: Entered find_ink_type\n");
@@ -1033,7 +1033,7 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
   const canon_modeuselist_t* mlist = caps->modeuselist;
   const canon_modeuse_t* muse = NULL;
   const canon_paper_t* media_type = get_media_type(caps,stp_get_string_parameter(v, "MediaType"));
-  int i,j;
+  unsigned int i,j;
   int modecheck, quality, modefound;
 #if 0
   int inkfound;
@@ -2814,7 +2814,7 @@ canon_list_parameters(const stp_vars_t *v)
   stp_parameter_list_t *ret = stp_parameter_list_create();
   stp_parameter_list_t *tmp_list;
 
-  int i;
+  unsigned int i;
 
   /* Set up dithering */
   tmp_list = stp_dither_list_parameters(v);
@@ -2832,7 +2832,8 @@ static void
 canon_parameters(const stp_vars_t *v, const char *name,
 		 stp_parameter_t *description)
 {
-  int		i,j;
+  unsigned int i;
+  int j;
 
   const canon_cap_t * caps=
     canon_get_model_capabilities(v);
@@ -3033,11 +3034,10 @@ canon_parameters(const stp_vars_t *v, const char *name,
   else if (strcmp(name, "MediaType") == 0)
   {
     const canon_paper_t * canon_paper_list = caps->paperlist->papers;
-    int count = caps->paperlist->count;
     description->bounds.str= stp_string_list_create();
     description->deflt.str= canon_paper_list[0].name;
 
-    for (i = 0; i < count; i ++) {
+    for (i = 0; i < caps->paperlist->count; i ++) {
       stp_string_list_add_string(description->bounds.str,
 				canon_paper_list[i].name,
 				gettext(canon_paper_list[i].text));
@@ -3048,11 +3048,10 @@ canon_parameters(const stp_vars_t *v, const char *name,
   else if (strcmp(name, "InputSlot") == 0)
   {
     const canon_slot_t * canon_slot_list = caps->slotlist->slots;
-    int count = caps->slotlist->count;
     description->bounds.str= stp_string_list_create();
     description->deflt.str= canon_slot_list[0].name;
 
-    for (i = 0; i < count; i ++)
+    for (i = 0; i < caps->slotlist->count; i ++)
       stp_string_list_add_string(description->bounds.str,
 				 canon_slot_list[i].name,
 				 gettext(canon_slot_list[i].text));
@@ -5135,8 +5134,8 @@ canon_init_setImage(const stp_vars_t *v, const canon_privdata_t *init)
 
   if(init->mode->flags & MODE_FLAG_EXTENDED_T)  /*code requires extended mode settings*/
   {
-    int i;
-    int length = init->mode->num_inks*3 + 3;
+    unsigned int i;
+    unsigned int length = init->mode->num_inks*3 + 3;
     unsigned char* buf = stp_zalloc(length);
     buf[0]=0x80;
     if(init->mode->flags & MODE_FLAG_PRO){
@@ -5673,7 +5672,7 @@ static void canon_setup_channels(stp_vars_t *v,canon_privdata_t* privdata){
 
     /* loop through the dither channels */
     for(channel_idx = 0; channel_idx < STP_NCOLORS ; channel_idx++){
-        int i;
+        unsigned int i;
         unsigned int subchannel = 0;
         stp_shade_t* shades = NULL;
 	int is_black_channel = 0;
@@ -5830,10 +5829,9 @@ static void canon_set_curve_parameter(stp_vars_t *v,const char* type,stp_curve_c
   const char * s[3];
   size_t count = sizeof(s) / sizeof(s[0]);
   stp_curve_t *ret = NULL;
-  int curve_count = 0;
-  int i;
+  unsigned int curve_count = 0;
+  unsigned int i;
   const size_t piecewise_point_count = 384;
-
 
   /* ignore settings from the printercaps if the user specified his own parameters */
   if(stp_check_curve_parameter(v,type, STP_PARAMETER_ACTIVE))
@@ -6619,7 +6617,7 @@ canon_write_line(stp_vars_t *v)
     (canon_privdata_t *) stp_get_component_data(v, "Driver");
   char write_sequence[] = "KYMCymck";
   static const int write_number[] = { 3, 2, 1, 0, 6, 5, 4, 7 };   /* KYMCymc */
-  int i;
+  unsigned int i;
   int written= 0;
   for (i = 0; i < strlen(write_sequence) ; i++)
     {

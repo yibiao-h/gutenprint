@@ -1614,7 +1614,7 @@ static void
 debug_print_parameter_description(const stp_parameter_t *desc, const char *who,
 				  const stp_vars_t *v)
 {
-  int i;
+  unsigned int i;
   char *curve;
   if (! (stp_get_debug_level() & STP_DBG_VARS))
     return;
@@ -1874,7 +1874,7 @@ stp_parameter_list_t
 stp_parameter_list_copy(stp_const_parameter_list_t list)
 {
   stp_list_t *ret = stp_parameter_list_create();
-  int i;
+  unsigned int i;
   size_t count = stp_parameter_list_count(list);
   for (i = 0; i < count; i++)
     stp_list_item_create(ret, NULL, stp_parameter_list_param(list, i));
@@ -1885,7 +1885,7 @@ void
 stp_parameter_list_append(stp_parameter_list_t list,
 			  stp_const_parameter_list_t append)
 {
-  int i;
+  unsigned int i;
   stp_list_t *ilist = (stp_list_t *)list;
   size_t count = stp_parameter_list_count(append);
   for (i = 0; i < count; i++)

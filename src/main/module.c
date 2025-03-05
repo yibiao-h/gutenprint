@@ -32,7 +32,6 @@
 #include <unistd.h>
 #include <sys/param.h>
 
-
 typedef struct stpi_internal_module_class
 {
   stp_module_class_t class;

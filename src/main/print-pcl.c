@@ -311,10 +311,10 @@ typedef struct {
 
 typedef struct {
   int model;
-  int custom_max_width;
-  int custom_max_height;
-  int custom_min_width;
-  int custom_min_height;
+  unsigned int custom_max_width;
+  unsigned int custom_max_height;
+  unsigned int custom_min_width;
+  unsigned int custom_min_height;
   int resolutions;
   margins_t normal_margins;
   margins_t a4_margins;
@@ -1620,8 +1620,8 @@ static const stp_parameter_t the_parameters[] =
   },
 };
 
-static const int the_parameter_count =
-sizeof(the_parameters) / sizeof(const stp_parameter_t);
+static const unsigned int the_parameter_count =
+  sizeof(the_parameters) / sizeof(const stp_parameter_t);
 
 typedef struct
 {
@@ -1726,8 +1726,8 @@ static const float_param_t float_parameters[] =
   },
 };
 
-static const int float_parameter_count =
-sizeof(float_parameters) / sizeof(const float_param_t);
+static const unsigned int float_parameter_count =
+  sizeof(float_parameters) / sizeof(const float_param_t);
 
 /*
  * Convert a name into it's option value
@@ -1854,7 +1854,7 @@ pcl_get_model_capabilities(const stp_vars_t *v)	/* I: Model */
 static void
 pcl_describe_resolution(const stp_vars_t *v, stp_resolution_t *x, stp_resolution_t *y)
 {
-  int i;
+  unsigned int i;
   const char *resolution = stp_get_string_parameter(v, "Resolution");
   const char *quality;
   const pcl_cap_t *caps = NULL;
@@ -1899,7 +1899,7 @@ static int pcl_convert_media_size(const stp_vars_t *v,
 				  const char *media_size)
 {
 
-  int i;
+  unsigned int i;
   int media_code = 0;
   const pcl_cap_t *caps;
 
@@ -2082,7 +2082,7 @@ pcl_list_parameters(const stp_vars_t *v)
   stp_parameter_list_t *ret = stp_parameter_list_create();
   stp_parameter_list_t *tmp_list;
 
-  int i;
+  unsigned int i;
 
   /* Set up dithering */
   tmp_list = stp_dither_list_parameters(v);
@@ -2101,7 +2101,7 @@ pcl_parameters(const stp_vars_t *v, const char *name,
 	       stp_parameter_t *description)
 {
   int		model = stp_get_model_id(v);
-  int		i;
+  unsigned int i;
   const pcl_cap_t *caps;
   description->p_type = STP_PARAMETER_TYPE_INVALID;
 
@@ -2734,7 +2734,7 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
   int		printing_color = 0;
   int		top = (int) stp_get_top(v) + .5;
   int		left = (int) stp_get_left(v) + .5;
-  int		y;		/* Looping vars */
+  unsigned int	y;		/* Looping vars */
   stp_resolution_t	xdpi, ydpi;	/* Resolution */
   unsigned char *black,		/* Black bitmap data */
 		*cyan,		/* Cyan bitmap data */
@@ -2746,9 +2746,9 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
 			page_top,
 			page_right,
 			page_bottom;
-  int		out_width,	/* Width of image on page */
-		out_height,	/* Height of image on page */
-		errdiv,		/* Error dividend */
+  unsigned int	out_width,	/* Width of image on page */
+                out_height;	/* Height of image on page */
+  unsigned	errdiv,		/* Error dividend */
 		errmod,		/* Error modulus */
 		errval,		/* Current error value */
 		errline,	/* Current raster line */
@@ -3547,7 +3547,7 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
 	    unsigned row_errcol = 0;
 	    unsigned short *output = stp_channel_get_output(v);
 	    unsigned char *optr = privdata.row_buf;
-	    int x;
+	    unsigned int x;
 	    for (x = 0; x < out_width; x++)
 	      {
 		if (row_errcol != row_errlast)

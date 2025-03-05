@@ -127,10 +127,10 @@ static const dpl_t dpl_speeds[] = {
 typedef struct
 {
   int model;
-  int custom_max_width;
-  int custom_max_height;
-  int custom_min_width;
-  int custom_min_height;
+  unsigned int custom_max_width;
+  unsigned int custom_max_height;
+  unsigned int custom_min_width;
+  unsigned int custom_min_height;
   int resolutions;
   int max_resolution;
   int resolution_adjust;
@@ -519,7 +519,7 @@ static const stp_parameter_t the_parameters[] = {
    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 0, 0},
 };
 
-static const int the_parameter_count =
+static const unsigned int the_parameter_count =
   sizeof (the_parameters) / sizeof (const stp_parameter_t);
 
 typedef struct
@@ -558,7 +558,7 @@ static const float_param_t float_parameters[] = {
     }, 0.0, 10.0, 0.0, 0},
 };
 
-static const int float_parameter_count =
+static const unsigned int float_parameter_count =
   sizeof (float_parameters) / sizeof (const float_param_t);
 
 /*
@@ -649,7 +649,7 @@ dpl_get_model_capabilities (const stp_vars_t *v)	/* I: Model */
 static void
 dpl_describe_resolution (const stp_vars_t * v, stp_resolution_t *x, stp_resolution_t *y)
 {
-  int i;
+  unsigned int i;
   const char *resolution = stp_get_string_parameter (v, "Resolution");
 
   *x = -1;
@@ -679,7 +679,7 @@ dpl_get_multiplier (const stp_vars_t * v)
 {
   stp_resolution_t x, y;
   int multiplier;
-  int i;
+  unsigned int i;
   int max_dpi = 0;
 
   const dpl_cap_t *caps = dpl_get_model_capabilities (v);
@@ -789,7 +789,7 @@ static stp_parameter_list_t
 dpl_list_parameters (const stp_vars_t * v)
 {
   stp_parameter_list_t *ret;
-  int i;
+  unsigned int i;
   (void)v;
 
   ret = stp_parameter_list_create ();
@@ -805,7 +805,7 @@ dpl_parameters (const stp_vars_t * v, const char *name,
 		stp_parameter_t * description)
 {
   int model = stp_get_model_id (v);
-  int i;
+  unsigned int i;
   const dpl_cap_t *caps;
   description->p_type = STP_PARAMETER_TYPE_INVALID;
 
@@ -1202,7 +1202,7 @@ dpl_do_print (stp_vars_t * v, stp_image_t * image)
         }
       else
         {
-          int i;
+          unsigned int i;
           for (i = 0; i < NUM_SPEEDS; i++)
             {
               if (0 == strcmp(dpl_speeds[i].dpl_name, speed))
@@ -1384,7 +1384,7 @@ dpl_pcx (stp_vars_t * v,	/* I - Print file or command */
   int out = 0;
   stp_resolution_t xdpi, ydpi;
   const dpl_cap_t *caps = dpl_get_model_capabilities (v);
-  int i;
+  unsigned int i;
   int max_dpi = 0;
   int dpi_adjust = 0;
   (void)last_plane;
