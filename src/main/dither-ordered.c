@@ -64,8 +64,7 @@ static const double dp_fraction = 0.5;
 static void
 init_dither_channel_new(stpi_dither_channel_t *dc, stp_vars_t *v)
 {
-  unsigned int i, j;
-  int k;
+  int i, j, k;
   double bp = 0;
   double lbp = 0;
   double lower_bottom = 0;
@@ -168,7 +167,7 @@ print_color_ordered_new(const stpi_dither_t *d, stpi_dither_channel_t *dc,
 			int val, int x, int y, unsigned char bit, int length)
 {
   int i;
-  unsigned int j;
+  int j;
   unsigned bits;
   int levels = dc->nlevels - 1;
   unsigned dpoint = ditherpoint(d, &(dc->dithermat), x);
@@ -262,7 +261,7 @@ print_color_ordered(const stpi_dither_t *d, stpi_dither_channel_t *dc, int val,
 static void
 free_dither_ordered(stpi_dither_t *d)
 {
-  unsigned int i;
+  int i;
   stpi_dither_channel_t *dc0 = &CHANNEL(d, 0);
   stpi_ordered_t *o0 = dc0->aux_data;
   stpi_new_ordered_t *no0 = NULL;
@@ -293,7 +292,7 @@ free_dither_ordered(stpi_dither_t *d)
 static void
 init_dither_ordered(stpi_dither_t *d, stp_vars_t *v)
 {
-  unsigned int i;
+  int i;
   d->aux_data = stp_malloc(1);
   d->aux_freefunc = &free_dither_ordered;
   stp_dprintf(STP_DBG_INK, v, "init_dither_ordered\n");
@@ -342,7 +341,7 @@ stpi_dither_ordered(stp_vars_t *v,
   int		x,
 		length;
   unsigned char	bit;
-  unsigned int i;
+  int i;
   int one_bit_only = 1;
   int one_level_only = 1;
 

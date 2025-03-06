@@ -75,7 +75,7 @@ typedef struct shade_segment
 static void
 free_eventone_data(stpi_dither_t *d)
 {
-  unsigned int i;
+  int i;
   eventone_t *et = (eventone_t *) (d->aux_data);
   for (i = 0; i < CHANNEL_COUNT(d); i++)
     {
@@ -107,7 +107,7 @@ et_setup(stpi_dither_t *d)
   static const int diff_factors[] = {1, 10, 16, 23, 32};
   eventone_t *et = stp_zalloc(sizeof(eventone_t));
   int xa, ya;
-  unsigned int i;
+  int i;
   for (i = 0; i < CHANNEL_COUNT(d); i++)
     {
       CHANNEL(d, i).error_rows = 1;
@@ -186,7 +186,7 @@ et_setup(stpi_dither_t *d)
 static int
 et_initializer(stpi_dither_t *d, int duplicate_line, int zero_mask)
 {
-  unsigned int i;
+  int i;
   eventone_t *et;
   if (!d->aux_data)
     et_setup(d);
@@ -371,7 +371,7 @@ static inline void
 print_ink(stpi_dither_t *d, unsigned char *tptr, const stpi_ink_defn_t *ink,
 	  unsigned char bit, int length)
 {
-  unsigned int j;
+  int j;
 
   if (tptr != 0)
     {
