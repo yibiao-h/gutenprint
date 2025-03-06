@@ -40,7 +40,7 @@ typedef struct {
 
 typedef struct {
   const char *name;
-  short count;
+  unsigned short count;
   const canon_slot_t *slots;
 } canon_slotlist_t;
 
@@ -294,7 +294,7 @@ typedef struct {
 
 typedef struct {
   const char *name;
-  short count;
+  unsigned short count;
   const canon_paper_t *papers;
 } canon_paperlist_t;
 

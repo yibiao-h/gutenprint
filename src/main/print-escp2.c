@@ -973,9 +973,8 @@ static const float_param_t float_parameters[] =
   },
 };
 
-static const int float_parameter_count =
-sizeof(float_parameters) / sizeof(const float_param_t);
-
+static const unsigned int float_parameter_count =
+  sizeof(float_parameters) / sizeof(const float_param_t);
 
 static const int_param_t int_parameters[] =
 {
@@ -1038,9 +1037,8 @@ static const int_param_t int_parameters[] =
   },
 };
 
-static const int int_parameter_count =
-sizeof(int_parameters) / sizeof(const int_param_t);
-
+static const unsigned int int_parameter_count =
+  sizeof(int_parameters) / sizeof(const int_param_t);
 
 static escp2_privdata_t *
 get_privdata(const stp_vars_t *v)
@@ -1114,10 +1112,10 @@ escp2_##f(const stp_vars_t *v, int rollfeed)				\
     }									\
 }
 
-DEF_SIMPLE_ACCESSOR(max_hres, int)
-DEF_SIMPLE_ACCESSOR(max_vres, int)
-DEF_SIMPLE_ACCESSOR(min_hres, int)
-DEF_SIMPLE_ACCESSOR(min_vres, int)
+DEF_SIMPLE_ACCESSOR(max_hres, unsigned int)
+DEF_SIMPLE_ACCESSOR(max_vres, unsigned int)
+DEF_SIMPLE_ACCESSOR(min_hres, unsigned int)
+DEF_SIMPLE_ACCESSOR(min_vres, unsigned int)
 DEF_SIMPLE_ACCESSOR(nozzles, unsigned)
 DEF_SIMPLE_ACCESSOR(black_nozzles, unsigned)
 DEF_SIMPLE_ACCESSOR(fast_nozzles, unsigned)
@@ -1419,7 +1417,7 @@ escp2_shades(const stp_vars_t *v, int channel)
 static shade_t *
 escp2_copy_shades(const stp_vars_t *v, int channel)
 {
-  int i;
+  unsigned int i;
   shade_t *nshades;
   const inklist_t *inklist = stpi_escp2_inklist(v);
   if (!inklist)
@@ -1634,7 +1632,7 @@ get_printer_resolution_bounds(const stp_vars_t *v,
 			      unsigned *max_x, unsigned *max_y,
 			      unsigned *min_x, unsigned *min_y)
 {
-  int i = 0;
+  unsigned int i = 0;
   const resolution_list_t *resolutions = escp2_reslist(v);
   *max_x = 0;
   *max_y = 0;
@@ -1823,7 +1821,7 @@ escp2_list_parameters(const stp_vars_t *v)
   stp_parameter_list_t *ret = stp_parameter_list_create();
   stp_parameter_list_t *tmp_list;
 
-  int i;
+  unsigned int i;
 
   /* Set up dithering */
   tmp_list = stp_dither_list_parameters(v);
@@ -2064,15 +2062,15 @@ static const res_t *
 find_default_resolution(const stp_vars_t *v, const quality_t *q, int strict)
 {
   const resolution_list_t *resolutions = escp2_reslist(v);
-  int i = 0;
+  unsigned int i = 0;
   stp_dprintf(STP_DBG_ESCP2, v, "Quality %s: min %d %d max %d %d, des %d %d\n",
 	      q->name, q->min_hres, q->min_vres, q->max_hres, q->max_vres,
 	      q->desired_hres, q->desired_vres);
   if (q->desired_hres < 0 || q->desired_vres < 0)
     {
-      for (i = resolutions->n_resolutions - 1; i >= 0; i--)
+      for (i = resolutions->n_resolutions; i > 0; i--)
 	{
-	  const res_t *res = &(resolutions->resolutions[i]);
+	  const res_t *res = &(resolutions->resolutions[i-1]);
 	  stp_dprintf(STP_DBG_ESCP2, v, "  Checking resolution %s %d...\n",
 		      res->name, i);
 	  if ((q->max_hres <= 0 || res->printed_hres <= q->max_hres) &&
@@ -2209,7 +2207,7 @@ static const res_t *
 find_resolution_from_quality(const stp_vars_t *v, const char *quality,
 			     int strict)
 {
-  int i;
+  unsigned int i;
   const quality_list_t *quals = escp2_quality_list(v);
   /* This is a rather gross hack... */
   if (strcmp(quality, "None") == 0)
@@ -2229,8 +2227,8 @@ get_raw_inktype(const stp_vars_t *v)
   if (strcmp(stp_get_string_parameter(v, "InputImageType"), "Raw") == 0)
     {
       const inklist_t *inks = stpi_escp2_inklist(v);
-      int ninktypes = inks->n_inks;
-      int i;
+      unsigned int ninktypes = inks->n_inks;
+      unsigned int i;
       const char *channel_name = stp_get_string_parameter(v, "RawChannels");
       const channel_count_t *count;
       if (!channel_name)
@@ -2251,7 +2249,7 @@ static void
 escp2_parameters(const stp_vars_t *v, const char *name,
 		 stp_parameter_t *description)
 {
-  int		i;
+  unsigned int i;
   description->p_type = STP_PARAMETER_TYPE_INVALID;
   int found = 0;
   if (name == NULL)
@@ -2449,7 +2447,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
   else if (strcmp(name, "InkType") == 0)
     {
       const inklist_t *inks = stpi_escp2_inklist(v);
-      int ninktypes = inks->n_inks;
+      unsigned int ninktypes = inks->n_inks;
       int verified_inktypes = 0;
       for (i = 0; i < ninktypes; i++)
 	if (verify_inktype(v, &(inks->inknames[i])))
@@ -2472,7 +2470,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
   else if (strcmp(name, "InkSet") == 0)
     {
       const inkgroup_t *inks = escp2_inkgroup(v);
-      int ninklists = inks->n_inklists;
+      unsigned int ninklists = inks->n_inklists;
       description->bounds.str = stp_string_list_create();
       if (ninklists > 1)
 	{
@@ -2494,7 +2492,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       description->is_active = 0;
       if (p)
 	{
-	  int nmediatypes = stp_string_list_count(p);
+	  unsigned int nmediatypes = stp_string_list_count(p);
 	  description->bounds.str = stp_string_list_create();
 	  if (nmediatypes)
 	    {
@@ -2514,7 +2512,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       description->is_active = 0;
       if (p)
 	{
-	  int nslots = stp_string_list_count(p);
+	  unsigned int nslots = stp_string_list_count(p);
 	  description->bounds.str = stp_string_list_create();
 	  if (nslots)
 	    {
@@ -2547,7 +2545,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	{
 	  const res_t *res = stpi_escp2_find_resolution(v);
 	  const printer_weave_list_t *printer_weaves = escp2_printer_weaves(v);
-	  int nprinter_weaves = 0;
+	  unsigned int nprinter_weaves = 0;
 	  if (printer_weaves && use_printer_weave(v) && (!res || res->command))
 	    nprinter_weaves = printer_weaves->n_printer_weaves;
 	  if (nprinter_weaves)
@@ -2784,7 +2782,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
   else if (strcmp(name, "RawChannels") == 0)
     {
       const inklist_t *inks = stpi_escp2_inklist(v);
-      int ninktypes = inks->n_inks;
+      unsigned int ninktypes = inks->n_inks;
       description->bounds.str = stp_string_list_create();
       if (ninktypes >= 1)
 	{
@@ -2895,7 +2893,7 @@ stpi_escp2_find_resolution(const stp_vars_t *v)
   if (resolution)
     {
       const resolution_list_t *resolutions = escp2_reslist(v);
-      int i;
+      unsigned int i;
       for (i = 0; i < resolutions->n_resolutions; i++)
 	{
 	  const res_t *res = &(resolutions->resolutions[i]);

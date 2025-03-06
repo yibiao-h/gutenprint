@@ -90,11 +90,11 @@ typedef struct
 {
   const char *name;
   const char *text;
-  short hres;
-  short vres;
-  short printed_hres;
-  short printed_vres;
-  short vertical_passes;
+  unsigned short hres;
+  unsigned short vres;
+  unsigned short printed_hres;
+  unsigned short printed_vres;
+  unsigned short vertical_passes;
   stp_raw_t *command;
   stp_vars_t *v;
 } res_t;
@@ -110,10 +110,10 @@ typedef struct
 {
   char *name;
   char *text;
-  short min_hres;
-  short min_vres;
-  short max_hres;
-  short max_vres;
+  unsigned short min_hres;
+  unsigned short min_vres;
+  unsigned short max_hres;
+  unsigned short max_vres;
   short desired_hres;
   short desired_vres;
 } quality_t;
@@ -166,7 +166,7 @@ typedef struct
 typedef struct
 {
   const char *name;
-  short n_subchannels;
+  unsigned short n_subchannels;
   physical_subchannel_t *subchannels;
   const char *hue_curve_name;
   stp_curve_t *hue_curve;
@@ -188,8 +188,8 @@ typedef struct
 {
   const char *name;
   const char *text;
-  short channel_count;
-  short aux_channel_count;
+  unsigned short channel_count;
+  unsigned short aux_channel_count;
   inkset_id_t inkset;
   const stp_raw_t *init_sequence;
   const stp_raw_t *deinit_sequence;
@@ -199,7 +199,7 @@ typedef struct
 
 typedef struct
 {
-  int n_shades;
+  unsigned int n_shades;
   double *shades;
 } shade_t;
 
@@ -207,8 +207,8 @@ typedef struct
 {
   const char *name;
   const char *text;
-  short n_shades;
-  short n_inks;
+  unsigned short n_shades;
+  unsigned short n_inks;
   const stp_raw_t *init_sequence;
   const stp_raw_t *deinit_sequence;
   shade_t *shades;
@@ -218,7 +218,7 @@ typedef struct
 typedef struct
 {
   const char *name;
-  short n_inklists;
+  unsigned short n_inklists;
   inklist_t *inklists;
 } inkgroup_t;
 
@@ -352,10 +352,10 @@ typedef struct escp2_printer
 				      /* must use color parameters */
 				      /* rather than (faster) black */
 				      /* only parameters*/
-  short		max_hres;
-  short		max_vres;
-  short		min_hres;
-  short		min_vres;
+  unsigned short	max_hres;
+  unsigned short	max_vres;
+  unsigned short	min_hres;
+  unsigned short	min_vres;
 /*****************************************************************************/
   /* Miscellaneous printer-specific data */
   short		extra_feed;	/* Extra distance the paper can be spaced */

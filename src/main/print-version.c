@@ -44,17 +44,17 @@ const char *
 stp_check_version (unsigned int required_major,
 		   unsigned int required_minor, unsigned int required_micro)
 {
-  if (required_major > STP_MAJOR_VERSION)
+  if (required_major > stp_major_version)
     return "Gutenprint version too old (major mismatch)";
-  if (required_major < STP_MAJOR_VERSION)
+  if (required_major < stp_major_version)
     return "Gutenprint version too new (major mismatch)";
-  if (required_minor > STP_MINOR_VERSION)
+  if (required_minor > stp_minor_version)
     return "Gutenprint version too old (minor mismatch)";
-  if (required_minor < STP_MINOR_VERSION)
+  if (required_minor < stp_minor_version)
     return "Gutenprint version too new (minor mismatch)";
-  if (required_micro < STP_MICRO_VERSION - STP_BINARY_AGE)
+  if (required_micro < stp_micro_version - stp_binary_age)
     return "Gutenprint version too new (micro mismatch)";
-  if (required_micro > STP_MICRO_VERSION)
+  if (required_micro > stp_micro_version)
     return "Gutenprint version too old (micro mismatch)";
   return NULL;
 }

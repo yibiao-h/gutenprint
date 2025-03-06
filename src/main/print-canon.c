@@ -2457,7 +2457,7 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 static unsigned int
 canon_printhead_colors(const stp_vars_t*v)
 {
-  int i,j;
+  unsigned int i,j;
   const canon_mode_t* mode;
   const canon_cap_t * caps = canon_get_model_capabilities(v);
   const char *print_mode = stp_get_string_parameter(v, "PrintingMode");
@@ -2544,10 +2544,10 @@ canon_printhead_colors(const stp_vars_t*v)
   return CANON_INK_K;
 #endif
   /* new fallback: loop through ink type in reverse order, picking first one found, which if CANON_INK_K is supported will be that, else the lowest amount of color */
-  for(i=((sizeof(canon_inktypes)/sizeof(canon_inktypes[0]))-1);i>=0;i--){
+  for(i=((sizeof(canon_inktypes)/sizeof(canon_inktypes[0])));i>0;i--){
     for(j=0;j<caps->modelist->count;j++){
-      if(caps->modelist->modes[j].ink_types & canon_inktypes[i].ink_type){
-	stp_dprintf(STP_DBG_CANON, v," lowest inktype found ---  %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].text);
+      if(caps->modelist->modes[j].ink_types & canon_inktypes[i-1].ink_type){
+	stp_dprintf(STP_DBG_CANON, v," lowest inktype found ---  %s(%s)\n",canon_inktypes[i-1].name,canon_inktypes[i].text);
 	return canon_inktypes[i].ink_type;
       }
     }
