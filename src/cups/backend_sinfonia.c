@@ -1,7 +1,7 @@
  /*
  *   Shinko/Sinfonia Common Code
  *
- *   (c) 2019-2024 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2019-2025 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -216,8 +216,6 @@ int sinfonia_panorama_splitjob(struct sinfonia_printjob *injob,
 	uint16_t inrows;
 	uint16_t cols;
 
-	int i;
-
 	inrows = injob->jp.rows;
 	cols = injob->jp.columns;
 
@@ -312,7 +310,7 @@ int sinfonia_panorama_splitjob(struct sinfonia_printjob *injob,
 	}
 
 	/* Allocate and set up new jobs and buffers */
-	for (i = 0 ; i < numpanels ; i++) {
+	for (int i = 0 ; i < numpanels ; i++) {
 		newjobs[i] = malloc(sizeof(struct sinfonia_printjob));
 		if (!newjobs[i]) {
 			ERROR("Memory allocation failure");

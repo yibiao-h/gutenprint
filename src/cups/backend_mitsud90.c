@@ -1044,7 +1044,6 @@ static int mitsud90_panorama_splitjob(struct mitsud90_printjob *injob, struct mi
 	uint16_t cols;
 	uint16_t inrows;
 	uint16_t max_rows = 2428; /* 6x8" only */
-	int i;
 
 	cols = be16_to_cpu(injob->hdr.cols);
 	inrows = be16_to_cpu(injob->hdr.rows);
@@ -1070,7 +1069,7 @@ static int mitsud90_panorama_splitjob(struct mitsud90_printjob *injob, struct mi
 	}
 
 	/* Allocate and set up new jobs and buffers */
-	for (i = 0 ; i < numpanels ; i++) {
+	for (int i = 0 ; i < numpanels ; i++) {
 		newjobs[i] = malloc(sizeof(struct mitsud90_printjob));
 		if (!newjobs[i]) {
 			ERROR("Memory allocation failure");
@@ -2680,7 +2679,7 @@ static const struct device_id mitsud90_devices[] = {
 /* Exported */
 const struct dyesub_backend mitsud90_backend = {
 	.name = "Mitsubishi CP-D90/CP-M1/CP-W5000",
-	.version = "0.57"  " (lib " LIBMITSU_VER ")",
+	.version = "0.58"  " (lib " LIBMITSU_VER ")",
 	.flags = BACKEND_FLAG_DUMMYPRINT,
 	.uri_prefixes = mitsud90_prefixes,
 	.devices = mitsud90_devices,

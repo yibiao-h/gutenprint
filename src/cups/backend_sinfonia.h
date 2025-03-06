@@ -1,7 +1,7 @@
  /*
  *   Shinko/Sinfonia Common Code
  *
- *   (c) 2019-2024 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2019-2025 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -24,7 +24,7 @@
  *
  */
 
-#define LIBSINFONIA_VER "0.21"
+#define LIBSINFONIA_VER "0.22"
 
 #define SINFONIA_HDR1_LEN 0x10
 #define SINFONIA_HDR2_LEN 0x64
