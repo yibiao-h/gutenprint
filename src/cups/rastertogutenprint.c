@@ -497,7 +497,7 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings,
     tmp_right = cups->d_width;
   if (tmp_bottom > tmp_top + cups->d_height)
     tmp_bottom = cups->d_height;
-  if (tmp_left < cups->d_left)
+  if (tmp_left <= cups->d_left)
     {
       if (cups->shrink_to_fit != 1)
 	{
@@ -517,7 +517,7 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings,
 		cups->d_left, tmp_left);
       cups->d_left = tmp_left;
     }
-  if (tmp_right > cups->d_right)
+  if (tmp_right >= cups->d_right)
     {
       if (cups->shrink_to_fit != 1)
 	{
@@ -537,7 +537,7 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings,
 		cups->d_right, tmp_right);
       cups->d_right = tmp_right;
     }
-  if (tmp_top < cups->d_top)
+  if (tmp_top <= cups->d_top)
     {
       if (cups->shrink_to_fit != 1)
 	{
@@ -557,7 +557,7 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings,
 		cups->d_top, tmp_top);
       cups->d_top = tmp_top;
     }
-  if (tmp_bottom > cups->d_bottom)
+  if (tmp_bottom >= cups->d_bottom)
     {
       if (cups->shrink_to_fit != 1)
 	{
