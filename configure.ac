@@ -77,7 +77,7 @@ pushdef([GUTENPRINT_MAJOR_VERSION],     [5])
 pushdef([GUTENPRINT_MINOR_VERSION],     [3])
 pushdef([GUTENPRINT_MICRO_VERSION],     [5])
 dnl Append snapshot ID if STP_BUILD_SNAPSHOT is set
-pushdef([GUTENPRINT_EXTRA_VERSION],     [-pre1[]m4_esyscmd_s(scripts/snapstamp)])
+pushdef([GUTENPRINT_EXTRA_VERSION],     [[]m4_esyscmd_s(scripts/snapstamp)])
 pushdef([GUTENPRINT_CURRENT_INTERFACE], [15])
 pushdef([GUTENPRINT_BINARY_AGE],        [6])
 pushdef([GUTENPRINTUI2_CURRENT_INTERFACE], [8])
