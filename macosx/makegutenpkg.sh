@@ -44,7 +44,7 @@ if test "x$2" != xfast; then
 	# Clean build the software...
 	test -f Makefile && make distclean
 
-	PACKAGE_VERSION=$pkgversion PACKAGE_STRING="gutenprint $pkgversion" LIBS="-framework IOKit -framework CoreFoundation" ./configure --prefix=/Library/Printers/Gutenprint.printerDriver/Contents/MacOS --datadir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --datarootdir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --localedir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --docdir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources/doc --mandir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --disable-samples --disable-test --enable-nls-macosx --with-archflags='-mmacosx-version-min=10.6 -Os -arch x86_64 -D_PPD_DEPRECATED=""'
+	PACKAGE_VERSION=$pkgversion PACKAGE_STRING="gutenprint $pkgversion" LIBS="-framework IOKit -framework CoreFoundation" ./configure --prefix=/Library/Printers/Gutenprint.printerDriver/Contents/MacOS --datadir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --datarootdir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --localedir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --docdir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources/doc --mandir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --disable-samples --disable-test --enable-nls-macosx --with-archflags='-mmacosx-version-min=11.0 -Os -arch x86_64 -D_PPD_DEPRECATED=""'
 	make
 fi
 
@@ -73,7 +73,7 @@ mv "$pkgroot/usr/libexec/cups/backend/gutenprint53+usb" "$pkgroot/Library/Printe
 
 mv "$pkgroot/usr/libexec/cups/driver/gutenprint.5.3" "$pkgroot/Library/Printers/Gutenprint.printerDriver/Contents/MacOS"
 
-for file in commandtocanon commandtoepson rastertogutenprint.5.3; do
+for file in commandtocanon commandtoepson commandtodyesub rastertogutenprint.5.3; do
 	mv "$pkgroot/usr/libexec/cups/filter/$file" "$pkgroot/Library/Printers/Gutenprint.printerDriver/Contents/MacOS"
 done
 
@@ -107,7 +107,7 @@ cat >"$pkgroot/Library/Printers/Gutenprint.printerDriver/Contents/Info.plist" <<
 	<key>CFBundleVersion</key>
 	<string>$pkgnumversion</string>
 	<key>LSMinimumSystemVersion</key>
-	<string>10.6</string>
+	<string>11.0</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright 1999-2015 by The Gutenprint Team. See http://gutenprint.sf.net for details.</string>
 </dict>
@@ -115,7 +115,7 @@ cat >"$pkgroot/Library/Printers/Gutenprint.printerDriver/Contents/Info.plist" <<
 EOF
 
 # Sign the driver bundle...
-for file in commandtocanon commandtoepson cups-genppd.5.3 cups-genppdupdate escputil gutenprint.5.3 gutenprint53+usb lib/libgutenprint.2.dylib rastertogutenprint.5.3; do
+for file in commandtocanon commandtoepson commandtodyesub cups-genppd.5.3 cups-genppdupdate escputil gutenprint.5.3 gutenprint53+usb lib/libgutenprint.9.dylib rastertogutenprint.5.3; do
 	codesign -s "$CODESIGN_IDENTITY" -fv "$pkgroot/Library/Printers/Gutenprint.printerDriver/Contents/MacOS/$file"
 done
 
@@ -126,10 +126,10 @@ mkdir -p "${pkgroot}-scripts"
 
 cat >"${pkgroot}-scripts/preinstall" <<EOF
 #!/bin/sh
-# Only run on 10.6 and later
+# Only run on 11.0 and later
 osvers=\`sw_vers -productVersion | awk -F. '{printf "%d\n", \$1 * 100 + \$2}'\`
-if test \$osvers -lt 1006; then
-	osascript -e 'tell application "System Events" to display alert "This version of Gutenprint requires OS X 10.6 or later." as critical'
+if test \$osvers -lt 1100; then
+	osascript -e 'tell application "System Events" to display alert "This version of Gutenprint requires OS X 11.0 or later." as critical'
 	exit 1
 fi
 
@@ -177,7 +177,7 @@ for file in \`ls -1 /Library/Printers/PPDs/Contents/Resources | grep '^stp-'\`; 
 	test -e /Library/Printers/PPDs/Contents/Resources/\$file && /bin/rm -f /Library/Printers/PPDs/Contents/Resources/\$file
 done
 
-for file in /usr/bin/cups-calibrate /usr/bin/escputil /usr/libexec/cups/filter/commandtocanon  /usr/libexec/cups/filter/commandtoepson /usr/local/bin/escputil; do
+for file in /usr/bin/cups-calibrate /usr/bin/escputil /usr/libexec/cups/filter/commandtocanon  /usr/libexec/cups/filter/commandtoepson /usr/libexec/cups/filter/commandtodyesub /usr/local/bin/escputil; do
 	test -e \$file && /bin/rm -f \$file
 done
 
@@ -204,6 +204,7 @@ ln -sf /Library/Printers/Gutenprint.printerDriver/Contents/MacOS/gutenprint53+us
 ln -sf /Library/Printers/Gutenprint.printerDriver/Contents/MacOS/gutenprint.5.3 /usr/libexec/cups/driver
 
 ln -sf /Library/Printers/Gutenprint.printerDriver/Contents/MacOS/commandtocanon /usr/libexec/cups/filter
+ln -sf /Library/Printers/Gutenprint.printerDriver/Contents/MacOS/commandtodyesub /usr/libexec/cups/filter
 ln -sf /Library/Printers/Gutenprint.printerDriver/Contents/MacOS/commandtoepson /usr/libexec/cups/filter
 ln -sf /Library/Printers/Gutenprint.printerDriver/Contents/MacOS/rastertogutenprint.5.3 /usr/libexec/cups/filter
 
@@ -212,7 +213,7 @@ ln -sf /Library/Printers/Gutenprint.printerDriver/Contents/MacOS/escputil /usr/l
 
 # Run cups-genppdupdate to update any Gutenprint PPD files...
 echo Updating Gutenprint printer queues...
-/Library/Printers/Gutenprint.printerDriver/Contents/MacOS/cups-genppdupdate -x
+/Library/Printers/Gutenprint.printerDriver/Contents/MacOS/cups-genppdupdate
 EOF
 chmod +x "${pkgroot}-scripts/postinstall"
 
@@ -261,4 +262,7 @@ codesign -s "$CODESIGN_IDENTITY" -fv ~/Desktop/gutenprint-$pkgversion/Gutenprint
 codesign -s "$CODESIGN_IDENTITY" -fv ~/Desktop/gutenprint-$pkgversion/libusb*
 
 test -f ~/Desktop/gutenprint-$pkgversion.dmg && rm -f ~/Desktop/gutenprint-$pkgversion.dmg
-hdiutil create -fs HFS+ -srcfolder ~/Desktop/gutenprint-$pkgversion ~/Desktop/gutenprint-$pkgversion.dmg
+
+# APFS began with macOS Sierra (10.13). We are only supporting macOS 11.0 or greater. No need to force a HFS+ disk image.
+#hdiutil create -fs HFS+ -srcfolder ~/Desktop/gutenprint-$pkgversion ~/Desktop/gutenprint-$pkgversion.dmg
+hdiutil create -srcfolder ~/Desktop/gutenprint-$pkgversion ~/Desktop/gutenprint-$pkgversion.dmg

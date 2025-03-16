@@ -117,7 +117,7 @@ if [ ! -z "${pkgutil_pkg[0]}" ] ; then
 	sudo pkgutil --forget "$newerpkg"
 
 	# Remove symlinks...
-	for file in /usr/libexec/cups/backend/gutenprint52+usb /usr/libexec/cups/driver/gutenprint.5.2  /usr/libexec/cups/filter/commandtocanon  /usr/libexec/cups/filter/commandtoepson /usr/libexec/cups/filter/rastertogutenprint.5.2 /usr/local/bin/escputil; do
+	for file in /usr/libexec/cups/backend/gutenprint52+usb /usr/libexec/cups/backend/gutenprint53+usb /usr/libexec/cups/driver/gutenprint.5.2 /usr/libexec/cups/driver/gutenprint.5.3  /usr/libexec/cups/filter/commandtocanon /usr/libexec/cups/filter/commandtodyesub  /usr/libexec/cups/filter/commandtoepson /usr/libexec/cups/filter/rastertogutenprint.5.2 /usr/libexec/cups/filter/rastertogutenprint.5.3 /usr/local/bin/escputil; do
 		test -L $file && sudo /bin/rm -f $file
 	done
 	done
@@ -130,7 +130,7 @@ MODEL_PPD_DIR="/Library/Printers/PPDs/Contents/Resources"
 ##############################################################
 ## Remove any PPDs that might be lying around from a previous
 ## install of some sort.
-LAST_PPD=($(find ${MODEL_PPD_DIR} -name 'stp-*\.5\.[0-2]\.ppd\.gz' | sort))
+LAST_PPD=($(find ${MODEL_PPD_DIR} -name 'stp-*\.5\.[0-3]\.ppd\.gz' | sort))
 	if [ ${#LAST_PPD[@]} -gt 0 ]; then
 		echo Removing the PPDs...
 		for ((jj=0;$jj < ${#LAST_PPD[@]} ; jj++)) ; do
@@ -146,8 +146,8 @@ CUPS_PPD_DIR="/etc/cups/ppd/"
 
 ## awk cannot handle an escaped \+ (plus sign) so use . (any character)
 ## in the regexp if you are going to use the + sign in the key.
-QUEUE_KEY_1=.*[Gg][Uu][Tt][Ee][Nn][Pp][Rr][Ii][Nn][Tt].*5\.[012]
-QUEUE_KEY_2=.*[Gg][Ii][Mm][Pp]-[Pp][Rr][Ii][Nn][Tt].*[45]\.[012]
+QUEUE_KEY_1=.*[Gg][Uu][Tt][Ee][Nn][Pp][Rr][Ii][Nn][Tt].*5\.[0123]
+QUEUE_KEY_2=.*[Gg][Ii][Mm][Pp]-[Pp][Rr][Ii][Nn][Tt].*[45]\.[0123]
 # scan for existing Gutenprint queues...
 #
 # we want only the queue name so strip the leading directories and the .ppd suffix...
