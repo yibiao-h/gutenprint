@@ -44,7 +44,7 @@ if test "x$2" != xfast; then
 	# Clean build the software...
 	test -f Makefile && make distclean
 
-	PACKAGE_VERSION=$pkgversion PACKAGE_STRING="gutenprint $pkgversion" LIBS="-framework IOKit -framework CoreFoundation" ./configure --prefix=/Library/Printers/Gutenprint.printerDriver/Contents/MacOS --datadir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --datarootdir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --localedir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --docdir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources/doc --mandir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --disable-samples --disable-test --enable-nls-macosx --with-archflags='-mmacosx-version-min=11.0 -Os -arch x86_64 -D_PPD_DEPRECATED=""'
+	PACKAGE_VERSION=$pkgversion PACKAGE_STRING="gutenprint $pkgversion" LIBS="-framework IOKit -framework CoreFoundation" ./configure --prefix=/Library/Printers/Gutenprint.printerDriver/Contents/MacOS --datadir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --datarootdir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --localedir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --docdir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources/doc --mandir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --disable-samples --disable-test --enable-nls-macosx --with-archflags='-mmacosx-version-min=11.0 -Os -arch x86_64 -arch arm64 -D_PPD_DEPRECATED=""'
 	make
 fi
 
@@ -213,7 +213,7 @@ ln -sf /Library/Printers/Gutenprint.printerDriver/Contents/MacOS/escputil /usr/l
 
 # Run cups-genppdupdate to update any Gutenprint PPD files...
 echo Updating Gutenprint printer queues...
-/Library/Printers/Gutenprint.printerDriver/Contents/MacOS/cups-genppdupdate
+/Library/Printers/Gutenprint.printerDriver/Contents/MacOS/cups-genppdupdate -x
 EOF
 chmod +x "${pkgroot}-scripts/postinstall"
 
