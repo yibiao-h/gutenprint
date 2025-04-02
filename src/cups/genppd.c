@@ -732,6 +732,28 @@ print_color_setup(gpFile fp, int simplified, int printer_is_color,
     }
 }
 
+static int
+fix_utf8(char *buf, size_t len)
+{
+    char *b = NULL;
+
+    /* Might truncate up to 3 bytes*/
+    b = buf + len - 3;
+
+    /* Is the last byte part of multi-byte sequence? */
+    if (b[2] & 0x80)
+    {
+        /*Is the last byte in buffer the first byte in a new
+         * multi-byte sequence? */
+        if (b[2] & 0x40) return len - 1;
+        /* Is it a 3 byte sequence? */
+        else if ((b[1] & 0xe0) == 0xe0) return len - 2;
+        /* Is it a 4 byte sequence? */
+        else if ((b[0] & 0xf0) == 0xf0) return len - 3;
+    }
+    return len;
+}
+
 static void
 print_group(
     gpFile                fp,		/* I - File to write to */
@@ -745,7 +767,10 @@ print_group(
   const char *class = stp_i18n_lookup(po, parameter_class_names[p_class]);
   const char *level = stp_i18n_lookup(po, parameter_level_names[p_level]);
   size_t bytes = bytelen(class) + bytelen(level);
+
   snprintf(buf, 40, "%s%s%s", class, bytes < 39 ? " " : "", level);
+  buf[fix_utf8(buf, strlen(buf))] = 0;
+
   gpprintf(fp, "*%sGroup: C%dL%d/%s\n", what, p_class, p_level, buf);
   if (language && !strcmp(language, "C") && !strcmp(what, "Open"))
     {
@@ -767,6 +792,7 @@ print_group(
 	      level = stp_i18n_lookup(altpo, parameter_level_names[p_level]);
 	      bytes = bytelen(class) + bytelen(level);
 	      snprintf(buf, 40, "%s%s%s", class, bytes < 39 ? " " : "", level);
+	      buf[fix_utf8(buf, strlen(buf))] = 0;
 	      gpprintf(fp, "*%s.Translation C%dL%d/%s: \"\"\n",
 		       lang, p_class, p_level, buf);
             }
