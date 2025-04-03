@@ -465,7 +465,7 @@ AS_IF([test "x$BUILD_CUPS" = "xyes"], [
 ])
 
 STP_ARG_ENABLE([user-install],
-               [install GIMP plugin in home directory],
+               [install GIMP2 plugin in home directory],
                [USER_INSTALL],
                [no])
 if test x$USER_INSTALL = xyes ; then
@@ -1187,15 +1187,15 @@ else
 fi
 echo "    Build EPSON inkjet utility:                 $BUILD_ESCPUTIL" |tee -a config.summary
 if test "$BUILD_GIMP2" != "no" ; then
-    echo "    Build enhanced Print plugin for GIMP:       yes" |tee -a config.summary
+    echo "    Build enhanced Print plugin for GIMP2:       yes" |tee -a config.summary
     if test "$BUILD_GIMP2_AS_GUTENPRINT" != "no" ; then
-        echo "        GIMP plugin will be named:              gutenprint" |tee -a config.summary
+        echo "        GIMP2 plugin will be named:              gutenprint" |tee -a config.summary
     else
-        echo "        GIMP plugin will be named:              print" |tee -a config.summary
+        echo "        GIMP2 plugin will be named:              print" |tee -a config.summary
     fi
     echo "        Install plugin(s) in home directory:    $USER_INSTALL" |tee -a config.summary
 else
-    echo "    Build enhanced Print plugin for GIMP:       no" |tee -a config.summary
+    echo "    Build enhanced Print plugin for GIMP2:       no" |tee -a config.summary
 fi
 echo "    Build test programs:                        $BUILD_TEST" |tee -a config.summary
 echo "    Build testpattern generator:                $BUILD_TESTPATTERN" |tee -a config.summary
