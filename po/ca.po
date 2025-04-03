@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gutenprint 5.2.10-pre2\n"
 "Report-Msgid-Bugs-To: gimp-print-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-09 20:43-0400\n"
+"POT-Creation-Date: 2025-04-03 09:16-0400\n"
 "PO-Revision-Date: 2014-03-27 09:00+0100\n"
 "Last-Translator: Walter Garcia-Fontes <walter.garcia@upf.edu>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
@@ -158,7 +158,7 @@ msgstr "Mida del paper en el qual s'està imprimint"
 #: src/main/print-canon.c:293 src/main/print-escp2.c:188
 #: src/main/print-lexmark.c:269 src/main/print-dyesub.c:10048
 #: src/main/print-dyesub.c:10049 src/main/print-dyesub.c:12667
-#: src/main/print-pcl.c:1549 src/cups/genppd.c:1388 src/cups/genppd.c:1875
+#: src/main/print-pcl.c:1549 src/cups/genppd.c:1414 src/cups/genppd.c:1901
 msgid "Media Type"
 msgstr "Tipus d'elements multimèdia"
 
@@ -170,7 +170,7 @@ msgstr "Tipus de suports (paper senzill, paper color, etc.)"
 
 #: src/main/print-canon.c:299 src/main/print-escp2.c:194
 #: src/main/print-lexmark.c:275 src/main/print-dyesub.c:12673
-#: src/main/print-pcl.c:1555 src/cups/genppd.c:1424 src/cups/genppd.c:1895
+#: src/main/print-pcl.c:1555 src/cups/genppd.c:1450 src/cups/genppd.c:1921
 msgid "Media Source"
 msgstr "Font del suport"
 
@@ -227,7 +227,7 @@ msgstr "Ajust vertical fi de CD"
 
 #: src/main/print-canon.c:341 src/main/print-escp2.c:242
 #: src/main/print-lexmark.c:281 src/main/print-dyesub.c:12679
-#: src/main/print-pcl.c:1567 src/cups/genppd.c:1516 src/cups/genppd.c:1930
+#: src/main/print-pcl.c:1567 src/cups/genppd.c:1542 src/cups/genppd.c:1956
 msgid "Resolution"
 msgstr "Resolució"
 
@@ -432,8 +432,8 @@ msgstr "CD - Personalitzat"
 #: src/main/print-canon.c:2916 src/main/print-escp2.c:2362
 #: src/main/print-dyesub.c:1680 src/main/print-dyesub.c:1912
 #: src/main/print-dyesub.c:6095 src/main/print-dyesub.c:9549
-#: src/main/print-dyesub.c:9776 src/cups/genppd.c:727 src/cups/genppd.c:1645
-#: src/cups/genppd.c:1862 src/cups/genppd.c:1954
+#: src/main/print-dyesub.c:9776 src/cups/genppd.c:727 src/cups/genppd.c:1671
+#: src/cups/genppd.c:1888 src/cups/genppd.c:1980
 msgid "Normal"
 msgstr "Normal"
 
@@ -558,10 +558,10 @@ msgstr "Foto"
 #: src/main/print-dyesub.c:3509 src/main/print-dyesub.c:4115
 #: src/main/print-dyesub.c:7446 src/main/print-dyesub.c:8188
 #: src/main/print-dyesub.c:8294 src/main/print-dyesub.c:10714
-#: src/cups/genppd.c:861 src/cups/genppd.c:882 src/cups/genppd.c:911
-#: src/cups/genppd.c:944 src/cups/genppd.c:999 src/cups/genppd.c:1046
-#: src/cups/genppd.c:1084 src/cups/genppd.c:1097 src/cups/genppd.c:1117
-#: src/cups/genppd.c:1139 src/cups/genppd.c:1156
+#: src/cups/genppd.c:887 src/cups/genppd.c:908 src/cups/genppd.c:937
+#: src/cups/genppd.c:970 src/cups/genppd.c:1025 src/cups/genppd.c:1072
+#: src/cups/genppd.c:1110 src/cups/genppd.c:1123 src/cups/genppd.c:1143
+#: src/cups/genppd.c:1165 src/cups/genppd.c:1182
 msgid "None"
 msgstr "Cap"
 
@@ -625,7 +625,7 @@ msgid "Pre-Dithered"
 msgstr "Pre-tramat"
 
 #: src/main/print-color.c:151 src/gutenprintui2/panel.c:289
-#: src/cups/genppd.c:672 src/cups/genppd.c:1845
+#: src/cups/genppd.c:672 src/cups/genppd.c:1871
 msgid "Grayscale"
 msgstr "Escala de grisos"
 
@@ -641,11 +641,11 @@ msgstr "RGB"
 msgid "CMY"
 msgstr "CMY"
 
-#: src/main/print-color.c:159 src/cups/genppd.c:703 src/cups/genppd.c:1852
+#: src/main/print-color.c:159 src/cups/genppd.c:703 src/cups/genppd.c:1878
 msgid "CMYK"
 msgstr "CMYK"
 
-#: src/main/print-color.c:161 src/cups/genppd.c:710 src/cups/genppd.c:1853
+#: src/main/print-color.c:161 src/cups/genppd.c:710 src/cups/genppd.c:1879
 msgid "KCMY"
 msgstr "KCMY"
 
@@ -1325,8 +1325,8 @@ msgstr "Mètode de intercalació"
 msgid "Interleave pattern to use"
 msgstr "Patró d'intercalació a usar"
 
-#: src/main/print-escp2.c:289 src/main/print-escp2.c:290 src/cups/genppd.c:1640
-#: src/cups/genppd.c:1953
+#: src/main/print-escp2.c:289 src/main/print-escp2.c:290 src/cups/genppd.c:1666
+#: src/cups/genppd.c:1979
 msgid "Output Order"
 msgstr "Ordre de la sortida"
 
@@ -1791,7 +1791,7 @@ msgstr "Control de configuració automàtica"
 
 #: src/main/print-escp2.c:2533 src/main/print-dyesub.c:6277
 #: src/main/print-dyesub.c:6880 src/main/print-dyesub.c:7230
-#: src/cups/genppd.c:1554 src/cups/genppd.c:1933
+#: src/cups/genppd.c:1580 src/cups/genppd.c:1959
 msgid "Automatic"
 msgstr "Automàtic"
 
@@ -3253,7 +3253,7 @@ msgstr "Característiques de la impressora"
 
 #: src/main/print-dyesub.c:12728 src/main/print-dyesub.c:12729
 #: src/main/generic-options.c:90 src/main/generic-options.c:91
-#: src/cups/genppd.c:1991
+#: src/cups/genppd.c:2017
 msgid "Collate the Job"
 msgstr ""
 
@@ -3558,14 +3558,14 @@ msgstr "Super Foto"
 msgid "Ultra Photo"
 msgstr "Ultra Foto"
 
-#: src/main/generic-options.c:39 src/cups/genppd.c:730 src/cups/genppd.c:1863
+#: src/main/generic-options.c:39 src/cups/genppd.c:730 src/cups/genppd.c:1889
 #: src/xml/xmli18n-tmp.h:2831 src/xml/xmli18n-tmp.h:2838
 #: src/xml/xmli18n-tmp.h:2847 src/xml/xmli18n-tmp.h:2856
 #: src/xml/xmli18n-tmp.h:2868 src/xml/xmli18n-tmp.h:2876
 msgid "Best"
 msgstr "El millor"
 
-#: src/main/generic-options.c:44 src/cups/genppd.c:887
+#: src/main/generic-options.c:44 src/cups/genppd.c:913
 msgid "Text"
 msgstr "Text"
 
@@ -4276,76 +4276,76 @@ msgstr "Extra 5"
 msgid "English"
 msgstr "Catalan"
 
-#: src/cups/genppd.c:559 src/cups/genppd.c:577 src/cups/genppd.c:1809
-#: src/cups/genppd.c:1810
+#: src/cups/genppd.c:559 src/cups/genppd.c:577 src/cups/genppd.c:1835
+#: src/cups/genppd.c:1836
 msgid "Media Size"
 msgstr "Mida del suport"
 
-#: src/cups/genppd.c:652 src/cups/genppd.c:1844
+#: src/cups/genppd.c:652 src/cups/genppd.c:1870
 msgid "Color Model"
 msgstr "Model de color"
 
-#: src/cups/genppd.c:679 src/cups/genppd.c:1846
+#: src/cups/genppd.c:679 src/cups/genppd.c:1872
 msgid "Inverted Grayscale"
 msgstr "Escala invertida de grisos"
 
-#: src/cups/genppd.c:689 src/cups/genppd.c:1850
+#: src/cups/genppd.c:689 src/cups/genppd.c:1876
 msgid "RGB Color"
 msgstr "Color RGB"
 
-#: src/cups/genppd.c:696 src/cups/genppd.c:1851
+#: src/cups/genppd.c:696 src/cups/genppd.c:1877
 msgid "CMY Color"
 msgstr "Color CMY"
 
-#: src/cups/genppd.c:721 src/cups/genppd.c:1861
+#: src/cups/genppd.c:721 src/cups/genppd.c:1887
 msgid "Color Precision"
 msgstr "Presició del color"
 
-#: src/cups/genppd.c:905 src/cups/genppd.c:916 src/cups/genppd.c:1099
-#: src/cups/genppd.c:1706 src/cups/genppd.c:1992
+#: src/cups/genppd.c:931 src/cups/genppd.c:942 src/cups/genppd.c:1125
+#: src/cups/genppd.c:1732 src/cups/genppd.c:2018
 msgid "Yes"
 msgstr "Sí"
 
-#: src/cups/genppd.c:905 src/cups/genppd.c:914 src/cups/genppd.c:1098
-#: src/cups/genppd.c:1704 src/cups/genppd.c:1993
+#: src/cups/genppd.c:931 src/cups/genppd.c:940 src/cups/genppd.c:1124
+#: src/cups/genppd.c:1730 src/cups/genppd.c:2019
 msgid "No"
 msgstr "No"
 
-#: src/cups/genppd.c:955 src/cups/genppd.c:1022 src/cups/genppd.c:1119
-#: src/cups/genppd.c:1150
+#: src/cups/genppd.c:981 src/cups/genppd.c:1048 src/cups/genppd.c:1145
+#: src/cups/genppd.c:1176
 msgid "Value"
 msgstr "Valor"
 
-#: src/cups/genppd.c:963 src/cups/genppd.c:1124
+#: src/cups/genppd.c:989 src/cups/genppd.c:1150
 msgid "Fine Adjustment"
 msgstr "Ajust fi"
 
-#: src/cups/genppd.c:1006 src/cups/genppd.c:1144
+#: src/cups/genppd.c:1032 src/cups/genppd.c:1170
 #, c-format
 msgid "%.1f mm"
 msgstr "%.1f mm"
 
-#: src/cups/genppd.c:1646 src/cups/genppd.c:1955
+#: src/cups/genppd.c:1672 src/cups/genppd.c:1981
 msgid "Reverse"
 msgstr "Cara posterior"
 
-#: src/cups/genppd.c:1667 src/cups/genppd.c:1971
+#: src/cups/genppd.c:1693 src/cups/genppd.c:1997
 msgid "2-Sided Printing"
 msgstr "Impressió a dues cares"
 
-#: src/cups/genppd.c:1712 src/cups/genppd.c:1997
+#: src/cups/genppd.c:1738 src/cups/genppd.c:2023
 msgid "Shrink Page If Necessary to Fit Borders"
 msgstr "Redueix la pàgina si és necessari per encaixar els marges"
 
-#: src/cups/genppd.c:1717 src/cups/genppd.c:1998
+#: src/cups/genppd.c:1743 src/cups/genppd.c:2024
 msgid "Shrink (print the whole page)"
 msgstr "Redueix (imprimeix la pàgina sencera)"
 
-#: src/cups/genppd.c:1718 src/cups/genppd.c:1999
+#: src/cups/genppd.c:1744 src/cups/genppd.c:2025
 msgid "Crop (preserve dimensions)"
 msgstr "Escapça (mantingues les mides)"
 
-#: src/cups/genppd.c:1719 src/cups/genppd.c:2000
+#: src/cups/genppd.c:1745 src/cups/genppd.c:2026
 msgid "Expand (use maximum page area)"
 msgstr "Expandeix (usa l'àrea màxima de la pàgina)"
 

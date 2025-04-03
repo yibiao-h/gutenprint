@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 1.0\n"
 "Report-Msgid-Bugs-To: gimp-print-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-09 20:43-0400\n"
+"POT-Creation-Date: 2025-04-03 09:16-0400\n"
 "PO-Revision-Date: 2001-12-29 20:10+0000\n"
 "Last-Translator: Simos Xenitellis <simos@hellug.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
@@ -159,7 +159,7 @@ msgstr "Επιλέξτε τον φάκελο που θέλετε να ανοίξετε"
 #: src/main/print-canon.c:293 src/main/print-escp2.c:188
 #: src/main/print-lexmark.c:269 src/main/print-dyesub.c:10048
 #: src/main/print-dyesub.c:10049 src/main/print-dyesub.c:12667
-#: src/main/print-pcl.c:1549 src/cups/genppd.c:1388 src/cups/genppd.c:1875
+#: src/main/print-pcl.c:1549 src/cups/genppd.c:1414 src/cups/genppd.c:1901
 #, fuzzy
 msgid "Media Type"
 msgstr "Είδος MIME"
@@ -172,7 +172,7 @@ msgstr ""
 
 #: src/main/print-canon.c:299 src/main/print-escp2.c:194
 #: src/main/print-lexmark.c:275 src/main/print-dyesub.c:12673
-#: src/main/print-pcl.c:1555 src/cups/genppd.c:1424 src/cups/genppd.c:1895
+#: src/main/print-pcl.c:1555 src/cups/genppd.c:1450 src/cups/genppd.c:1921
 #, fuzzy
 msgid "Media Source"
 msgstr "Ανοικτό Λογισμικό"
@@ -231,7 +231,7 @@ msgstr ""
 
 #: src/main/print-canon.c:341 src/main/print-escp2.c:242
 #: src/main/print-lexmark.c:281 src/main/print-dyesub.c:12679
-#: src/main/print-pcl.c:1567 src/cups/genppd.c:1516 src/cups/genppd.c:1930
+#: src/main/print-pcl.c:1567 src/cups/genppd.c:1542 src/cups/genppd.c:1956
 msgid "Resolution"
 msgstr "Ανάλυση"
 
@@ -459,8 +459,8 @@ msgstr "Ορισμένο από το χρήστη"
 #: src/main/print-canon.c:2916 src/main/print-escp2.c:2362
 #: src/main/print-dyesub.c:1680 src/main/print-dyesub.c:1912
 #: src/main/print-dyesub.c:6095 src/main/print-dyesub.c:9549
-#: src/main/print-dyesub.c:9776 src/cups/genppd.c:727 src/cups/genppd.c:1645
-#: src/cups/genppd.c:1862 src/cups/genppd.c:1954
+#: src/main/print-dyesub.c:9776 src/cups/genppd.c:727 src/cups/genppd.c:1671
+#: src/cups/genppd.c:1888 src/cups/genppd.c:1980
 msgid "Normal"
 msgstr ""
 
@@ -590,10 +590,10 @@ msgstr "Κρυπτογραφία"
 #: src/main/print-dyesub.c:3509 src/main/print-dyesub.c:4115
 #: src/main/print-dyesub.c:7446 src/main/print-dyesub.c:8188
 #: src/main/print-dyesub.c:8294 src/main/print-dyesub.c:10714
-#: src/cups/genppd.c:861 src/cups/genppd.c:882 src/cups/genppd.c:911
-#: src/cups/genppd.c:944 src/cups/genppd.c:999 src/cups/genppd.c:1046
-#: src/cups/genppd.c:1084 src/cups/genppd.c:1097 src/cups/genppd.c:1117
-#: src/cups/genppd.c:1139 src/cups/genppd.c:1156
+#: src/cups/genppd.c:887 src/cups/genppd.c:908 src/cups/genppd.c:937
+#: src/cups/genppd.c:970 src/cups/genppd.c:1025 src/cups/genppd.c:1072
+#: src/cups/genppd.c:1110 src/cups/genppd.c:1123 src/cups/genppd.c:1143
+#: src/cups/genppd.c:1165 src/cups/genppd.c:1182
 msgid "None"
 msgstr ""
 
@@ -661,7 +661,7 @@ msgid "Pre-Dithered"
 msgstr "Εκτύπωση"
 
 #: src/main/print-color.c:151 src/gutenprintui2/panel.c:289
-#: src/cups/genppd.c:672 src/cups/genppd.c:1845
+#: src/cups/genppd.c:672 src/cups/genppd.c:1871
 msgid "Grayscale"
 msgstr "Κλίμακα του γκρι"
 
@@ -678,11 +678,11 @@ msgstr ""
 msgid "CMY"
 msgstr ""
 
-#: src/main/print-color.c:159 src/cups/genppd.c:703 src/cups/genppd.c:1852
+#: src/main/print-color.c:159 src/cups/genppd.c:703 src/cups/genppd.c:1878
 msgid "CMYK"
 msgstr ""
 
-#: src/main/print-color.c:161 src/cups/genppd.c:710 src/cups/genppd.c:1853
+#: src/main/print-color.c:161 src/cups/genppd.c:710 src/cups/genppd.c:1879
 msgid "KCMY"
 msgstr ""
 
@@ -1399,8 +1399,8 @@ msgstr ""
 msgid "Interleave pattern to use"
 msgstr ""
 
-#: src/main/print-escp2.c:289 src/main/print-escp2.c:290 src/cups/genppd.c:1640
-#: src/cups/genppd.c:1953
+#: src/main/print-escp2.c:289 src/main/print-escp2.c:290 src/cups/genppd.c:1666
+#: src/cups/genppd.c:1979
 #, fuzzy
 msgid "Output Order"
 msgstr "Byte Εξόδου"
@@ -1919,7 +1919,7 @@ msgstr ""
 #
 #: src/main/print-escp2.c:2533 src/main/print-dyesub.c:6277
 #: src/main/print-dyesub.c:6880 src/main/print-dyesub.c:7230
-#: src/cups/genppd.c:1554 src/cups/genppd.c:1933
+#: src/cups/genppd.c:1580 src/cups/genppd.c:1959
 #, fuzzy
 msgid "Automatic"
 msgstr "Μέγεθος"
@@ -3387,7 +3387,7 @@ msgstr "Ρυθμίσεις Επιλογέα"
 
 #: src/main/print-dyesub.c:12728 src/main/print-dyesub.c:12729
 #: src/main/generic-options.c:90 src/main/generic-options.c:91
-#: src/cups/genppd.c:1991
+#: src/cups/genppd.c:2017
 msgid "Collate the Job"
 msgstr ""
 
@@ -3715,14 +3715,14 @@ msgstr "Slashdot"
 msgid "Ultra Photo"
 msgstr "Slashdot"
 
-#: src/main/generic-options.c:39 src/cups/genppd.c:730 src/cups/genppd.c:1863
+#: src/main/generic-options.c:39 src/cups/genppd.c:730 src/cups/genppd.c:1889
 #: src/xml/xmli18n-tmp.h:2831 src/xml/xmli18n-tmp.h:2838
 #: src/xml/xmli18n-tmp.h:2847 src/xml/xmli18n-tmp.h:2856
 #: src/xml/xmli18n-tmp.h:2868 src/xml/xmli18n-tmp.h:2876
 msgid "Best"
 msgstr ""
 
-#: src/main/generic-options.c:44 src/cups/genppd.c:887
+#: src/main/generic-options.c:44 src/cups/genppd.c:913
 msgid "Text"
 msgstr ""
 
@@ -4507,83 +4507,83 @@ msgstr ""
 msgid "English"
 msgstr "Greek"
 
-#: src/cups/genppd.c:559 src/cups/genppd.c:577 src/cups/genppd.c:1809
-#: src/cups/genppd.c:1810
+#: src/cups/genppd.c:559 src/cups/genppd.c:577 src/cups/genppd.c:1835
+#: src/cups/genppd.c:1836
 #, fuzzy
 msgid "Media Size"
 msgstr "Μέγεθος Χ:"
 
 #
-#: src/cups/genppd.c:652 src/cups/genppd.c:1844
+#: src/cups/genppd.c:652 src/cups/genppd.c:1870
 #, fuzzy
 msgid "Color Model"
 msgstr "Χρώμα"
 
-#: src/cups/genppd.c:679 src/cups/genppd.c:1846
+#: src/cups/genppd.c:679 src/cups/genppd.c:1872
 #, fuzzy
 msgid "Inverted Grayscale"
 msgstr "Κλίμακα του γκρι"
 
 #
-#: src/cups/genppd.c:689 src/cups/genppd.c:1850
+#: src/cups/genppd.c:689 src/cups/genppd.c:1876
 #, fuzzy
 msgid "RGB Color"
 msgstr "Χρώμα"
 
-#: src/cups/genppd.c:696 src/cups/genppd.c:1851
+#: src/cups/genppd.c:696 src/cups/genppd.c:1877
 #, fuzzy
 msgid "CMY Color"
 msgstr "+ Χρώμα"
 
-#: src/cups/genppd.c:721 src/cups/genppd.c:1861
+#: src/cups/genppd.c:721 src/cups/genppd.c:1887
 msgid "Color Precision"
 msgstr ""
 
-#: src/cups/genppd.c:905 src/cups/genppd.c:916 src/cups/genppd.c:1099
-#: src/cups/genppd.c:1706 src/cups/genppd.c:1992
+#: src/cups/genppd.c:931 src/cups/genppd.c:942 src/cups/genppd.c:1125
+#: src/cups/genppd.c:1732 src/cups/genppd.c:2018
 msgid "Yes"
 msgstr ""
 
-#: src/cups/genppd.c:905 src/cups/genppd.c:914 src/cups/genppd.c:1098
-#: src/cups/genppd.c:1704 src/cups/genppd.c:1993
+#: src/cups/genppd.c:931 src/cups/genppd.c:940 src/cups/genppd.c:1124
+#: src/cups/genppd.c:1730 src/cups/genppd.c:2019
 msgid "No"
 msgstr ""
 
-#: src/cups/genppd.c:955 src/cups/genppd.c:1022 src/cups/genppd.c:1119
-#: src/cups/genppd.c:1150
+#: src/cups/genppd.c:981 src/cups/genppd.c:1048 src/cups/genppd.c:1145
+#: src/cups/genppd.c:1176
 msgid "Value"
 msgstr ""
 
-#: src/cups/genppd.c:963 src/cups/genppd.c:1124
+#: src/cups/genppd.c:989 src/cups/genppd.c:1150
 msgid "Fine Adjustment"
 msgstr ""
 
-#: src/cups/genppd.c:1006 src/cups/genppd.c:1144
+#: src/cups/genppd.c:1032 src/cups/genppd.c:1170
 #, c-format
 msgid "%.1f mm"
 msgstr ""
 
-#: src/cups/genppd.c:1646 src/cups/genppd.c:1955
+#: src/cups/genppd.c:1672 src/cups/genppd.c:1981
 msgid "Reverse"
 msgstr ""
 
-#: src/cups/genppd.c:1667 src/cups/genppd.c:1971
+#: src/cups/genppd.c:1693 src/cups/genppd.c:1997
 msgid "2-Sided Printing"
 msgstr ""
 
-#: src/cups/genppd.c:1712 src/cups/genppd.c:1997
+#: src/cups/genppd.c:1738 src/cups/genppd.c:2023
 msgid "Shrink Page If Necessary to Fit Borders"
 msgstr ""
 
-#: src/cups/genppd.c:1717 src/cups/genppd.c:1998
+#: src/cups/genppd.c:1743 src/cups/genppd.c:2024
 msgid "Shrink (print the whole page)"
 msgstr ""
 
-#: src/cups/genppd.c:1718 src/cups/genppd.c:1999
+#: src/cups/genppd.c:1744 src/cups/genppd.c:2025
 msgid "Crop (preserve dimensions)"
 msgstr ""
 
-#: src/cups/genppd.c:1719 src/cups/genppd.c:2000
+#: src/cups/genppd.c:1745 src/cups/genppd.c:2026
 msgid "Expand (use maximum page area)"
 msgstr ""
 

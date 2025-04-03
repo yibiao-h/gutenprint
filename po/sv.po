@@ -1,17 +1,17 @@
 # Swedish messages for gutenprint.
-# Copyright (C) 2001, 2002, 2006, 2019, 2020, 2021, 2024 Free Software Foundation, Inc.
+# Copyright (C) 2001, 2002, 2006, 2019, 2020, 2021, 2024, 2025 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gutenprint package.
 # Christian Rose <menthos@menthos.com>, 2001, 2002.
 # Daniel Nylander <po@danielnylander.se>, 2006.
-# Göran Uddeborg <goeran@uddeborg.se>, 2019, 2020, 2021, 2024.
+# Göran Uddeborg <goeran@uddeborg.se>, 2019, 2020, 2021, 2024, 2025.
 #
-# $Id: gutenprint.po,v 1.5 2024-10-04 22:23:26+02 göran Exp $
+# $Id: gutenprint.po,v 1.7 2025-03-18 09:26:40+01 göran Exp $
 msgid ""
 msgstr ""
-"Project-Id-Version: gutenprint 5.3.5-pre1\n"
+"Project-Id-Version: gutenprint 5.3.5\n"
 "Report-Msgid-Bugs-To: gimp-print-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-09 20:43-0400\n"
-"PO-Revision-Date: 2024-10-04 22:23+0200\n"
+"POT-Creation-Date: 2025-04-03 09:16-0400\n"
+"PO-Revision-Date: 2025-03-18 09:26+0100\n"
 "Last-Translator: Göran Uddeborg <goeran@uddeborg.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -161,7 +161,7 @@ msgstr "Storlek på papperet som du vill skriva ut till"
 #: src/main/print-canon.c:293 src/main/print-escp2.c:188
 #: src/main/print-lexmark.c:269 src/main/print-dyesub.c:10048
 #: src/main/print-dyesub.c:10049 src/main/print-dyesub.c:12667
-#: src/main/print-pcl.c:1549 src/cups/genppd.c:1388 src/cups/genppd.c:1875
+#: src/main/print-pcl.c:1549 src/cups/genppd.c:1414 src/cups/genppd.c:1901
 msgid "Media Type"
 msgstr "Mediatyp"
 
@@ -173,7 +173,7 @@ msgstr "Typ av media (vanligt papper, fotopapper, etc.)"
 
 #: src/main/print-canon.c:299 src/main/print-escp2.c:194
 #: src/main/print-lexmark.c:275 src/main/print-dyesub.c:12673
-#: src/main/print-pcl.c:1555 src/cups/genppd.c:1424 src/cups/genppd.c:1895
+#: src/main/print-pcl.c:1555 src/cups/genppd.c:1450 src/cups/genppd.c:1921
 msgid "Media Source"
 msgstr "Mediakälla"
 
@@ -230,7 +230,7 @@ msgstr "CD:ns vertikala finjustering"
 
 #: src/main/print-canon.c:341 src/main/print-escp2.c:242
 #: src/main/print-lexmark.c:281 src/main/print-dyesub.c:12679
-#: src/main/print-pcl.c:1567 src/cups/genppd.c:1516 src/cups/genppd.c:1930
+#: src/main/print-pcl.c:1567 src/cups/genppd.c:1542 src/cups/genppd.c:1956
 msgid "Resolution"
 msgstr "Upplösning"
 
@@ -429,8 +429,8 @@ msgstr "CD – anpassad"
 #: src/main/print-canon.c:2916 src/main/print-escp2.c:2362
 #: src/main/print-dyesub.c:1680 src/main/print-dyesub.c:1912
 #: src/main/print-dyesub.c:6095 src/main/print-dyesub.c:9549
-#: src/main/print-dyesub.c:9776 src/cups/genppd.c:727 src/cups/genppd.c:1645
-#: src/cups/genppd.c:1862 src/cups/genppd.c:1954
+#: src/main/print-dyesub.c:9776 src/cups/genppd.c:727 src/cups/genppd.c:1671
+#: src/cups/genppd.c:1888 src/cups/genppd.c:1980
 msgid "Normal"
 msgstr "Normal"
 
@@ -555,10 +555,10 @@ msgstr "Foto"
 #: src/main/print-dyesub.c:3509 src/main/print-dyesub.c:4115
 #: src/main/print-dyesub.c:7446 src/main/print-dyesub.c:8188
 #: src/main/print-dyesub.c:8294 src/main/print-dyesub.c:10714
-#: src/cups/genppd.c:861 src/cups/genppd.c:882 src/cups/genppd.c:911
-#: src/cups/genppd.c:944 src/cups/genppd.c:999 src/cups/genppd.c:1046
-#: src/cups/genppd.c:1084 src/cups/genppd.c:1097 src/cups/genppd.c:1117
-#: src/cups/genppd.c:1139 src/cups/genppd.c:1156
+#: src/cups/genppd.c:887 src/cups/genppd.c:908 src/cups/genppd.c:937
+#: src/cups/genppd.c:970 src/cups/genppd.c:1025 src/cups/genppd.c:1072
+#: src/cups/genppd.c:1110 src/cups/genppd.c:1123 src/cups/genppd.c:1143
+#: src/cups/genppd.c:1165 src/cups/genppd.c:1182
 msgid "None"
 msgstr "Inget"
 
@@ -622,7 +622,7 @@ msgid "Pre-Dithered"
 msgstr "Förutjämnad"
 
 #: src/main/print-color.c:151 src/gutenprintui2/panel.c:289
-#: src/cups/genppd.c:672 src/cups/genppd.c:1845
+#: src/cups/genppd.c:672 src/cups/genppd.c:1871
 msgid "Grayscale"
 msgstr "Gråtoner"
 
@@ -638,11 +638,11 @@ msgstr "RGB"
 msgid "CMY"
 msgstr "CMY"
 
-#: src/main/print-color.c:159 src/cups/genppd.c:703 src/cups/genppd.c:1852
+#: src/main/print-color.c:159 src/cups/genppd.c:703 src/cups/genppd.c:1878
 msgid "CMYK"
 msgstr "CMYK"
 
-#: src/main/print-color.c:161 src/cups/genppd.c:710 src/cups/genppd.c:1853
+#: src/main/print-color.c:161 src/cups/genppd.c:710 src/cups/genppd.c:1879
 msgid "KCMY"
 msgstr "KCMY"
 
@@ -1320,8 +1320,8 @@ msgstr "Sammanflätningsmetod"
 msgid "Interleave pattern to use"
 msgstr "Sammanflätningsmönster att använda"
 
-#: src/main/print-escp2.c:289 src/main/print-escp2.c:290 src/cups/genppd.c:1640
-#: src/cups/genppd.c:1953
+#: src/main/print-escp2.c:289 src/main/print-escp2.c:290 src/cups/genppd.c:1666
+#: src/cups/genppd.c:1979
 msgid "Output Order"
 msgstr "Utmatningsordning"
 
@@ -1780,7 +1780,7 @@ msgstr "Automatisk inställningsstyrning"
 
 #: src/main/print-escp2.c:2533 src/main/print-dyesub.c:6277
 #: src/main/print-dyesub.c:6880 src/main/print-dyesub.c:7230
-#: src/cups/genppd.c:1554 src/cups/genppd.c:1933
+#: src/cups/genppd.c:1580 src/cups/genppd.c:1959
 msgid "Automatic"
 msgstr "Automatisk"
 
@@ -2927,12 +2927,11 @@ msgstr "Av-curl-styrning"
 
 #: src/main/print-dyesub.c:10033
 msgid "Metallic"
-msgstr ""
+msgstr "Metallisk"
 
 #: src/main/print-dyesub.c:10035
-#, fuzzy
 msgid "Transparent"
-msgstr "Genomskinligt"
+msgstr "Genomskinlig"
 
 #: src/main/print-dyesub.c:10290
 msgid "Media Version"
@@ -3197,7 +3196,7 @@ msgstr "Skrivargenererade exemplar"
 
 #: src/main/print-dyesub.c:12728 src/main/print-dyesub.c:12729
 #: src/main/generic-options.c:90 src/main/generic-options.c:91
-#: src/cups/genppd.c:1991
+#: src/cups/genppd.c:2017
 msgid "Collate the Job"
 msgstr "Sortera jobbet"
 
@@ -3495,14 +3494,14 @@ msgstr "Superfoto"
 msgid "Ultra Photo"
 msgstr "Ultrafoto"
 
-#: src/main/generic-options.c:39 src/cups/genppd.c:730 src/cups/genppd.c:1863
+#: src/main/generic-options.c:39 src/cups/genppd.c:730 src/cups/genppd.c:1889
 #: src/xml/xmli18n-tmp.h:2831 src/xml/xmli18n-tmp.h:2838
 #: src/xml/xmli18n-tmp.h:2847 src/xml/xmli18n-tmp.h:2856
 #: src/xml/xmli18n-tmp.h:2868 src/xml/xmli18n-tmp.h:2876
 msgid "Best"
 msgstr "Bästa"
 
-#: src/main/generic-options.c:44 src/cups/genppd.c:887
+#: src/main/generic-options.c:44 src/cups/genppd.c:913
 msgid "Text"
 msgstr "Text"
 
@@ -4214,77 +4213,77 @@ msgstr "Extra 5"
 msgid "English"
 msgstr "Swedish"
 
-#: src/cups/genppd.c:559 src/cups/genppd.c:577 src/cups/genppd.c:1809
-#: src/cups/genppd.c:1810
+#: src/cups/genppd.c:559 src/cups/genppd.c:577 src/cups/genppd.c:1835
+#: src/cups/genppd.c:1836
 msgid "Media Size"
 msgstr "Mediastorlek"
 
-#: src/cups/genppd.c:652 src/cups/genppd.c:1844
+#: src/cups/genppd.c:652 src/cups/genppd.c:1870
 msgid "Color Model"
 msgstr "Färgmodell"
 
-#: src/cups/genppd.c:679 src/cups/genppd.c:1846
+#: src/cups/genppd.c:679 src/cups/genppd.c:1872
 msgid "Inverted Grayscale"
 msgstr "Inverterad gråskala"
 
-#: src/cups/genppd.c:689 src/cups/genppd.c:1850
+#: src/cups/genppd.c:689 src/cups/genppd.c:1876
 msgid "RGB Color"
 msgstr "RGB-färg"
 
-#: src/cups/genppd.c:696 src/cups/genppd.c:1851
+#: src/cups/genppd.c:696 src/cups/genppd.c:1877
 msgid "CMY Color"
 msgstr "CMY-färg"
 
-#: src/cups/genppd.c:721 src/cups/genppd.c:1861
+#: src/cups/genppd.c:721 src/cups/genppd.c:1887
 msgid "Color Precision"
 msgstr "Färgprecision"
 
-#: src/cups/genppd.c:905 src/cups/genppd.c:916 src/cups/genppd.c:1099
-#: src/cups/genppd.c:1706 src/cups/genppd.c:1992
+#: src/cups/genppd.c:931 src/cups/genppd.c:942 src/cups/genppd.c:1125
+#: src/cups/genppd.c:1732 src/cups/genppd.c:2018
 msgid "Yes"
 msgstr "Ja"
 
-#: src/cups/genppd.c:905 src/cups/genppd.c:914 src/cups/genppd.c:1098
-#: src/cups/genppd.c:1704 src/cups/genppd.c:1993
+#: src/cups/genppd.c:931 src/cups/genppd.c:940 src/cups/genppd.c:1124
+#: src/cups/genppd.c:1730 src/cups/genppd.c:2019
 msgid "No"
 msgstr "Nej"
 
-#: src/cups/genppd.c:955 src/cups/genppd.c:1022 src/cups/genppd.c:1119
-#: src/cups/genppd.c:1150
+#: src/cups/genppd.c:981 src/cups/genppd.c:1048 src/cups/genppd.c:1145
+#: src/cups/genppd.c:1176
 msgid "Value"
 msgstr "Värde"
 
-#: src/cups/genppd.c:963 src/cups/genppd.c:1124
+#: src/cups/genppd.c:989 src/cups/genppd.c:1150
 msgid "Fine Adjustment"
 msgstr "Finjustering"
 
-#: src/cups/genppd.c:1006 src/cups/genppd.c:1144
+#: src/cups/genppd.c:1032 src/cups/genppd.c:1170
 #, c-format
 msgid "%.1f mm"
 msgstr "%.1f mm"
 
 # Syftar på "utmatningsordning", därav utrum
-#: src/cups/genppd.c:1646 src/cups/genppd.c:1955
+#: src/cups/genppd.c:1672 src/cups/genppd.c:1981
 msgid "Reverse"
 msgstr "Omvänd"
 
-#: src/cups/genppd.c:1667 src/cups/genppd.c:1971
+#: src/cups/genppd.c:1693 src/cups/genppd.c:1997
 msgid "2-Sided Printing"
 msgstr "2-sidig utskrift"
 
-#: src/cups/genppd.c:1712 src/cups/genppd.c:1997
+#: src/cups/genppd.c:1738 src/cups/genppd.c:2023
 msgid "Shrink Page If Necessary to Fit Borders"
 msgstr "Krymp sidan om nödvändigt för att passa med gränserna"
 
-#: src/cups/genppd.c:1717 src/cups/genppd.c:1998
+#: src/cups/genppd.c:1743 src/cups/genppd.c:2024
 msgid "Shrink (print the whole page)"
 msgstr "Krymp (skriv ut hela sidan)"
 
-#: src/cups/genppd.c:1718 src/cups/genppd.c:1999
+#: src/cups/genppd.c:1744 src/cups/genppd.c:2025
 msgid "Crop (preserve dimensions)"
 msgstr "Beskär (behåll dimensionerna)"
 
-#: src/cups/genppd.c:1719 src/cups/genppd.c:2000
+#: src/cups/genppd.c:1745 src/cups/genppd.c:2026
 msgid "Expand (use maximum page area)"
 msgstr "Expandera (använd maximal sidyta)"
 
@@ -4962,9 +4961,9 @@ msgid "Warning: %s Ink Low\n"
 msgstr "Varning: %s bläcknivå är låg\n"
 
 #: src/escputil/escputil.c:1256
-#, fuzzy, c-format
+#, c-format
 msgid "Warning: Channel %lu Ink Low\n"
-msgstr "Varning: kanal %d bläcknivå är låg\n"
+msgstr "Varning: kanal %lu bläcknivå är låg\n"
 
 #: src/escputil/escputil.c:1262
 #, c-format
@@ -4972,9 +4971,9 @@ msgid "Warning: %s Cleaning Disabled\n"
 msgstr "Varning: %s-rengöring avaktiverad\n"
 
 #: src/escputil/escputil.c:1265
-#, fuzzy, c-format
+#, c-format
 msgid "Warning: Channel %lu Cleaning \n"
-msgstr "Varning: kanal %d rensas\n"
+msgstr "Varning: kanal %lu rensas\n"
 
 #: src/escputil/escputil.c:1272
 #, c-format
@@ -4987,9 +4986,9 @@ msgid "Warning: Maintenance request pending\n"
 msgstr "Varning: en underhållsbegäran väntar\n"
 
 #: src/escputil/escputil.c:1278
-#, fuzzy, c-format
+#, c-format
 msgid "Warning: Unknown (%lu)\n"
-msgstr "Varning: okänd (%d)\n"
+msgstr "Varning: okänd (%lu)\n"
 
 #: src/escputil/escputil.c:1290
 #, c-format
@@ -12715,7 +12714,7 @@ msgstr "HiTi P750L"
 
 #: src/xml/xmli18n-tmp.h:4527
 msgid "Joyspace U826L"
-msgstr ""
+msgstr "Joyspace U826L"
 
 #: src/xml/xmli18n-tmp.h:4528
 msgid "Kodak 305"
@@ -12902,9 +12901,8 @@ msgid "Mitsubishi CP-D90DW"
 msgstr "Mitsubishi CP-D90DW"
 
 #: src/xml/xmli18n-tmp.h:4574
-#, fuzzy
 msgid "Mitsubishi CP-D90DW-SL"
-msgstr "Mitsubishi CP-D90DW"
+msgstr "Mitsubishi CP-D90DW-SL"
 
 #: src/xml/xmli18n-tmp.h:4575
 msgid "Mitsubishi CP-D70DW"
@@ -13227,9 +13225,8 @@ msgid "Epson SC-P800 Series"
 msgstr "Epson SC-P800-serien"
 
 #: src/xml/xmli18n-tmp.h:4655
-#, fuzzy
 msgid "Epson SC-P5000 Series"
-msgstr "Epson SC-P6000-serien"
+msgstr "Epson SC-P5000-serien"
 
 #: src/xml/xmli18n-tmp.h:4656
 msgid "Epson SC-P6000 Series"
@@ -14744,14 +14741,12 @@ msgid "Epson SureColor P800"
 msgstr "Epson SureColor P800"
 
 #: src/xml/xmli18n-tmp.h:5034
-#, fuzzy
 msgid "Epson SureColor P5000 Commercial Edition"
-msgstr "Epson SureColor P7000 Commercial Edition"
+msgstr "Epson SureColor P5000 Commercial Edition"
 
 #: src/xml/xmli18n-tmp.h:5035
-#, fuzzy
 msgid "Epson SureColor P5000 Standard Edition"
-msgstr "Epson SureColor P7000 Commercial Edition"
+msgstr "Epson SureColor P5000 Standard Edition"
 
 #: src/xml/xmli18n-tmp.h:5036
 msgid "Epson SureColor P6000"
