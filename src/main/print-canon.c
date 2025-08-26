@@ -2547,8 +2547,8 @@ canon_printhead_colors(const stp_vars_t*v)
   for(i=((sizeof(canon_inktypes)/sizeof(canon_inktypes[0])));i>0;i--){
     for(j=0;j<caps->modelist->count;j++){
       if(caps->modelist->modes[j].ink_types & canon_inktypes[i-1].ink_type){
-	stp_dprintf(STP_DBG_CANON, v," lowest inktype found ---  %s(%s)\n",canon_inktypes[i-1].name,canon_inktypes[i].text);
-	return canon_inktypes[i].ink_type;
+	stp_dprintf(STP_DBG_CANON, v," lowest inktype found ---  %s(%s)\n",canon_inktypes[i-1].name,canon_inktypes[i-1].text);
+	return canon_inktypes[i-1].ink_type;
       }
     }
   }
