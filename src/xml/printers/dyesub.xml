@@ -133,7 +133,7 @@
       <printer translate="name" name="HiTi P720L" deviceid="MFG:HiTi;MDL:HiTi HiTi P720L;" driver="hiti-p720l" manufacturer="HiTi" model="6501" >EXPERIMENTAL</printer>
       <printer translate="name" name="HiTi P728L" deviceid="MFG:HiTi;MDL:HiTi P728L;" driver="hiti-p728l" manufacturer="HiTi" model="6501" >EXPERIMENTAL</printer>
       <printer translate="name" name="HiTi P750L" deviceid="MFG:HiTi;MDL:P750L;" driver="hiti-p750l" manufacturer="HiTi" model="6501" >EXPERIMENTAL</printer>
-      <printer translate="name" name="Joyspace U826L" deviceid="MFG:JoySpace;CMD:???;MDL:U826;CLS:PRINTER;" driver="joyspace-u826" manufacturer="Joyspace" model="6500" />
+      <printer translate="name" name="Joyspace U826" deviceid="MFG:JoySpace;CMD:???;MDL:U826;CLS:PRINTER;" driver="joyspace-u826" manufacturer="Joyspace" model="6500" />
       <printer translate="name" name="Kodak 305" deviceid="MFG:KODAK;CMD:KODAK305;MDL:305 Photo Printer;CLS:PRINTER;DES:KODAK 305 Photo Printer" driver="kodak-305" manufacturer="Kodak" model="4108" />
       <printer translate="name" name="Kodak 605" deviceid="MFG:Eastman Kodak Company;CMD:SUPCC;MCL:KODAK 605 Photo Printer;CLS:PRINTER;DES:Thermal Dye Photo Printer;" driver="kodak-605" manufacturer="Kodak" model="4003" />
       <printer translate="name" name="Kodak 1400" deviceid="MFG:Eastman Kodak Company;CMD:EK1;MDL: 1400 Printer;CLS:Printer;DES:Kodak 1400 Printer;`" driver="kodak-1400" manufacturer="Kodak" model="4004" />
@@ -221,6 +221,7 @@
       <printer translate="name" name="Sony UP-CR20L" driver="sony-upcr20l" manufacturer="Sony" model="2009">EXPERIMENTAL</printer>
       <printer translate="name" name="Sony UP-DR80MD" deviceid="MFG:SONY;MDL:UP-DR80MD;DES:Sony UP-DR80MD;CMD:SPJL-DS,SPDL-DS;CLS:PRINTER;" driver="sony-updr80md" manufacturer="Sony" model="2010" />
       <printer translate="name" name="Stryker SDP1000" deviceid="MFG:Stryker;MDL:SDP1000;DES:Stryker SDP1000;CMD:SPJL-DS,SPDL-DS2;CLS:PRINTER;" driver="stryker-sdp1000" manufacturer="Stryker" model="2010" />
+      <printer translate="name" name="Swiftfoto KSF-10R" deviceid="MFG:SwiftFoto;CMD:???;MDL:KSF-10R;CLS:PRINTER;" driver="swiftfoto-ksf10r" manufacturer="Swiftfoto" model="6500" />
     </family>
   </printdef>
 </gutenprint>
