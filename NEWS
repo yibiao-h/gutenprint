@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.3.5!  Please read these release notes
+Welcome to Gutenprint 5.3.6-pre!  Please read these release notes
 carefully.
 
 Gutenprint is a suite of printer drivers for Linux and other UNIX-like
@@ -74,6 +74,19 @@ for building and installing Gutenprint.
 
 
 II) MAJOR CHANGES FROM PREVIOUS RELEASES
+
+* Changes from Gutenprint 5.3.5
+
+  0) Conformance fixes for internationalized PPDs
+
+  1) Support for the following Dye-sublimation & thermal printers
+     has been added:
+
+	Swiftfoto KSF-10R
+
+  2) Numerous bugfixes, including:
+
+	Canon inkjets may use the wrong inksets
 
 * Changes from Gutenprint 5.3.4
 
