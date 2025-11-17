@@ -1,7 +1,7 @@
 /*
  *   HiTi Photo Printer CUPS backend
  *
- *   (c) 2019-2024 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2019-2025 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -697,6 +697,11 @@ static const char* hiti_modelcode(int type, int subtype) {
 			return "ro1";
 		else
 			return "ro";
+	case P_SWIFTFOTO_KSF10:
+		if (subtype)
+			return "rq1";
+		else
+			return "rq";
 	default:
 		ERROR("Unknown HiTi type %d\n", type);
 		return "XX";
@@ -952,9 +957,32 @@ static unsigned int hiti_ribboncounts(uint8_t code, uint8_t type)
 		}
 	} else if (type == P_HITI_826) {
 		switch(code) {
-		case RIBBON_TYPE_4x6: return 500;
-		case RIBBON_TYPE_5x7: return 200;
+		case RIBBON_TYPE_4x6: return 400;
+		case RIBBON_TYPE_5x7: return 290;
 		case RIBBON_TYPE_6x8: return 200;
+		default: return 999;
+		}
+	} else if (type == P_SWIFTFOTO_KSF10) {
+		switch(code) {
+		case RIBBON_TYPE_4x6: return 500;
+		case RIBBON_TYPE_5x7: return 290;
+		case RIBBON_TYPE_6x8: return 250; // 200 on brochure, 250 in service manual
+		default: return 999;
+		}
+	} else if (type == P_HITI_720) {
+		switch(code) {
+		case RIBBON_TYPE_4x6: return 1000;
+		case RIBBON_TYPE_5x7: return 600;
+		case RIBBON_TYPE_6x8: return 455;
+		case RIBBON_TYPE_6x9: return 455;
+		default: return 999;
+		}
+	} else if (type == P_HITI_750) {
+		switch(code) {
+		case RIBBON_TYPE_4x6: return 1000;
+		case RIBBON_TYPE_5x7: return 600;
+		case RIBBON_TYPE_6x8: return 500;
+		case RIBBON_TYPE_6x9: return 455;
 		default: return 999;
 		}
 	}
@@ -1422,12 +1450,12 @@ static int hiti_attach(void *vctx, struct dyesub_connection *conn, uint8_t jobid
 			if (strncmp(ctx->version, "1.22", 4) < 0 &&
 			    strncmp(ctx->version, "1.17", 4) > 0)  /* V1.18 -> v1.21 have a known USB CLEAR_ENDPOINT_HALT issue */
 				WARNING("Printer firmware %s has a known USB bug, please update to at least v1.22\n", ctx->version);
-			else if (strncmp(ctx->version, "1.29", 4) < 0)
-				WARNING("Printer firmware %s out of date (vs %s), please update.\n", ctx->version, "v1.29");
+			else if (strncmp(ctx->version, "1.30", 4) < 0)
+				WARNING("Printer firmware %s out of date (vs %s), please update.\n", ctx->version, "v1.30");
 			break;
 		case P_HITI_525:
-			if (strncmp(ctx->version, "1.04", 4) < 0)
-				WARNING("Printer firmware %s out of date (vs %s), please update.\n", ctx->version, "v1.04");
+			if (strncmp(ctx->version, "1.05", 4) < 0)
+				WARNING("Printer firmware %s out of date (vs %s), please update.\n", ctx->version, "v1.05");
 			break;
 		case P_HITI_530:
 			if (strncmp(ctx->version, "1.02.0", 6) < 0)
@@ -1438,12 +1466,16 @@ static int hiti_attach(void *vctx, struct dyesub_connection *conn, uint8_t jobid
 				WARNING("Printer firmware %s out of date (vs %s), please update.\n", ctx->version, "v1.19");
 			break;
 		case P_HITI_750:
-			if (strncmp(ctx->version, "1.21.0", 6) < 0)
-				WARNING("Printer firmware %s out of date (vs %s), please update.\n", ctx->version, "v1.21.0");
+			if (strncmp(ctx->version, "1.22.0", 6) < 0)
+				WARNING("Printer firmware %s out of date (vs %s), please update.\n", ctx->version, "v1.22.0");
 			break;
 		case P_HITI_826:
 			if (strncmp(ctx->version, "1.07.0", 6) < 0)
 				WARNING("Printer firmware %s out of date (vs %s), please update.\n", ctx->version, "v1.07.0");
+			break;
+		case P_SWIFTFOTO_KSF10:
+			if (strncmp(ctx->version, "1.00.0", 6) < 0)
+				WARNING("Printer firmware %s out of date (vs %s), please update.\n", ctx->version, "v1.00.0");
 			break;
 		default:
 			break;
@@ -1605,7 +1637,8 @@ static uint8_t *hiti_get_correction_data(struct hiti_ctx *ctx, uint8_t mode, int
 		colorname = "B"; // XXX many more, investigate more carefully.
 	} else if (ctx->conn->type == P_HITI_520 ||
 		   ctx->conn->type == P_HITI_525 ||
-		   ctx->conn->type == P_HITI_826) {
+		   ctx->conn->type == P_HITI_826 ||
+		   ctx->conn->type == P_SWIFTFOTO_KSF10) {
 		if (colormode == HT_COLORMODE_METALLIC)
 			colorname = "M";
 		else if (colormode == HT_COLORMODE_HIGHDENSITY)
@@ -2060,6 +2093,7 @@ static int hiti_read_parse(void *vctx, const void **vjob, int data_fd, int copie
 	case P_HITI_525:
 	case P_HITI_530:
 	case P_HITI_826:
+	case P_SWIFTFOTO_KSF10:
 		if (job->hdr.model != 520) {
 			ERROR("Unrecognized header!\n");
 			hiti_cleanup_job(job);
@@ -2167,7 +2201,11 @@ static int hiti_read_parse(void *vctx, const void **vjob, int data_fd, int copie
 		    job->hdr.code != PRINT_TYPE_6x2 &&
 		    job->hdr.code != PRINT_TYPE_6x9_2UP &&
 		    job->hdr.code != PRINT_TYPE_6x9_4UP &&
-		    job->hdr.code != PRINT_TYPE_6x9_6UP) {
+		    job->hdr.code != PRINT_TYPE_6x9_6UP &&
+		    /* HiTi now supplies 6x8" ribbons in 5x7" kits */
+		    job->hdr.code != PRINT_TYPE_5x7 &&
+		    job->hdr.code != PRINT_TYPE_5x3_5 &&
+		    job->hdr.code != PRINT_TYPE_5x7_2UP ) {
 			ERROR("Invalid ribbon type vs job (%02x/%02x)\n",
 			      ctx->ribbon.type, job->hdr.code);
 			hiti_cleanup_job(job);
@@ -2175,7 +2213,9 @@ static int hiti_read_parse(void *vctx, const void **vjob, int data_fd, int copie
 		}
 		if (job->hdr.code == PRINT_TYPE_6x4 ||
 		    job->hdr.code == PRINT_TYPE_6x4_2UP ||
-		    job->hdr.code == PRINT_TYPE_6x4_3UP)
+		    job->hdr.code == PRINT_TYPE_6x4_3UP ||
+		    /* 5x7" prints on 6x8" ribbons... */
+		    job->hdr.code == PRINT_TYPE_5x3_5)
 			job->common.can_combine = 1;
 		break;
 	case RIBBON_TYPE_6x9:
@@ -2473,7 +2513,7 @@ static int hiti_main_loop(void *vctx, const void *vjob, int wait_for_return)
 	// QJC
 	// then SF again
 
-	if (ctx->conn->type == P_HITI_520 || ctx->conn->type == P_HITI_525 || ctx->conn->type == P_HITI_826) {
+	if (ctx->conn->type == P_HITI_520 || ctx->conn->type == P_HITI_525 || ctx->conn->type == P_HITI_826 || ctx->conn->type == P_SWIFTFOTO_KSF10) {
 		/* XXX Unknown.  Maybe other models too? */
 		uint8_t val = 0;
 		uint8_t resp[4]; // 00 01 00 06
@@ -2527,7 +2567,7 @@ static int hiti_main_loop(void *vctx, const void *vjob, int wait_for_return)
 
 	/* If we don't have a heat file or the heat transfer failed, revert to default tables */
 	if (!job->heattable_len || ret) {
-		if (ctx->conn->type != P_HITI_525 && ctx->conn->type != P_HITI_826) {
+		if (ctx->conn->type != P_HITI_525 && ctx->conn->type != P_HITI_826 && ctx->conn->type != P_SWIFTFOTO_KSF10) {
 			uint8_t chs[2] = { 0, 1 }; /* Reverts to default tables */
 			resplen = 0;
 			ret = hiti_docmd(ctx, CMD_EFD_CHS, chs, sizeof(chs), &resplen);
@@ -3527,7 +3567,7 @@ static const struct device_id hiti_devices[] = {
 	{ 0x0d16, 0x000a, P_HITI_720, NULL, "hiti-p728l"},
 	{ 0x0d16, 0x0501, P_HITI_750, NULL, "hiti-p750l"},
 	{ 0x0d16, 0x0510, P_HITI_826, NULL, "joyspace-u826"}, /* OEM variant of P525 */
-	{ 0x0d16, 0x0510, P_HITI_826, NULL, "swiftfoto-ksf10r"}, /* OEM variant of P525 */
+	{ 0x0d16, 0x0512, P_SWIFTFOTO_KSF10, NULL, "swiftfoto-ksf10r"}, /* OEM variant of P525? */
 	{ 0x0d16, 0xc000, P_HITI_51X, NULL, "yashica-yp120"},
 	{ 0x0d16, 0xd000, P_HITI_51X, NULL, "touchtunes-p510tt"},
 	{ 0, 0, 0, NULL, NULL}
@@ -3540,7 +3580,7 @@ static const struct device_id hiti_devices[] = {
 
 const struct dyesub_backend hiti_backend = {
 	.name = "HiTi Photo Printers",
-	.version = "0.83",
+	.version = "0.85",
 	.uri_prefixes = hiti_prefixes,
 	.cmdline_usage = hiti_cmdline,
 	.cmdline_arg = hiti_cmdline_arg,
