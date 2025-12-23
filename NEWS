@@ -31,10 +31,10 @@ V)    Critical Upgrade Note from Gutenprint 5.0 or Earlier
 
 I) GENERAL REQUIREMENTS
 
-Gutenprint will run on any reasonably modern computer running Linux, or 
-any other UNIX-like operating system.  If you plan to compile this 
-package from source, you will also need an ISO C99 compiler, such as gcc 
-(recommended).  A compiler is not required if you are installing a 
+Gutenprint will run on any reasonably modern computer running Linux, or
+any other UNIX-like operating system.  If you plan to compile this
+package from source, you will also need an ISO C99 compiler, such as gcc
+(recommended).  A compiler is not required if you are installing a
 pre-compiled package.
 
 Processor and memory requirements vary depending upon the printer and
@@ -83,6 +83,7 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      has been added:
 
 	Swiftfoto KSF-10R
+	HiTi P310W / P322W
 
   2) Numerous bugfixes, including:
 

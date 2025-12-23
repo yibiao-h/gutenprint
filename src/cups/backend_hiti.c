@@ -1436,7 +1436,10 @@ static int hiti_attach(void *vctx, struct dyesub_connection *conn, uint8_t jobid
 			return CUPS_BACKEND_FAILED;
 
 		switch (ctx->conn->type) {
-			// XXX P310/P322
+		case P_HITI_310:
+			if (strncmp(ctx->version, "1.17.0", 6) < 0)
+				WARNING("Printer firmware %s out of date (vs %s), please update.\n", ctx->version, "v1.17.0");
+			break;
 		case P_HITI_320:
 			if (strncmp(ctx->version, "1.04.0", 6) < 0)
 				WARNING("Printer firmware %s out of date (vs %s), please update.\n", ctx->version, "v1.04.0");
@@ -2074,7 +2077,8 @@ static int hiti_read_parse(void *vctx, const void **vjob, int data_fd, int copie
 	/* Sanity check printer type vs job type */
 	switch(ctx->conn->type)	{
 	// XXX add P11x
-	// XXX add P320/P310
+	case P_HITI_310: // XXX
+	case P_HITI_320: // XXX
 	case P_HITI_461:
 		if (job->hdr.model != 461) {
 			ERROR("Unrecognized header!\n");
@@ -2091,7 +2095,7 @@ static int hiti_read_parse(void *vctx, const void **vjob, int data_fd, int copie
 		break;
 	case P_HITI_520:
 	case P_HITI_525:
-	case P_HITI_530:
+	case P_HITI_530: // XXX
 	case P_HITI_826:
 	case P_SWIFTFOTO_KSF10:
 		if (job->hdr.model != 520) {
@@ -2139,8 +2143,7 @@ static int hiti_read_parse(void *vctx, const void **vjob, int data_fd, int copie
 	/* Sanity check against paper */
 	switch (ctx->paper.type) {
 	case PAPER_TYPE_X4INCH:
-		// XXX P461 is 1280
-		// XXX P320/P310 ???
+		// XXX P461/P320/P310 is 1280
 		// XXX P11x is ???
 		if (job->hdr.cols != ctx->erdc_rs.cols) {
 			ERROR("Illegal job on 4x6-inch paper!\n");
@@ -2499,11 +2502,10 @@ static int hiti_main_loop(void *vctx, const void *vjob, int wait_for_return)
 	sf.cols_offset = calc_offset(ctx->calibration.horiz, 6, 11, 4);
 	sf.colorSeq = SF_COLORSEQ_YMCO | (job->hdr.overcoat ? SF_COLORSEQ_MATTE : 0);
 	sf.copies = job->common.copies;
-	sf.printMode = (ctx->conn->type == P_HITI_461) // XXX P320/P310
-		? 0 : SF_PRINTMODE_BASE + (job->hdr.quality ? SF_PRINTMODE_FINE : 0);
+	sf.printMode = ctx->sheet ? 0 : SF_PRINTMODE_BASE + (job->hdr.quality ? SF_PRINTMODE_FINE : 0);
 	memset(sf.zero, 0, sizeof(sf.zero));
-	ret = hiti_docmd(ctx, CMD_EFD_SF, (uint8_t*) &sf, // XXX P320/P310
-			 ctx->conn->type == P_HITI_461 ? sizeof(sf) : sizeof(sf)-4 ,
+	ret = hiti_docmd(ctx, CMD_EFD_SF, (uint8_t*) &sf,
+			 ctx->sheet ? sizeof(sf) : sizeof(sf)-4 ,
 			 &resplen);
 	if (ret)
 		return CUPS_BACKEND_FAILED;
@@ -2942,7 +2944,7 @@ static int hiti_query_led_calibration(struct hiti_ctx *ctx)
 	int ret;
 	uint16_t len;
 
-	if (ctx->conn->type == P_HITI_461) { // XXx P320/P310
+	if (ctx->sheet) {
 		len = sizeof(ctx->led_calibration) - 4;
 		ret = hiti_docmd_resp(ctx, CMD_ERDC_RLC, NULL, 0, (uint8_t*)(&ctx->led_calibration)+4, &len);
 	} else {
@@ -3560,6 +3562,7 @@ static const struct device_id hiti_devices[] = {
 	{ 0x0d16, 0x0503, P_HITI_310, NULL, "hiti-p310l"},
 	{ 0x0d16, 0x050a, P_HITI_310, NULL, "hiti-p310w"},
 	{ 0x0d16, 0x050c, P_HITI_320, NULL, "hiti-p320w"},
+	{ 0x0d16, 0x050a, P_HITI_310, NULL, "hiti-p322w"}, // XXX duplicate of p310w
 	{ 0x0d16, 0x0509, P_HITI_461, NULL, "hiti-p461"},
 	{ 0x0d16, 0x050e, P_HITI_525, NULL, "hiti-p525l"},
 	{ 0x0d16, 0x000f, P_HITI_530, NULL, "hiti-p530d"},
@@ -3580,7 +3583,7 @@ static const struct device_id hiti_devices[] = {
 
 const struct dyesub_backend hiti_backend = {
 	.name = "HiTi Photo Printers",
-	.version = "0.85",
+	.version = "0.86",
 	.uri_prefixes = hiti_prefixes,
 	.cmdline_usage = hiti_cmdline,
 	.cmdline_arg = hiti_cmdline_arg,
