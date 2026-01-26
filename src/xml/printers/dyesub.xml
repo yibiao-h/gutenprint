@@ -132,6 +132,8 @@
       <printer translate="name" name="HiTi P518S" deviceid="MFG:HiTi;MDL:HiTi P518S;CLS:PRINTER;" driver="hiti-p518s" manufacturer="HiTi" model="6502">EXPERIMENTAL</printer>
       <printer translate="name" name="HiTi P520L" deviceid="MFG:HiTi;MDL:P520L;CLS:PRINTER;" driver="hiti-p520l" manufacturer="HiTi" model="6500" />
       <printer translate="name" name="HiTi P525L" deviceid="MFG:HiTi;MDL:P525L;CLS:PRINTER;" driver="hiti-p525l" manufacturer="HiTi" model="6500" />
+      <printer translate="name" name="HiTi P630" deviceid="MFG:HiTi;MDL:P630;CLS:PRINTER;" driver="hiti-p630" manufacturer="HiTi" model="6504" />
+      <printer translate="name" name="HiTi P630A" deviceid="MFG:HiTi;MDL:P630A;CLS:PRINTER;" driver="hiti-p630" manufacturer="HiTi" model="6504" />
       <printer translate="name" name="HiTi P720L" deviceid="MFG:HiTi;MDL:HiTi HiTi P720L;" driver="hiti-p720l" manufacturer="HiTi" model="6501" >EXPERIMENTAL</printer>
       <printer translate="name" name="HiTi P728L" deviceid="MFG:HiTi;MDL:HiTi P728L;" driver="hiti-p728l" manufacturer="HiTi" model="6501" >EXPERIMENTAL</printer>
       <printer translate="name" name="HiTi P750L" deviceid="MFG:HiTi;MDL:P750L;" driver="hiti-p750l" manufacturer="HiTi" model="6501" >EXPERIMENTAL</printer>

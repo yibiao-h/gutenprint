@@ -10378,6 +10378,11 @@ static int hiti_p461_parse_parameters(stp_vars_t *v)
   return 1;
 }
 
+/* HiTi P630 series */
+static void hiti_p630_printer_start(stp_vars_t *v)
+{
+  hiti_printer_start(v, 630);
+}
 
 /* Magicard Series */
 static const dyesub_pagesize_t magicard_page[] =
@@ -12614,6 +12619,25 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     hiti_p461_parameter_count,
     hiti_p461_load_parameters,
     hiti_p461_parse_parameters,
+  },
+  { /* HiTi P630 series */
+    6504,
+    &bgr_ink_list,
+    &res_300dpi_list,
+    &hiti_p520l_page_list,
+    &hiti_p520l_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
+    &hiti_p630_printer_start, NULL,
+    NULL, NULL,
+    NULL, NULL,
+    &hiti_p520l_overcoat_list, NULL,
+    NULL, NULL,
+    hiti_p720l_parameters,
+    hiti_p720l_parameter_count,
+    hiti_p720l_load_parameters,
+    hiti_p720l_parse_parameters,
   },
   { /* Magicard Series w/ Duplex */
     7000,

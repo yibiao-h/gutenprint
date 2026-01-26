@@ -1,7 +1,7 @@
 /*
  *   HiTi Photo Printer CUPS backend
  *
- *   (c) 2019-2025 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2019-2026 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -39,25 +39,37 @@
 /* Private structures */
 struct hiti_cmd {
 	uint8_t hdr;    /* 0xa5 */
-	uint16_t len;   /* (BE) everything after this field, minimum 3, max 6 */
-	uint8_t status; /* see CMD_STATUS_* */
+	uint16_t len;   /* (BE) everything after this field, minimum 3, max 64 */
+	uint8_t flag;   /* see CMD_FLAG_* -- MUST include CMD_FLAG_DEST */
 	uint16_t cmd;   /* CMD_*  (BE) */
-	uint8_t payload[];  /* 0-3 items */
+	uint8_t payload[];  /* 0-61 items */
 } __attribute__((packed));
 
-#define CMD_STATUS_ERR     0x80
-#define CMD_STATUS_OK      (0x40 | 0x10)
+struct hiti_cmd_lun {
+	uint8_t hdr;    /* 0xa5 */
+	uint16_t len;   /* (BE) everything after this field, minimum 4, max 64 */
+	uint8_t flag;   /* see CMD_FLAG_* -- MUST NOT include CMD_FLAG_DEST */
+	uint8_t lun;
+	uint16_t cmd;   /* CMD_*  (BE) */
+	uint8_t payload[];  /* 0-60 items */
+} __attribute__((packed));
 
-// XXX lower 4 bits are sub-status, unknown.
+#define CMD_FLAG_NOP_ERR   0x80
+#define CMD_FLAG_DEST      0x40
+#define CMD_FLAG_CONTINUE  0x20
+#define CMD_FLAG_REPLY     0x10
 
-// Success
-// 0x01 Seen with ERDC_RLC on p51x
-// 0x02 Seen with EPC_SP on p51x, sometimes?
-// 0x03 Seen with RDC_RS on p461
+#define CMD_FLAG_CHK_MASK  0x8c
+#define CMD_FLAG_CHK_OK       0x00
+#define CMD_FLAG_CHK_REJECTED 0x80 // no errors, but rejected
+#define CMD_FLAG_CHK_DATAERR  0x84 // error in data stream
+#define CMD_FLAG_CHK_CMDERR   0x88 // error in command itself
 
-// Errors
-// 0x08 Seen with EFM_RD on p51x, EFD_CHS on p525, ERDC_RRVC on p461
-// 0x0b Seen with ESD_SEHT2 on p51x
+#define CMD_FLAG_STS_MASK  0x03
+#define CMD_FLAG_STS_OK    0x00  // OK
+#define CMD_FLAG_STS_COND  0x01  // OK, but alert to a condition
+#define CMD_FLAG_STS_OPER  0x02  // operator intervention required (eg media)
+#define CMD_FLAG_STS_ERR   0x03  // fatal, eg memory error
 
 /* Request Device Characteristics */
 #define CMD_RDC_RS     0x0100 /* Request Summary */
@@ -84,7 +96,7 @@ struct hiti_cmd {
 #define CMD_JC_SJ      0x0500 /* Start Job (3 arg) */
 #define CMD_JC_EJ      0x0501 /* End Job (3 arg) */
 #define CMD_JC_QJC     0x0502 /* Query Job Completed (5 arg) XX 6 byte resp (most), 2 (p461) */
-#define CMD_JC_QQA     0x0503 /* Query Jobs Queued or Active (3 arg) */
+#define CMD_JC_QQA     0x0503 /* Query Jobs Queued or Active (3 arg), 1 rsp */
 #define CMD_JC_RSJ     0x0510 /* Resume Suspended Job (3 arg) XX */
 
 /* Extended Read Device Characteristics */
@@ -102,12 +114,12 @@ struct hiti_cmd {
 #define CMD_ERDC_RTLV  0x800E /* Request T/L Voltage */
 #define CMD_ERDC_RRVC  0x800F /* Read Ribbon Vendor Code */
 #define CMD_ERDC_UNK0  0x8010 /* Used when printer doesn't support RRVC? NOT p525/u826 */
-#define CMD_ERDC_UNK1  0x8011 /* XX p52x Unknown Query, 1 arg == QUALITY? Always 0x0 */
+#define CMD_ERDC_RHTV  0x8011 /* Request Heating Paramaters Table VersionXX p52x Unknown Query */
 #define CMD_ERDC_RHA   0x801C /* Read Highlight Adjustment (6 resp) RE */
 
 /* Extended Format Data */
 #define CMD_EFD_SF     0x8100 /* Sublimation Format */
-#define CMD_EFD_CHS    0x8101 /* Color & Heating Setting (2 arg) -- Not P525 */
+#define CMD_EFD_CHS    0x8101 /* Color & Heating Setting (2 arg) -- Not P525/U826/P630 */
 #define CMD_EFD_C_CHS  0x8102 /* CS Color Heating Setting (3 arg) */
 #define CMD_EFD_C_SIID 0x8103 /* CS Set Input ID (1 arg) */
 
@@ -142,7 +154,7 @@ struct hiti_cmd {
 #define CMD_ESD_SEPD   0x8309 /* Send Ext Print Data (2 arg) + struct */
 #define CMD_ESD_SHCI   0x830A /* Unknown, seen on P51x (4 byte payload) */
 #define CMD_ESD_SHPTC  0x830B /* Send Heating Parameters & Tone Curve (varying payload) */
-#define CMD_ESD_C_SHPTC  0x830C /* CS Send Heating Parameters & Tone Curve XX (n arg) */
+#define CMD_ESD_SHPTC2 0x830C /* Send Heating Parameters & Tone Curve Extended (when SHPTC is > 64K) */
 
 /* Extended Flash/NVram */
 #define CMD_EFM_WCV    0x8403 /* Write Calibration Value (n arg) */
@@ -186,14 +198,20 @@ struct hiti_cmd {
 
 /* CMD_ERDC_RCC */
 struct hiti_calibration {
-	uint8_t horiz;
-	uint8_t vert;
+	uint8_t cols;
+	uint8_t rows;
+} __attribute__((packed));
+
+/* CMD_EDRC_RHTV */
+struct hiti_rhtv {
+	uint16_t major;
+	uint16_t minor;
 } __attribute__((packed));
 
 /* CMD_ERDC_RPIDM */
 struct hiti_rpidm {
 	uint16_t usb_pid;  /* BE */
-	uint8_t  region;   /* See hiti_regions */
+	uint8_t  region;   /* See hiti_regions, fixed at 01 on P52x and P630 */
 } __attribute__((packed));
 
 /* CMD_EDRC_RS */
@@ -211,7 +229,7 @@ struct hiti_erdc_rs {      /* All are BIG endian */
 	uint8_t  o_speed;
 	uint8_t  overheatTemp;
 	uint8_t  heaterOffTemp;
-	uint8_t  hwFeature1; // P52x bit 7 means "RI1" printhead
+	uint8_t  hwFeature1; // P52x bit 7 means Toshiba ("RI1") printhead
 	uint8_t  fwFeature1; // bit 7 means KO function
 	uint8_t  preheatTemp;
 
@@ -219,7 +237,7 @@ struct hiti_erdc_rs {      /* All are BIG endian */
 
 	uint16_t dpi_rows2; /* 0x5c08 p520l/p510s */
 	uint16_t dpi_rows3; /* 0x0020 p461 */
-	uint8_t  hwFeature2; // 64/40/20  520l/510s/561
+	uint8_t  hwFeature2; // 64/64/40/20  p630/520l/510s/p461
 	uint8_t  overheatTempS;
 	uint8_t  overheatTempOT;
 } __attribute__((packed));
@@ -314,7 +332,7 @@ struct hiti_heattable_hdr_v2 {
 	struct hiti_heattable_entry_v2 entries[];
 } __attribute((packed));
 
-#define HEATTABLE_V2_MAX_SIZE (1024*128)
+#define HEATTABLE_V2_MAX_SIZE (1024*4096)  /* P630 has 3.6MB tables! */
 
 #define HEATTABLE_S_SIZE 4167   /* P461, P310, and some P32x */
 #define HEATTABLE_S2_SIZE 4232  /* Some P32x */
@@ -381,6 +399,10 @@ struct hiti_heattable_hdr_v2 {
 #define HEATTABLE_V2_ID_EN_FO          0xd9 //
 #define HEATTABLE_V2_ID_EN_YMC         0xde //
 #define HEATTABLE_V2_ID_EN_ALL         0xdf //
+#define HEATTABLE_V2_ID_OP1            0xf1 // rp only so far
+#define HEATTABLE_V2_ID_OP2            0xf2 // rp only so far
+#define HEATTABLE_V2_ID_SMEAR          0xf3 // rp only so far
+#define HEATTABLE_V2_ID_MSKL_RATE      0xf4 // rp only so far
 
 #define HEATTABLE_V2_ID_EMBEDDED       0xf0 // 2
 #define HEATTABLE_V2_ID_EMBEDDED_1     0x00 // varies
@@ -419,12 +441,12 @@ struct hiti_efd_sf {
 /*@3 */	uint16_t rows_res;  /* BE, always 300dpi */
 /*@5 */	uint16_t cols;      /* BE */
 /*@7 */	uint16_t rows;      /* BE */
-/*@9 */	 int8_t  rows_offset; /* Has to do with H_Offset calibration */
-/*@10*/	 int8_t  cols_offset; /* Has to do wiwth V_Offset calibration */
+/*@9 */	 int8_t  cols_offset; /* Has to do with H_Offset calibration */
+/*@10*/	 int8_t  rows_offset; /* Has to do wiwth V_Offset calibration */
 /*@11*/	uint8_t  colorSeq;  /* See SF_COLORSEQ_* */
 /*@12*/	uint8_t  copies;
 /*@13*/	uint8_t  printMode; /* See SF_PRINTMODE_* */
-/*@14*/	uint8_t  zero[4]; /* P461, U286 only */
+/*@14*/	uint8_t  zero[4]; /* P461, U826, P630 only? */
 } __attribute__((packed));
 
 /* SF_COLORSEQ is actually:
@@ -450,7 +472,7 @@ struct hiti_efd_sf {
 struct hiti_extprintdata {
 	uint8_t  hdr; /* 0xa5 */
 	uint16_t len; /* 24bit data length (+8) in BE format, first two bytes */
-	uint8_t  status; /* 0x50 */
+	uint8_t  flag; /* 0x50 */
 	uint16_t cmd; /* 0x8309, BE */
 	uint8_t  lenb; /* LSB of length */
 	uint16_t startLine;  /* Starting line number, BE */
@@ -462,7 +484,7 @@ struct hiti_extprintdata {
 struct hiti_seht2 {
 	uint8_t  hdr;  /* 0xa5 */
 	uint16_t len;  /* 24-bit data length (+5) in BE format, first two bytes */
-	uint8_t  status;  /* 0x50 */
+	uint8_t  flag;  /* 0x50 */
 	uint16_t cmd;  /* 0x8303, BE */
 	uint8_t  lenb; /* LSB of length */
 	uint8_t  plane;
@@ -533,9 +555,9 @@ struct hiti_matrix {
 STATIC_ASSERT(sizeof(struct hiti_matrix) == 512);
 
 struct hiti_ribbon {
-	uint16_t unk;  // 01 08 (p461, u826)
+	uint16_t unk;  // 01 08 (p461, u826, p630)
 	uint8_t type;  /* RIBBON_TYPE_XXX */
-	uint16_t unk2; // 00 07 (p461, u826)
+	uint16_t unk2; // 00 07 (p461, u826, p630)
 } __attribute__((packed));
 
 #define RIBBON_TYPE_4x6    0x01
@@ -570,15 +592,16 @@ enum {
 	HT_PLANE_Y =    0x01,
 	HT_PLANE_M =    0x02,
 	HT_PLANE_C =    0x04,
-	HT_PLANE_K =    0x08,   // Dye K, eg on YMCKO ribbons?
+	HT_PLANE_K =    0x08,  // Dye K, eg on YMCKO ribbons?
 	HT_PLANE_OG =   0x10,
 	HT_PLANE_OK =   0x20,  // Glossy on YMCKO ribbons
 	HT_PLANE_OM =   0x40,
-	HT_PLANE_RK =  0x100, // Resin K on YMCKO
+	HT_PLANE_RK =  0x100,  // Resin K on YMCKO
 	HT_PLANE_R  =  0x200,  // Resin K only
 	HT_PLANE_FO =  0x400,  // Flourescent
 	HT_PLANE_L  =  0x800,  // Lamination on RESIN K
-	HT_CVD      = 0x1000
+	HT_CVD      = 0x1000,
+	HT_PLANE_630X = 0x2000, // P630 has several unknown fields
 };
 
 struct hiti_printjob {
@@ -628,8 +651,9 @@ struct hiti_ctx {
 	struct hiti_ribbon ribbon;
 	struct hiti_paper  paper;
 	struct hiti_calibration calibration;
+	struct hiti_rhtv rhtv;
 	uint8_t  led_calibration[10]; // XXX convert to struct
-	uint8_t  unk_8010[17]; // XXX !sheet. 17 on U826, 15 on rest
+	uint8_t  unk_8010[17]; // XXX !sheet. 17 on U826+P630, 15 on rest
 	uint8_t  unk_800c[4]; // XXX
 	struct hiti_erdc_rs erdc_rs;
 	uint8_t  hilight_adj[6]; // XXX convert to struct, not P51x!
@@ -688,6 +712,8 @@ static const char* hiti_modelcode(int type, int subtype) {
 			return "ri";
 	case P_HITI_530:
 		return "rk";
+	case P_HITI_630:
+		return "rp";
 	case P_HITI_720:
 		return "rd";
 	case P_HITI_750:
@@ -716,7 +742,7 @@ static int hiti_docmd(struct hiti_ctx *ctx, uint16_t cmdid, const uint8_t *buf, 
 
 	cmd->hdr = 0xa5;
 	cmd->len = cpu_to_be16(buf_len + 3);
-	cmd->status = CMD_STATUS_OK;
+	cmd->flag = (CMD_FLAG_DEST | CMD_FLAG_REPLY);
 	cmd->cmd = cpu_to_be16(cmdid);
 	if (buf && buf_len)
 		memcpy(cmd->payload, buf, buf_len);
@@ -748,8 +774,20 @@ static int hiti_docmd(struct hiti_ctx *ctx, uint16_t cmdid, const uint8_t *buf, 
 	}
 
 	/* Check response */
-	if (cmd->status & CMD_STATUS_ERR) {
-		ERROR("Command %04x failed, code %02x\n", cmdid, cmd->status);
+	switch (cmd->flag & CMD_FLAG_CHK_MASK) {
+	case CMD_FLAG_CHK_OK:
+		break;
+	case CMD_FLAG_CHK_REJECTED:
+		ERROR("Command %04x rejected, code %02x\n", cmdid, cmd->flag);
+		return CUPS_BACKEND_FAILED;
+	case CMD_FLAG_CHK_DATAERR:
+		ERROR("Command %04x Data Error, code %02x\n", cmdid, cmd->flag);
+		return CUPS_BACKEND_FAILED;
+	case CMD_FLAG_CHK_CMDERR:
+		ERROR("Command %04x Data Error, code %02x\n", cmdid, cmd->flag);
+		return CUPS_BACKEND_FAILED;
+	default:
+		ERROR("Command %04x failed, code %02x\n", cmdid, cmd->flag);
 		return CUPS_BACKEND_FAILED;
 	}
 
@@ -800,19 +838,28 @@ static int hiti_docmd_resp(struct hiti_ctx *ctx, uint16_t cmdid,
 	return CUPS_BACKEND_OK;
 }
 
-static int hiti_shptc(struct hiti_ctx *ctx, const uint8_t *buf, uint16_t buf_len)
+static int hiti_shptc(struct hiti_ctx *ctx, const uint8_t *buf, uint32_t buf_len)
 {
-	uint8_t cmdbuf[sizeof(struct hiti_cmd)];
+	uint8_t cmdbuf[sizeof(struct hiti_cmd) + 1];
 	struct hiti_cmd *cmd = (struct hiti_cmd *)cmdbuf;
+	int cmdsize = 0;
 	int ret, num = 0;
 
 	cmd->hdr = 0xa5;
-	cmd->len = cpu_to_be16(buf_len + 3);
-	cmd->status = CMD_STATUS_OK;
-	cmd->cmd = cpu_to_be16(CMD_ESD_SHPTC);
+	if (buf_len > 0xffff-3) {
+		cmd->cmd = cpu_to_be16(CMD_ESD_SHPTC2);
+		cmd->len = cpu_to_be16((buf_len + 4) >> 8);
+		cmdbuf[sizeof(struct hiti_cmd)] = (buf_len + 4) & 0xff;
+		cmdsize = sizeof(struct hiti_cmd) + 1;
+	} else {
+		cmd->cmd = cpu_to_be16(CMD_ESD_SHPTC);
+		cmd->len = cpu_to_be16(buf_len + 3);
+		cmdsize = sizeof(struct hiti_cmd);
+	}
+	cmd->flag = (CMD_FLAG_DEST | CMD_FLAG_REPLY);
 
 	/* Send over command */
-	if ((ret = send_data(ctx->conn, (uint8_t*) cmd, sizeof(*cmd)))) {
+	if ((ret = send_data(ctx->conn, (uint8_t*) cmd, cmdsize))) {
 		return ret;
 	}
 
@@ -846,7 +893,7 @@ static int hiti_sepd(struct hiti_ctx *ctx, uint32_t buf_len,
 
 	cmd->hdr = 0xa5;
 	cmd->len = cpu_to_be16(buf_len >> 8);
-	cmd->status = CMD_STATUS_OK;
+	cmd->flag = (CMD_FLAG_DEST | CMD_FLAG_REPLY);
 	cmd->cmd = cpu_to_be16(CMD_ESD_SEPD);
 	cmd->lenb = buf_len & 0xff;
 	cmd->startLine = cpu_to_be16(startLine);
@@ -955,6 +1002,14 @@ static unsigned int hiti_ribboncounts(uint8_t code, uint8_t type)
 		case RIBBON_TYPE_6x9: return 220; // XXX guess
 		default: return 999;
 		}
+	} else if (type == P_HITI_630) {
+		switch(code) {
+		case RIBBON_TYPE_4x6: return 430;
+		case RIBBON_TYPE_5x7: return 215;
+		case RIBBON_TYPE_6x8: return 215;
+		case RIBBON_TYPE_6x9: return 190; // XXX guess
+		default: return 999;
+		}
 	} else if (type == P_HITI_826) {
 		switch(code) {
 		case RIBBON_TYPE_4x6: return 400;
@@ -1013,7 +1068,7 @@ static const char* hiti_regions(uint8_t code)
 	case 0x16: return "IN";
 	case 0x17: return "DB";
 	case 0xf0: // Seen on P510S
-	case 0x01: // Seen on P520L, P525L, U826
+	case 0x01: // Seen on P520L, P525L, U826, KSF-10R, P630
 	default:
 		return "Unknown";
 	}
@@ -1213,16 +1268,19 @@ static int hiti_get_info(struct hiti_ctx *ctx)
 			return ret;
 	}
 
-	INFO("Calibration:  H: %d V: %d\n", ctx->calibration.horiz, ctx->calibration.vert);
+	INFO("Calibration:  H: %d V: %d\n", ctx->calibration.rows, ctx->calibration.cols);
 	INFO("LED Calibration: %d %d %d / %d %d %d\n",
 	     ctx->led_calibration[4], ctx->led_calibration[5],
 	     ctx->led_calibration[6], ctx->led_calibration[7],
 	     ctx->led_calibration[8], ctx->led_calibration[9]);
 	INFO("TPH Voltage (T/L): %d %d\n", ctx->rtlv[0], ctx->rtlv[1]);
 	hiti_query_markers(ctx, NULL, NULL);
-	INFO("Region: %s (%02x)\n",
-	     hiti_regions(ctx->rpidm.region),
-		ctx->rpidm.region);
+
+	if (!(ctx->conn->type == P_HITI_520 || ctx->conn->type == P_HITI_525 || ctx->conn->type == P_HITI_826 || ctx->conn->type == P_SWIFTFOTO_KSF10 || ctx->conn->type == P_HITI_630)) {
+		INFO("Region: %s (%02x)\n",
+		     hiti_regions(ctx->rpidm.region),
+		     ctx->rpidm.region);
+	}
 
 	if (ctx->conn->type != P_HITI_51X) {
 		INFO("Highlight Adjustment (Y M C): %d %d %d\n",
@@ -1464,6 +1522,10 @@ static int hiti_attach(void *vctx, struct dyesub_connection *conn, uint8_t jobid
 			if (strncmp(ctx->version, "1.02.0", 6) < 0)
 				WARNING("Printer firmware %s out of date (vs %s), please update.\n", ctx->version, "v1.02.0");
 			break;
+		case P_HITI_630:
+			if (strncmp(ctx->version, "9.05.2", 6) < 0)
+				WARNING("Printer firmware %s out of date (vs %s), please update.\n", ctx->version, "v9.05.2.3");
+			break;
 		case P_HITI_720:
 			if (strncmp(ctx->version, "1.19", 4) < 0)
 				WARNING("Printer firmware %s out of date (vs %s), please update.\n", ctx->version, "v1.19");
@@ -1553,19 +1615,22 @@ static void *hiti_get_heat_data(struct hiti_ctx *ctx, uint8_t mode, uint8_t colo
 	switch (colormode) {
 	case HT_COLORMODE_METALLIC:
 		modename = "m";
+		mode = 0;
 		break;
 	case HT_COLORMODE_HIGHDENSITY:
 		modename = "h";
+		mode = 0;
 		break;
 	case HT_COLORMODE_TRANSPARENT:
 		modename = "r";
+		mode = 0;
 		break;
 	default:
 		if (mode) {
 			modename = "q";
 		} else {
 			modename = "t";
-		} // XXX p/o ??
+		} // XXX p/o/s ??
 		break;
 	}
 
@@ -1641,6 +1706,7 @@ static uint8_t *hiti_get_correction_data(struct hiti_ctx *ctx, uint8_t mode, int
 	} else if (ctx->conn->type == P_HITI_520 ||
 		   ctx->conn->type == P_HITI_525 ||
 		   ctx->conn->type == P_HITI_826 ||
+		   ctx->conn->type == P_HITI_630 || // XXX eventually?
 		   ctx->conn->type == P_SWIFTFOTO_KSF10) {
 		if (colormode == HT_COLORMODE_METALLIC)
 			colorname = "M";
@@ -1659,7 +1725,6 @@ static uint8_t *hiti_get_correction_data(struct hiti_ctx *ctx, uint8_t mode, int
 			colorname = "I";
 		} // XXX PR, L, LR, C, SO, B, and more?
 	}
-
 
 	if (mode) {
 		modename = "Q";
@@ -1720,7 +1785,7 @@ static int hiti_seht2(struct hiti_ctx *ctx, uint8_t plane,
 
 	cmd->hdr = 0xa5;
 	cmd->len = cpu_to_be16(buf_len >> 8);
-	cmd->status = CMD_STATUS_OK;
+	cmd->flag = (CMD_FLAG_DEST | CMD_FLAG_REPLY);
 	cmd->cmd = cpu_to_be16(CMD_ESD_SEHT2);
 	cmd->lenb = buf_len & 0xff;
 	cmd->plane = plane;
@@ -1759,7 +1824,7 @@ static int hiti_cvd(struct hiti_ctx *ctx, const uint8_t *buf, uint32_t buf_len)
 
 	cmd->hdr = 0xa5;
 	cmd->len = cpu_to_be16(buf_len + 3);
-	cmd->status = CMD_STATUS_OK;
+	cmd->flag = (CMD_FLAG_DEST | CMD_FLAG_REPLY);
 	cmd->cmd = cpu_to_be16(CMD_EDM_CVD);
 
 	/* Send over command */
@@ -2019,6 +2084,202 @@ static void hiti_interp33_256(uint8_t *dst, const uint8_t *src, const uint8_t *p
 
 }
 
+static int hiti630_compute_score(double mean)
+{
+	int score = 9 - (int)(mean / 25.5);
+	if (score < 0)
+		return 0;
+	if (score > 9)
+		return 9;
+	return score;
+}
+
+static int hiti630_check_quality_16(int *scores, double *below40)
+{
+	int total = 0;
+
+	int i;
+
+	for (i = 0 ; i < 16 ; i++)
+		total += scores[i];
+	if (total >= 112)
+		return 1;
+	if (scores[12] + scores[13] + scores[14] + scores[15] >= 35)
+		return 2;
+	for (total = 0, i = 0 ; i < 8 ; i++)
+		total += scores[i];
+	if (total >= 68)
+		return 3;
+	for (total = 0, i = 8 ; i < 16 ; i++)
+		total += scores[i];
+	if (total >= 68)
+		return 4;
+	if (scores[4] + scores[8] + scores[12] >= 26)
+		return 5;
+	if (scores[7] + scores[11] + scores[15] >= 26)
+		return 6;
+	if (scores[0] + scores[4] + scores[7] >= 26)
+		return 7;
+	if (scores[3] + scores[7] + scores[11] >= 26)
+		return 8;
+	if (scores[0] + scores[1] + scores[4] + scores[5] >= 34)
+		return 9;
+	if (scores[1] + scores[2] + scores[5] + scores[6] >= 34)
+		return 10;
+	if (scores[2] + scores[3] + scores[6] + scores[7] >= 34)
+		return 11;
+	if (scores[4] + scores[5] + scores[8] + scores[9] >= 34)
+		return 12;
+	if (scores[5] + scores[6] + scores[9] + scores[10] >= 34)
+		return 13;
+	if (scores[6] + scores[7] + scores[10] + scores[11] >= 34)
+		return 14;
+	if (scores[8] + scores[9] + scores[12] + scores[13] >= 34)
+		return 15;
+	if (scores[9] + scores[10] + scores[13] + scores[14] >= 34)
+		return 16;
+	if (scores[10] + scores[11] + scores[14] + scores[15] >= 34)
+		return 17;
+
+	double avgPct = 0.0;
+	for (i = 0 ; i < 16 ; i++)
+		avgPct += below40[i];
+	avgPct /= 16;
+	if (avgPct >= 45.0)
+		return 18; // rule "17-1"
+
+	return 0;
+}
+
+static int hiti630_check_quality_32(int *scores, double *below40)
+{
+	int total = 0;
+
+	int i;
+
+	for (i = 0 ; i < 32; i++)
+		total += scores[i];
+	if (total >= 232)
+		return 19;
+	for (total = 0, i = 16; i < 32; i++)
+		total += scores[i];
+	if (total >= 112)
+		return 20;
+	if (scores[28] + scores[29] + scores[30] + scores[31] >= 35)
+		return 21;
+	if (scores[20] + scores[24] + scores[28] >= 26)
+		return 22;
+	if (scores[23] + scores[27] + scores[31] >= 26)
+		return 23;
+	if (scores[16] + scores[20] + scores[24] >= 26)
+		return 24;
+	if (scores[19] + scores[23] + scores[27] >= 26)
+		return 25;
+	for (total = 0, i = 12; i < 20; i++)
+		total += scores[i];
+	if (total >= 68)
+		return 26;
+	for (total = 0, i = 16; i < 24; i++)
+		total += scores[i];
+	if (total >= 68)
+		return 27;
+	for (total = 0, i = 24; i < 31; i++)
+		total += scores[i];
+	if (total >= 68)
+		return 28;
+	if (scores[16] + scores[17] + scores[20] + scores[21] >= 34)
+		return 29;
+	if (scores[17] + scores[18] + scores[21] + scores[22] >= 34)
+		return 30;
+	if (scores[18] + scores[19] + scores[22] + scores[23] >= 34)
+		return 31;
+	if (scores[20] + scores[21] + scores[24] + scores[25] >= 34)
+		return 32;
+	if (scores[21] + scores[22] + scores[25] + scores[26] >= 34)
+		return 33;
+	if (scores[22] + scores[23] + scores[26] + scores[27] >= 34)
+		return 34;
+	if (scores[24] + scores[25] + scores[28] + scores[29] >= 34)
+		return 35;
+	if (scores[25] + scores[26] + scores[29] + scores[30] >= 34)
+		return 36;
+	if (scores[26] + scores[27] + scores[30] + scores[31] >= 34)
+		return 37;
+
+	double avgPct = 0.0;
+	for (i = 16; i < 32 ; i++)
+		avgPct += below40[i];
+	avgPct /= 16;
+	if (avgPct >= 45.0)
+		return 38; // rule "37-1"
+
+	for (avgPct = 0.0, i = 0; i < 32 ; i++)
+		avgPct += below40[i];
+	avgPct /= 16;
+	if (avgPct >= 45.0)
+		return 39; // rule "37-2"
+
+	return 0;
+}
+
+static int hiti630_analyze_channel(const uint8_t *imgdata, uint16_t cols, uint16_t rows, uint8_t bpp, uint8_t bshift)
+{
+	int segments, seg_rows, seg_cols;
+	int scores[32] = { 0 };
+	int seg_w, seg_h;
+	double below40[32] = { 0.0 };
+
+	if (rows <= 1240) {
+		segments = 16; seg_rows = 4; seg_cols = 4;
+	} else {
+		segments = 32; seg_rows = 8; seg_cols = 4;
+	}
+	seg_w = cols /* - offset*2 */ / seg_cols;
+	seg_h = rows / seg_rows;
+
+	for (int r = 0; r < seg_rows ; r++) {
+		for (int c = 0; c < seg_cols ; c++) {
+			int seg_idx = r * seg_cols + c;
+			uint64_t sum = 0;
+			int count = 0;
+			int below40_count = 0;
+			for (int y = r * seg_h ; y < (r+1)*seg_h ; y++) {
+				const uint8_t *rptr = imgdata + (y * cols * bpp /* + offset*bpp*2 */ ) /* + offset*bpp */;
+				int s = c * seg_w * bpp;
+				for (int x = 0; x < seg_w; x++, s += bpp) {
+					uint8_t val = rptr[s + bshift]; /* ie a specific pixel's channel */
+					sum += val;
+					count ++;
+					if (val < 40)
+						below40_count++;
+				}
+			}
+			double mean = (double)sum / count;
+			scores[seg_idx] = hiti630_compute_score(mean);
+			below40[seg_idx] = (double) below40_count / count * 100.0;
+		}
+	}
+
+	if (hiti630_check_quality_16(scores, below40))
+		return 1;
+	if (segments == 32)
+		return hiti630_check_quality_32(scores, below40);
+	return 0;
+}
+
+static int hitip630_analyze_quality(const uint8_t *imgdata, uint16_t cols, uint16_t rows, uint8_t bpp)
+{
+	if (hiti630_analyze_channel(imgdata, cols, rows, bpp, 0)) /* B */
+		return 1;
+	if (hiti630_analyze_channel(imgdata, cols, rows, bpp, 1)) /* G */
+		return 2;
+	if (hiti630_analyze_channel(imgdata, cols, rows, bpp, 2)) /* R */
+		return 3;
+
+	return 0;
+}
+
+
 static int hiti_read_parse(void *vctx, const void **vjob, int data_fd, int copies)
 {
 	struct hiti_ctx *ctx = vctx;
@@ -2099,6 +2360,13 @@ static int hiti_read_parse(void *vctx, const void **vjob, int data_fd, int copie
 	case P_HITI_826:
 	case P_SWIFTFOTO_KSF10:
 		if (job->hdr.model != 520) {
+			ERROR("Unrecognized header!\n");
+			hiti_cleanup_job(job);
+			return CUPS_BACKEND_CANCEL;
+		}
+		break;
+	case P_HITI_630:
+		if (job->hdr.model != 630) {
 			ERROR("Unrecognized header!\n");
 			hiti_cleanup_job(job);
 			return CUPS_BACKEND_CANCEL;
@@ -2264,6 +2532,16 @@ static int hiti_read_parse(void *vctx, const void **vjob, int data_fd, int copie
 
 	/* Convert input packed BGR data into YMC planar, if needed */
 	if (!(job->hdr.payload_flag & PAYLOAD_FLAG_YMCPLANAR)) {
+
+		/* Perform "quality" analysis */
+		if (ctx->conn->type == P_HITI_630 && !job->hdr.quality) {
+			if (hitip630_analyze_quality(job->databuf, job->hdr.cols, job->hdr.rows, 3)) {
+				INFO("Promoting job to high quality mode\n");
+				job->hdr.quality = 1;
+				// XXX how does this interact with metallic etc media?
+			}
+		}
+
 		/* Load up correction data, if requested */
 		uint8_t *corrdata = NULL;
 		if (!(job->hdr.payload_flag & PAYLOAD_FLAG_NOCORRECT)) {
@@ -2396,8 +2674,11 @@ static int hiti_read_parse(void *vctx, const void **vjob, int data_fd, int copie
 
 		int planes = HT_PLANE_Y | HT_PLANE_M | HT_PLANE_C | HT_CVD;
 		planes |= (job->hdr.overcoat) ? HT_PLANE_OM : HT_PLANE_OG;
-		ret = hiti_construct_heattable_v2(job, planes, job->colormode, table);
 
+		if (ctx->conn->type == P_HITI_630)
+			planes |= HT_PLANE_630X;
+
+		ret = hiti_construct_heattable_v2(job, planes, job->colormode, table);
 		if (ret) {
 			job->heattable_len = 0;
 		} else {
@@ -2431,6 +2712,9 @@ static int hiti_read_parse(void *vctx, const void **vjob, int data_fd, int copie
 
 static int calc_offset(int val, int mid, int max, int step)
 {
+	if (val == 0 || mid == 0)
+		goto done;
+
 	if (val > max)
 		val = max;
 	else if (val < 0)
@@ -2439,6 +2723,7 @@ static int calc_offset(int val, int mid, int max, int step)
 	val -= mid;
 	val *= step;
 
+done:
 	return val;
 }
 
@@ -2498,8 +2783,8 @@ static int hiti_main_loop(void *vctx, const void *vjob, int wait_for_return)
 	sf.rows_res = cpu_to_be16(job->hdr.row_dpi);
 	sf.cols = cpu_to_be16(job->hdr.cols);
 	sf.rows = cpu_to_be16(rows);
-	sf.rows_offset = calc_offset(5, ctx->calibration.vert, 8, 4);
-	sf.cols_offset = calc_offset(ctx->calibration.horiz, 6, 11, 4);
+	sf.rows_offset = calc_offset(5, ctx->calibration.rows, 8, 4);
+	sf.cols_offset = calc_offset(ctx->calibration.cols, 6, 11, 4);
 	sf.colorSeq = SF_COLORSEQ_YMCO | (job->hdr.overcoat ? SF_COLORSEQ_MATTE : 0);
 	sf.copies = job->common.copies;
 	sf.printMode = ctx->sheet ? 0 : SF_PRINTMODE_BASE + (job->hdr.quality ? SF_PRINTMODE_FINE : 0);
@@ -2510,20 +2795,21 @@ static int hiti_main_loop(void *vctx, const void *vjob, int wait_for_return)
 	if (ret)
 		return CUPS_BACKEND_FAILED;
 
-	// XXX on P461:  (and maybe 320/310)
+	// XXX on P461, P310/P322, P630:  (and maybe 320?)
 	// request warning
 	// QJC
 	// then SF again
 
-	if (ctx->conn->type == P_HITI_520 || ctx->conn->type == P_HITI_525 || ctx->conn->type == P_HITI_826 || ctx->conn->type == P_SWIFTFOTO_KSF10) {
-		/* XXX Unknown.  Maybe other models too? */
-		uint8_t val = 0;
-		uint8_t resp[4]; // 00 01 00 06
-		resplen = sizeof(resp);
-		ret = hiti_docmd_resp(ctx, CMD_ERDC_UNK1, &val,
-				      sizeof(val), resp, &resplen);
+	if (ctx->conn->type == P_HITI_520 || ctx->conn->type == P_HITI_525 || ctx->conn->type == P_HITI_826 || ctx->conn->type == P_SWIFTFOTO_KSF10 || ctx->conn->type == P_HITI_630) {
+		uint8_t val = 0; /* table index */
+		resplen = sizeof(&ctx->rhtv);
+		ret = hiti_docmd_resp(ctx, CMD_ERDC_RHTV, &val,
+				      sizeof(val), (uint8_t*) &ctx->rhtv, &resplen);
 		if (ret)
 			return CUPS_BACKEND_FAILED;
+		ctx->rhtv.major = be16_to_cpu(ctx->rhtv.major);
+		ctx->rhtv.minor = be16_to_cpu(ctx->rhtv.minor);
+		// Unclear if we meaningfully _care_ about this in any way
 	}
 
 	/* Initialize jobid structure */
@@ -2569,7 +2855,7 @@ static int hiti_main_loop(void *vctx, const void *vjob, int wait_for_return)
 
 	/* If we don't have a heat file or the heat transfer failed, revert to default tables */
 	if (!job->heattable_len || ret) {
-		if (ctx->conn->type != P_HITI_525 && ctx->conn->type != P_HITI_826 && ctx->conn->type != P_SWIFTFOTO_KSF10) {
+		if (ctx->conn->type != P_HITI_525 && ctx->conn->type != P_HITI_826 && ctx->conn->type != P_SWIFTFOTO_KSF10 && ctx->conn->type != P_HITI_630) {
 			uint8_t chs[2] = { 0, 1 }; /* Reverts to default tables */
 			resplen = 0;
 			ret = hiti_docmd(ctx, CMD_EFD_CHS, chs, sizeof(chs), &resplen);
@@ -2799,6 +3085,10 @@ static int hiti_query_version(struct hiti_ctx *ctx)
 	strncpy(ctx->id, (char*) &buf[34], buf[33]);
 	strncpy(ctx->version, (char*) &buf[34 + buf[33] + 1], sizeof(ctx->version));
 	ctx->version[9] = 0;
+
+	/* Early P630 firmware had a trailing newline */
+	if (ctx->version[8] == '\n')
+		ctx->version[8] = 0;
 
 	return CUPS_BACKEND_OK;
 }
@@ -3407,6 +3697,13 @@ static int hiti_construct_heattable_v2(const struct hiti_printjob *job, int plan
 
     APPEND_ENTRY(HEATTABLE_V2_ID_TC_COMPENSATE);
 
+    if (planes & HT_PLANE_630X) {
+	    APPEND_ENTRY_FAIL(HEATTABLE_V2_ID_OP1);
+	    APPEND_ENTRY_FAIL(HEATTABLE_V2_ID_OP2);
+	    APPEND_ENTRY_FAIL(HEATTABLE_V2_ID_SMEAR);
+	    APPEND_ENTRY_FAIL(HEATTABLE_V2_ID_MSKL_RATE);
+    }
+
     return 0;
 
 fail:
@@ -3570,7 +3867,9 @@ static const struct device_id hiti_devices[] = {
 	{ 0x0d16, 0x000a, P_HITI_720, NULL, "hiti-p728l"},
 	{ 0x0d16, 0x0501, P_HITI_750, NULL, "hiti-p750l"},
 	{ 0x0d16, 0x0510, P_HITI_826, NULL, "joyspace-u826"}, /* OEM variant of P525 */
-	{ 0x0d16, 0x0512, P_SWIFTFOTO_KSF10, NULL, "swiftfoto-ksf10r"}, /* OEM variant of P525? */
+	{ 0x0d16, 0x0511, P_HITI_630, NULL, "hiti-p630"},
+//	{ 0x0d16, XXXXX, P_HITI_630, NULL, "hiti-p630"}, // placeholder for P630C
+	{ 0x0d16, 0x0512, P_SWIFTFOTO_KSF10, NULL, "swiftfoto-ksf10r"}, /* OEM variant of P525 */
 	{ 0x0d16, 0xc000, P_HITI_51X, NULL, "yashica-yp120"},
 	{ 0x0d16, 0xd000, P_HITI_51X, NULL, "touchtunes-p510tt"},
 	{ 0, 0, 0, NULL, NULL}
@@ -3583,7 +3882,7 @@ static const struct device_id hiti_devices[] = {
 
 const struct dyesub_backend hiti_backend = {
 	.name = "HiTi Photo Printers",
-	.version = "0.86",
+	.version = "0.96",
 	.uri_prefixes = hiti_prefixes,
 	.cmdline_usage = hiti_cmdline,
 	.cmdline_arg = hiti_cmdline_arg,
@@ -3603,7 +3902,6 @@ const struct dyesub_backend hiti_backend = {
 /* TODO:
 
    - Figure out 5x5 prints
-   - Figure out "region 0x1" on P52x/U826
    - Confirm 6x2" print dimensions (windows?)
    - Job control (QJC, RSJ) -- and canceling?
    - Set highlight adjustment & H/V alignment from cmdline
@@ -3614,17 +3912,17 @@ const struct dyesub_backend hiti_backend = {
    - Figure out Windows spool format (probably never)
    - GP Spool parsing improvements
       * Add additional 'reserved' fields for future use?
-   - Further performance optimizations in color conversion code
+   - Further performance optimizations in LUT color conversion code
       * Rework to take advantage of auto-vectorization?
       * Pre-compute then cache entire map on disk?
       * Use external "Cube LUT" implementation?
-   - Commands UNK_8008, UNK_8010, UNK_800C, EST_SEHT, CMD_EDM_*
+   - Commands UNK_8008, UNK_8010, UNK_800C, ESD_SEHT, CMD_EDM_*
    - Test with P720, P750
    - Incorporate changes for CS-series card printers
    - More "Matrix table" decoding work
    - More work on other "sheet type" models
      - P110S   ("P4x6" 1248x1836)
-     - P310/P320 series ("P4x6" 1280*1818)
+     - P320 series ("P4x6" 1280*1818)
      - Others?
    - More work on remaining "roll type" models
      - P530D
@@ -3632,7 +3930,7 @@ const struct dyesub_backend hiti_backend = {
      - Others?
    - More work on P461 Prinhome
      - Quality mode
-     - Windows supports media types 2 & 3 too, manually specified
    - Figure out when to use Heat tables with 'p' quality tags
-   - Figure out how to send over the "raw" matte overcoat data.  (Partial matte is now possible on P52x?)
+   - Figure out how to send over the "raw" matte overcoat data.  (Partial matte is now possible on P52x/P630?)
+   - P630 Quality analysis on YMC planar data
 */

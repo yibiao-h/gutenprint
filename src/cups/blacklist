@@ -325,13 +325,13 @@
 0x0d16 0x030d blacklist
 
 # HiTi P310L
-#0x0d16 0x0503 blacklist
+0x0d16 0x0503 blacklist
 
-# HiTi P310W
-#0x0d16 0x050a blacklist
+# HiTi P310W / P322W
+0x0d16 0x050a blacklist
 
 # HiTi P320W
-#0x0d16 0x050c blacklist
+0x0d16 0x050c blacklist
 
 # HiTi P461 (Prinhome)
 0x0d16 0x0509 blacklist
@@ -363,6 +363,9 @@
 # HiTi P530D
 0x0d16 0x000f blacklist
 
+# HiTi P630
+0x0d16 0x0011 blacklist
+
 # HiTi P720L
 0x0d16 0x0009 blacklist
 
@@ -377,6 +380,9 @@
 
 # Joyspace U826
 0x0d16 0x0510 blacklist
+
+# Swiftfoto KSF-10R
+0x0d16 0x0512 blacklist
 
 # HiTi P910L
 0x0d16 0x000e blacklist

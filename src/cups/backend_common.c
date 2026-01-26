@@ -1016,7 +1016,7 @@ static void dump_stats(struct dyesub_backend *backend, struct printerstats *stat
 void print_license_blurb(void)
 {
 	const char *license = "\n\
-Copyright 2007-2025 Solomon Peachy <pizza AT shaftnet DOT org>\n\
+Copyright 2007-2026 Solomon Peachy <pizza AT shaftnet DOT org>\n\
 \n\
 This program is free software; you can redistribute it and/or modify it\n\
 under the terms of the GNU General Public License as published by the Free\n\
