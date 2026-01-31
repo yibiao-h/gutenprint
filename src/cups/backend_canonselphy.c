@@ -1,7 +1,7 @@
 /*
  *   Canon SELPHY ES/CP series CUPS backend
  *
- *   (c) 2007-2024 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2007-2026 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -139,6 +139,10 @@ static uint8_t es3_error_detect(const uint8_t *rdbuf)
 	} else if (rdbuf[8] == 0x05 &&
 		   rdbuf[10] == 0x01) {
 		ERROR("Incorrect media loaded!\n");
+		return 1;
+	} else if (rdbuf[8] == 0x03 &&
+		   rdbuf[10] == 0x04) {
+		ERROR("Paper jam!\n");
 		return 1;
 	}
 
@@ -1150,7 +1154,7 @@ static const struct device_id canonselphy_devices[] = {
 
 const struct dyesub_backend canonselphy_backend = {
 	.name = "Canon SELPHY CP/ES (legacy)",
-	.version = "0.113",
+	.version = "0.114",
 	.uri_prefixes = canonselphy_prefixes,
 	.devices = canonselphy_devices,
 	.cmdline_usage = canonselphy_cmdline,
