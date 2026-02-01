@@ -75,7 +75,7 @@ dnl
 pushdef([GUTENPRINT_NAME],              [gutenprint])
 pushdef([GUTENPRINT_MAJOR_VERSION],     [5])
 pushdef([GUTENPRINT_MINOR_VERSION],     [3])
-pushdef([GUTENPRINT_MICRO_VERSION],     [5])
+pushdef([GUTENPRINT_MICRO_VERSION],     [6])
 dnl Append snapshot ID if STP_BUILD_SNAPSHOT is set
 pushdef([GUTENPRINT_EXTRA_VERSION],     [[]m4_esyscmd_s(scripts/snapstamp)])
 pushdef([GUTENPRINT_CURRENT_INTERFACE], [15])
