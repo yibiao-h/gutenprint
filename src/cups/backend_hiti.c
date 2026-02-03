@@ -294,7 +294,7 @@ struct hiti_jc_qjc {
 #define PRINT_TYPE_6x8      3
 #define PRINT_TYPE_6x9      6
 #define PRINT_TYPE_6x9_2UP  7
-#define PRINT_TYPE_5x3_5    8
+#define PRINT_TYPE_5x3_5    8 // "5x3.74" ??
 #define PRINT_TYPE_6x4_2UP  9
 #define PRINT_TYPE_6x2     10
 #define PRINT_TYPE_5x7_2UP 11
@@ -303,6 +303,7 @@ struct hiti_jc_qjc {
 #define PRINT_TYPE_6x9_6UP 24 // ("6x9-2up3split")
 #define PRINT_TYPE_6x5     20
 #define PRINT_TYPE_6x6     21
+#define PRINT_TYPE_5x5     23
 
 struct hiti_heattable_hdr_v1 {  /* P51x */
 	uint8_t type;
@@ -2453,6 +2454,7 @@ static int hiti_read_parse(void *vctx, const void **vjob, int data_fd, int copie
 	case RIBBON_TYPE_5x7:
 		if (job->hdr.code != PRINT_TYPE_5x7 &&
 		    job->hdr.code != PRINT_TYPE_5x3_5 &&
+		    job->hdr.code != PRINT_TYPE_5x5 &&
 		    job->hdr.code != PRINT_TYPE_5x7_2UP) {
 			ERROR("Invalid ribbon type vs job (%02x/%02x)\n",
 			      ctx->ribbon.type, job->hdr.code);
@@ -3859,7 +3861,7 @@ static const struct device_id hiti_devices[] = {
 	{ 0x0d16, 0x0503, P_HITI_310, NULL, "hiti-p310l"},
 	{ 0x0d16, 0x050a, P_HITI_310, NULL, "hiti-p310w"},
 	{ 0x0d16, 0x050c, P_HITI_320, NULL, "hiti-p320w"},
-	{ 0x0d16, 0x050a, P_HITI_310, NULL, "hiti-p322w"}, // XXX duplicate of p310w
+	{ 0x0d16, 0x050a, P_HITI_310, NULL, "hiti-p322w"}, /* Duplicate */
 	{ 0x0d16, 0x0509, P_HITI_461, NULL, "hiti-p461"},
 	{ 0x0d16, 0x050e, P_HITI_525, NULL, "hiti-p525l"},
 	{ 0x0d16, 0x000f, P_HITI_530, NULL, "hiti-p530d"},
@@ -3868,7 +3870,8 @@ static const struct device_id hiti_devices[] = {
 	{ 0x0d16, 0x0501, P_HITI_750, NULL, "hiti-p750l"},
 	{ 0x0d16, 0x0510, P_HITI_826, NULL, "joyspace-u826"}, /* OEM variant of P525 */
 	{ 0x0d16, 0x0511, P_HITI_630, NULL, "hiti-p630"},
-//	{ 0x0d16, XXXXX, P_HITI_630, NULL, "hiti-p630"}, // placeholder for P630C
+	{ 0x0d16, 0x0511, P_HITI_630, NULL, "hiti-p630a"}, /* Duplicate */
+//	{ 0x0d16, XXXXX, P_HITI_630, NULL, "hiti-p630c"}, // placeholder
 	{ 0x0d16, 0x0512, P_SWIFTFOTO_KSF10, NULL, "swiftfoto-ksf10r"}, /* OEM variant of P525 */
 	{ 0x0d16, 0xc000, P_HITI_51X, NULL, "yashica-yp120"},
 	{ 0x0d16, 0xd000, P_HITI_51X, NULL, "touchtunes-p510tt"},
@@ -3882,7 +3885,7 @@ static const struct device_id hiti_devices[] = {
 
 const struct dyesub_backend hiti_backend = {
 	.name = "HiTi Photo Printers",
-	.version = "0.96",
+	.version = "0.97",
 	.uri_prefixes = hiti_prefixes,
 	.cmdline_usage = hiti_cmdline,
 	.cmdline_arg = hiti_cmdline_arg,
