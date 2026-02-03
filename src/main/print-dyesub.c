@@ -9925,6 +9925,7 @@ static const dyesub_pagesize_t hiti_p520l_page[] =
   DEFINE_PAPER_SIMPLE( "B7", "3.5x5", PT(1072,300), PT(1548,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "w288h432", "4x6", PT(1240,300), PT(1844,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "w288h432-div2", "2x6*2", PT(1248,300), PT(1844,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w360h360", "5x5", PT(1540,300), PT(1548,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "w360h504", "5x7", PT(1548,300), PT(2140,300), DYESUB_PORTRAIT),
   DEFINE_PAPER( "w360h504-div2", "3.5x5*2", PT(1548,300), PT1(2140,300), 0, 0, 0, PT1(0,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w360h432", "6x5", PT(1588,300), PT(1844,300), DYESUB_LANDSCAPE),
@@ -9940,8 +9941,10 @@ LIST(dyesub_pagesize_list_t, hiti_p520l_page_list, dyesub_pagesize_t, hiti_p520l
 static const dyesub_printsize_t hiti_p520l_printsize[] =
 {
   { "300x300", "B7", 1072, 1548},
+  // Also 5x3.74" 1548x1160 w360h270, code 0x08
   { "300x300", "w288h432", 1240, 1844},
   { "300x300", "w288h432-div2", 1248, 1844},
+  { "300x300", "w360h360", 1540, 1548},
   { "300x300", "w360h504", 1548, 2140},
   { "300x300", "w360h504-div2", 1548, 2152},
   { "300x300", "w360h432", 1588, 1844},
@@ -9986,6 +9989,8 @@ static void hiti_printer_start(stp_vars_t *v, int model)
 	  pgcode = 0;
   else if (!strcmp(pd->pagesize, "w288h432-div2"))
 	  pgcode = 9;
+  else if (!strcmp(pd->pagesize, "w360h360"))
+	  pgcode = 23;
   else if (!strcmp(pd->pagesize, "w360h504"))
 	  pgcode = 2;
   else if (!strcmp(pd->pagesize, "w360h504-div2"))
