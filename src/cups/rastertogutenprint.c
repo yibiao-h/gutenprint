@@ -377,6 +377,8 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings,
       set_string_parameter(v, "InputImageType", "Grayscale");
       break;
     case CUPS_CSPACE_RGB :
+    case CUPS_CSPACE_SRGB :
+    case CUPS_CSPACE_ARGB :
       set_string_parameter(v, "PrintingMode", "Color");
       set_string_parameter(v, "InputImageType", "RGB");
       break;
@@ -1625,6 +1627,8 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
 	  memset(data, 0, bytes_per_line);
 	  break;
 	case CUPS_CSPACE_RGB:
+	case CUPS_CSPACE_SRGB:
+	case CUPS_CSPACE_ARGB:
 	case CUPS_CSPACE_W:
 	  memset(data, ((1 << CHAR_BIT) - 1), bytes_per_line);
 	  break;
