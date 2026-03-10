@@ -89,7 +89,7 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
   2) Numerous bugfixes, including:
 
 	Canon inkjets may use the wrong inksets
-	Recognition of CUPS SRGB and ARGB colorspaces
+	Recognition of CUPS SRGB colorspace
 
 * Changes from Gutenprint 5.3.4
 
