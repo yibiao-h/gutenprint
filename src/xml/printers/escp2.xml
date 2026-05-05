@@ -96,6 +96,7 @@
       <printer translate="name" name="Epson Expression Photo XP-860" driver="escp2-xp860" manufacturer="Epson" model="134" parameters="standard_params" />
       <printer translate="name" name="Epson Expression Photo XP-960" driver="escp2-xp960" manufacturer="Epson" model="133" parameters="standard_params" />
       <printer translate="name" name="Epson Expression Photo XP-8500" driver="escp2-xp8500" manufacturer="Epson" model="134" parameters="standard_params" />
+      <printer translate="name" name="Epson L18050 RIP PoC" driver="escp2-l18050-rip90" manufacturer="Epson" model="900" parameters="standard_params">EXPERIMENTAL; 90-nozzle white/color RIP intermediate driver</printer>
       <printer translate="name" name="Epson XP-15000 Series" deviceid="MFG:EPSON;CMD:ESCPL2,BDC,ESCPR7,END4,GENEP;MDL:XP-15000 Series;CLS:PRINTER;DES:EPSON XP-15000 Series;CID:EpsonRGB;FID:FXN,DPA,WFA,ETA,AFN,DAN,WRA;RID:20;DDS:022500;ELG:1000;SN:583436523031363416" driver="escp2-xp15000" manufacturer="Epson" model="132" parameters="standard_params" />
       <printer translate="name" name="Epson L120" driver="escp2-l120" manufacturer="Epson" model="80" parameters="cx3500_params" />
       <printer translate="name" name="Epson L130" driver="escp2-l130" manufacturer="Epson" model="80" parameters="cx3500_params" />

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<gutenprint xmlns="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd">
+<copyright>
+ * L18050 RIP PoC model derived from the existing XP-8500 Gutenprint model.
+ * This file belongs to the isolated GPL worker distribution.
+</copyright>
+<escp2Model id="900" base="escp2/model/model_134.xml">
+ <inkGroup src="escp2/inks/l18050_rip.xml"/>
+ <headConfiguration type="default">
+  <Nozzles>90</Nozzles>
+  <MinNozzles>1</MinNozzles>
+  <FirstNozzle>0</FirstNozzle>
+  <NozzleSeparation>2</NozzleSeparation>
+ </headConfiguration>
+ <physicalChannels>6</physicalChannels>
+ <minimumMediaSize>144 144</minimumMediaSize>
+ <maximumMediaSize>1191 1684</maximumMediaSize>
+ <maximumImageableArea>1191 1684</maximumImageableArea>
+ <margins interleave="soft" media="sheet">9 9 0 9</margins>
+ <margins interleave="printer" media="sheet">9 9 0 9</margins>
+ <ChannelNames>
+  <ChannelName translate="text" name="Black" text="Black"/>
+  <ChannelName translate="text" name="Cyan" text="Cyan"/>
+  <ChannelName translate="text" name="Magenta" text="Magenta"/>
+  <ChannelName translate="text" name="Yellow" text="Yellow"/>
+  <ChannelName translate="text" name="LightCyanWhite" text="Light Cyan White"/>
+  <ChannelName translate="text" name="LightMagentaWhite" text="Light Magenta White"/>
+ </ChannelNames>
+</escp2Model>
+</gutenprint>
