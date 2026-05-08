@@ -107,7 +107,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <physicalResolution>720 360</physicalResolution>
    <verticalPasses>4</verticalPasses>
    <parameter type="float" name="escp2_density">2.450000</parameter>
-   <parameter type="integer" name="escp2_ink_type">33</parameter>
+   <parameter type="integer" name="escp2_ink_type">18</parameter>
    <parameter type="integer" name="escp2_base_res">720</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
    <parameter type="float" name="DropSize1">0.160000</parameter>
@@ -117,7 +117,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <resolution translate="text" name="720sw" text="720 DPI">
    <physicalResolution>720 720</physicalResolution>
    <parameter type="float" name="escp2_density">1.224000</parameter>
-   <parameter type="integer" name="escp2_ink_type">33</parameter>
+   <parameter type="integer" name="escp2_ink_type">18</parameter>
    <parameter type="integer" name="escp2_base_res">720</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
    <parameter type="float" name="DropSize1">0.130000</parameter>
@@ -127,28 +127,51 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <resolution translate="text" name="1440x720sw" text="1440 x 720 DPI">
    <physicalResolution>1440 720</physicalResolution>
    <parameter type="float" name="escp2_density">0.612000</parameter>
-   <parameter type="integer" name="escp2_ink_type">33</parameter>
+   <parameter type="integer" name="escp2_ink_type">19</parameter>
    <parameter type="integer" name="escp2_base_res">720</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
    <parameter type="float" name="DropSize1">0.130000</parameter>
    <parameter type="float" name="DropSize2">0.580000</parameter>
    <parameter type="float" name="DropSize3">1.000000</parameter>
   </resolution>
+  <!-- <resolution translate="text" name="1440x1440ov" text="1440 x 1440 DPI">
+   <physicalResolution>2880 1440</physicalResolution>
+   <printedResolution>1440 1440</printedResolution>
+   <parameter type="float" name="escp2_density">1.224000</parameter>
+   <parameter type="integer" name="escp2_ink_type">20</parameter>
+   <parameter type="integer" name="escp2_base_res">720</parameter>
+   <parameter type="integer" name="escp2_bits">2</parameter>
+   <parameter type="float" name="DropSize1">0.400000</parameter>
+   <parameter type="float" name="DropSize2">0.700000</parameter>
+   <parameter type="float" name="DropSize3">1.000000</parameter>
+  </resolution> -->
   <resolution translate="text" name="1440x1440ov" text="1440 x 1440 DPI">
    <physicalResolution>2880 1440</physicalResolution>
    <printedResolution>1440 1440</printedResolution>
-   <parameter type="float" name="escp2_density">1.1770000</parameter>
-   <parameter type="integer" name="escp2_ink_type">37</parameter>
+   <parameter type="float" name="escp2_density">1.000000</parameter>
+   <parameter type="integer" name="escp2_ink_type">20</parameter>
    <parameter type="integer" name="escp2_base_res">720</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
-   <parameter type="float" name="DropSize1">0.500000</parameter>
-   <parameter type="float" name="DropSize2">0.600000</parameter>
+   <parameter type="float" name="DropSize1">0.300000</parameter>
+   <parameter type="float" name="DropSize2">0.650000</parameter>
    <parameter type="float" name="DropSize3">1.000000</parameter>
   </resolution>
+
+  <!-- VSD5校准 -->
+  <!-- <resolution translate="text" name="1440x1440ov" text="1440 x 1440 DPI">
+   <physicalResolution>2880 1440</physicalResolution>
+   <printedResolution>1440 1440</printedResolution>
+   <parameter type="float" name="escp2_density">1.000000</parameter>
+   <parameter type="integer" name="escp2_ink_type">21</parameter>
+   <parameter type="integer" name="escp2_base_res">720</parameter>
+   <parameter type="integer" name="escp2_bits">2</parameter>
+   <parameter type="float" name="DropSize2">0.500000</parameter>
+   <parameter type="float" name="DropSize3">1.000000</parameter>
+  </resolution> -->
   <resolution translate="text" name="2880x1440sw" text="2880 x 1440 DPI">
    <physicalResolution>2880 1440</physicalResolution>
    <parameter type="float" name="escp2_density">0.586000</parameter>
-   <parameter type="integer" name="escp2_ink_type">37</parameter>
+   <parameter type="integer" name="escp2_ink_type">19</parameter>
    <parameter type="integer" name="escp2_base_res">720</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
    <parameter type="float" name="DropSize1">0.500000</parameter>
@@ -158,7 +181,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <resolution translate="text" name="5760x1440sw" text="5760 x 1440 DPI">
    <physicalResolution>5760 1440</physicalResolution>
    <parameter type="float" name="escp2_density">0.733000</parameter>
-   <parameter type="integer" name="escp2_ink_type">37</parameter>
+   <parameter type="integer" name="escp2_ink_type">19</parameter>
    <parameter type="integer" name="escp2_base_res">720</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
    <parameter type="float" name="DropSize1">0.833000</parameter>
@@ -167,7 +190,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <resolution translate="text" name="2880x2880sw" text="2880 x 2880 DPI">
    <physicalResolution>2880 2880</physicalResolution>
    <parameter type="float" name="escp2_density">0.733000</parameter>
-   <parameter type="integer" name="escp2_ink_type">37</parameter>
+   <parameter type="integer" name="escp2_ink_type">19</parameter>
    <parameter type="integer" name="escp2_base_res">720</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
    <parameter type="float" name="DropSize1">0.833000</parameter>
@@ -176,7 +199,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <resolution translate="text" name="5760x2880sw" text="5760 x 2880 DPI">
    <physicalResolution>5760 2880</physicalResolution>
    <parameter type="float" name="escp2_density">0.440000</parameter>
-   <parameter type="integer" name="escp2_ink_type">37</parameter>
+   <parameter type="integer" name="escp2_ink_type">19</parameter>
    <parameter type="integer" name="escp2_base_res">720</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
    <parameter type="float" name="DropSize1">1.000000</parameter>

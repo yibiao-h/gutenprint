@@ -14,13 +14,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <MinNozzles>1</MinNozzles>
   <FirstNozzle>0</FirstNozzle>
   <NozzleSeparation>2</NozzleSeparation>
- </headConfiguration> 
- <!-- <headConfiguration type="black">
-  <Nozzles>180</Nozzles>
-  <MinNozzles>1</MinNozzles>
-  <FirstNozzle>1</FirstNozzle>
-  <NozzleSeparation>1</NozzleSeparation>
- </headConfiguration> -->
+ </headConfiguration>
  <physicalChannels>6</physicalChannels>
  <minimumMediaSize>144 144</minimumMediaSize>
  <maximumMediaSize>1191 1684</maximumMediaSize>
