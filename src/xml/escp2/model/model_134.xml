@@ -126,12 +126,12 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   </resolution>
   <resolution translate="text" name="1440x720sw" text="1440 x 720 DPI">
    <physicalResolution>1440 720</physicalResolution>
-   <parameter type="float" name="escp2_density">0.612000</parameter>
+   <parameter type="float" name="escp2_density">2</parameter>
    <parameter type="integer" name="escp2_ink_type">19</parameter>
    <parameter type="integer" name="escp2_base_res">720</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
-   <parameter type="float" name="DropSize1">0.130000</parameter>
-   <parameter type="float" name="DropSize2">0.580000</parameter>
+   <parameter type="float" name="DropSize1">0.300000</parameter>
+   <parameter type="float" name="DropSize2">0.650000</parameter>
    <parameter type="float" name="DropSize3">1.000000</parameter>
   </resolution>
   <!-- <resolution translate="text" name="1440x1440ov" text="1440 x 1440 DPI">
@@ -149,13 +149,27 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <physicalResolution>2880 1440</physicalResolution>
    <printedResolution>1440 1440</printedResolution>
    <parameter type="float" name="escp2_density">1.000000</parameter>
-   <parameter type="integer" name="escp2_ink_type">20</parameter>
+   <parameter type="integer" name="escp2_ink_type">19</parameter>
    <parameter type="integer" name="escp2_base_res">720</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
    <parameter type="float" name="DropSize1">0.300000</parameter>
    <parameter type="float" name="DropSize2">0.650000</parameter>
    <parameter type="float" name="DropSize3">1.000000</parameter>
   </resolution>
+
+  
+  <!-- VSD5校准 -->
+  <!-- <resolution translate="text" name="1440x1440ov" text="1440 x 1440 DPI">
+   <physicalResolution>2880 1440</physicalResolution>
+   <printedResolution>1440 1440</printedResolution>
+   <parameter type="float" name="escp2_density">1.000000</parameter>
+   <parameter type="integer" name="escp2_ink_type">20</parameter>
+   <parameter type="integer" name="escp2_base_res">720</parameter>
+   <parameter type="integer" name="escp2_bits">2</parameter>
+   <parameter type="float" name="DropSize1">0.300000</parameter>
+   <parameter type="float" name="DropSize2">0.650000</parameter>
+   <parameter type="float" name="DropSize3">1.000000</parameter>
+  </resolution> -->
 
   <!-- VSD5校准 -->
   <!-- <resolution translate="text" name="1440x1440ov" text="1440 x 1440 DPI">
