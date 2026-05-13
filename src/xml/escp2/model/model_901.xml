@@ -10,7 +10,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 <escp2Model id="900" base="escp2/model/model_134.xml">
  <inkGroup src="escp2/inks/l18050_rip.xml"/>
  <headConfiguration type="default">
-  <Nozzles>90</Nozzles>
+  <Nozzles>87</Nozzles>
   <MinNozzles>1</MinNozzles>
   <FirstNozzle>0</FirstNozzle>
   <NozzleSeparation>2</NozzleSeparation>
