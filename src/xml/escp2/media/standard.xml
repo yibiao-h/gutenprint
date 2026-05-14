@@ -244,40 +244,6 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 
- <ink translate="text" name="Base0" text="L18050 RIP Base Raw Inks">
-  <parameter type="float" name="Density">1.000000</parameter>
-  <parameter type="float" name="SubchannelCutoff">1.000000</parameter>
-  <parameter type="float" name="BlackTrans">1.000000</parameter>
-  <parameter type="float" name="GCRLower">0.150000</parameter>
-  <parameter type="float" name="GCRUpper">0.999000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">1.000000</parameter>
-  <parameter type="float" name="YellowBalance">1.000000</parameter>
-  <parameter type="float" name="BlackDensity">1.000000</parameter>
-  <parameter type="float" name="Saturation">1.000000</parameter>
-  <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap" ref="hue_map"/>
-  <parameter type="curve" name="LumMap" ref="lum_map"/>
-  <parameter type="curve" name="SatMap" ref="sat_map"/>
- </ink>
-
- <ink translate="text" name="Offset90" text="L18050 RIP Offset Raw Inks">
-  <parameter type="float" name="Density">1.000000</parameter>
-  <parameter type="float" name="SubchannelCutoff">1.000000</parameter>
-  <parameter type="float" name="BlackTrans">1.000000</parameter>
-  <parameter type="float" name="GCRLower">0.150000</parameter>
-  <parameter type="float" name="GCRUpper">0.999000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">1.000000</parameter>
-  <parameter type="float" name="YellowBalance">1.000000</parameter>
-  <parameter type="float" name="BlackDensity">1.000000</parameter>
-  <parameter type="float" name="Saturation">1.000000</parameter>
-  <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap" ref="hue_map"/>
-  <parameter type="curve" name="LumMap" ref="lum_map"/>
-  <parameter type="curve" name="SatMap" ref="sat_map"/>
- </ink>
-
  <ink translate="text" name="quadtone" text="Quadtone">
   <parameter type="float" name="Density">1.000000</parameter>
   <parameter type="float" name="SubchannelCutoff">1.000000</parameter>
@@ -296,6 +262,48 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  </ink>
 
  <ink translate="text" name="MISQuadtone" text="MISQuadtone">
+  <parameter type="float" name="Density">1.000000</parameter>
+  <parameter type="float" name="SubchannelCutoff">1.000000</parameter>
+  <parameter type="float" name="BlackTrans">1.000000</parameter>
+  <parameter type="float" name="GCRLower">0.150000</parameter>
+  <parameter type="float" name="GCRUpper">0.999000</parameter>
+  <parameter type="float" name="CyanBalance">1.000000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
+  <parameter type="float" name="BlackDensity">1.000000</parameter>
+  <parameter type="float" name="Saturation">1.000000</parameter>
+  <parameter type="float" name="Gamma">1.000000</parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
+ </ink>
+</paper>
+
+<paper translate="text" name="ColorOffset" text="L18050 RIP Color Offset Raw Inks" class="photo">
+ <parameter type="integer" name="FeedSequence">3</parameter>
+
+ <ink translate="text" name="ColorOffset" text="L18050 RIP Color Offset Raw Inks">
+  <parameter type="float" name="Density">1.000000</parameter>
+  <parameter type="float" name="SubchannelCutoff">1.000000</parameter>
+  <parameter type="float" name="BlackTrans">1.000000</parameter>
+  <parameter type="float" name="GCRLower">0.150000</parameter>
+  <parameter type="float" name="GCRUpper">0.999000</parameter>
+  <parameter type="float" name="CyanBalance">1.000000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
+  <parameter type="float" name="BlackDensity">1.000000</parameter>
+  <parameter type="float" name="Saturation">1.000000</parameter>
+  <parameter type="float" name="Gamma">1.000000</parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
+ </ink>
+</paper>
+
+<paper translate="text" name="WhiteOffset" text="L18050 RIP White Offset Raw Inks" class="photo">
+ <parameter type="integer" name="FeedSequence">3</parameter>
+
+ <ink translate="text" name="WhiteOffset" text="L18050 RIP White Offset Raw Inks">
   <parameter type="float" name="Density">1.000000</parameter>
   <parameter type="float" name="SubchannelCutoff">1.000000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
