@@ -279,10 +279,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  </ink>
 </paper>
 
-<paper translate="text" name="ColorOffset" text="L18050 RIP Color Offset Raw Inks" class="photo">
+<paper translate="text" name="ColorOffset" text="Color Offset Raw Inks" class="photo">
  <parameter type="integer" name="FeedSequence">3</parameter>
 
- <ink translate="text" name="ColorOffset" text="L18050 RIP Color Offset Raw Inks">
+ <ink translate="text" name="ColorOffset" text="Color Offset Raw Inks">
   <parameter type="float" name="Density">1.000000</parameter>
   <parameter type="float" name="SubchannelCutoff">1.000000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -300,10 +300,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  </ink>
 </paper>
 
-<paper translate="text" name="WhiteOffset" text="L18050 RIP White Offset Raw Inks" class="photo">
+<paper translate="text" name="WhiteOffset" text="White Offset Raw Inks" class="photo">
  <parameter type="integer" name="FeedSequence">3</parameter>
 
- <ink translate="text" name="WhiteOffset" text="L18050 RIP White Offset Raw Inks">
+ <ink translate="text" name="WhiteOffset" text="White Offset Raw Inks">
   <parameter type="float" name="Density">1.000000</parameter>
   <parameter type="float" name="SubchannelCutoff">1.000000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
