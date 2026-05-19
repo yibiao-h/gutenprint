@@ -4,7 +4,7 @@
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd">
 <copyright>
- * EPSON ET-8550 83-nozzle 1440 x 720 white/color raw model.
+ * EPSON ET-8550 83-nozzle 720 x 1440 white/color raw model.
 </copyright>
 <escp2Model id="903" base="escp2/model/model_902.xml">
  <inkGroup src="escp2/inks/et8550_83.xml"/>
@@ -15,11 +15,11 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <FirstNozzle>0</FirstNozzle>
   <NozzleSeparation>2</NozzleSeparation>
  </headConfiguration>
- <minimumResolution>1440 720</minimumResolution>
- <maximumResolution>1440 720</maximumResolution>
+ <minimumResolution>720 1440</minimumResolution>
+ <maximumResolution>720 1440</maximumResolution>
  <resolutions>
-  <resolution translate="text" name="1440x720sw" text="1440 x 720 DPI">
-   <physicalResolution>1440 720</physicalResolution>
+  <resolution translate="text" name="720x1440sw" text="720 x 1440 DPI">
+   <physicalResolution>720 1440</physicalResolution>
    <parameter type="float" name="escp2_density">1.000000</parameter>
    <parameter type="integer" name="escp2_ink_type">19</parameter>
    <parameter type="integer" name="escp2_base_res">720</parameter>

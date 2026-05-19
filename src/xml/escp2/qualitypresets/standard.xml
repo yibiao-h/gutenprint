@@ -36,9 +36,9 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <desiredResolution>360 360</desiredResolution>
  </quality>
  <quality translate="text" name="Standard" text="Standard">
-  <minimumResolution>0 0</minimumResolution>
-  <maximumResolution>0 0</maximumResolution>
-  <desiredResolution>720 360</desiredResolution>
+  <minimumResolution>720 360</minimumResolution>
+  <maximumResolution>0 1440</maximumResolution>
+  <desiredResolution>-1 -1</desiredResolution>
  </quality>
  <quality translate="text" name="High" text="High">
   <minimumResolution>0 0</minimumResolution>

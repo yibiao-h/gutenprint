@@ -17,25 +17,39 @@
         <shade count="1">1.000000</shade>
         <shade count="1">1.000000</shade>
       </Shades>
-      <InkName translate="text" name="ColorOffset6" text="Offset Color + Base White Raw" InkID="Extended">
+      <InkName translate="text" name="ColorOffset6" text="Offset Color + Base White Raw"
+        InkID="Extended">
         <Channels>
           <channel name="l18050_cyan_offset" index="0">
-            <subchannel color="2" headOffset="189" name="Cyan" text="Cyan" translate="text"><ChannelDensityParam name="CyanDensity" /></subchannel>
+            <subchannel color="2" headOffset="189" name="Cyan" text="Cyan" translate="text">
+              <ChannelDensityParam name="CyanDensity" />
+            </subchannel>
           </channel>
           <channel name="l18050_magenta_offset" index="1">
-            <subchannel color="1" headOffset="189" name="Magenta" text="Magenta" translate="text"><ChannelDensityParam name="MagentaDensity" /></subchannel>
+            <subchannel color="1" headOffset="189" name="Magenta" text="Magenta" translate="text">
+              <ChannelDensityParam name="MagentaDensity" />
+            </subchannel>
           </channel>
           <channel name="l18050_yellow_offset" index="2">
-            <subchannel color="4" headOffset="188" name="Yellow" text="Yellow" translate="text"><ChannelDensityParam name="YellowDensity" /></subchannel>
+            <subchannel color="4" headOffset="188" name="Yellow" text="Yellow" translate="text">
+              <ChannelDensityParam name="YellowDensity" />
+            </subchannel>
           </channel>
           <channel name="l18050_black_offset" index="3">
-            <subchannel color="0" headOffset="189" name="Black" text="Black" translate="text"><ChannelDensityParam name="BlackDensity" /></subchannel>
+            <subchannel color="0" headOffset="189" name="Black" text="Black" translate="text">
+              <ChannelDensityParam name="BlackDensity" />
+            </subchannel>
           </channel>
-          <channel name="l18050_white_photoblack_base" index="4">
-            <subchannel color="0" subchannel="4" name="PhotoblackWhite" text="Photoblack White" translate="text"><ChannelDensityParam name="GlossDensity" /></subchannel>
+          <channel name="l18050_white_light_cyan_base" index="4">
+            <subchannel color="2" subchannel="1" name="LightCyanWhite" text="Light Cyan White"
+              translate="text">
+              <ChannelDensityParam name="GlossDensity" />
+            </subchannel>
           </channel>
-          <channel name="l18050_white_gray_base" index="5">
-            <subchannel color="0" subchannel="1" name="GrayWhite" text="Gray White" translate="text"><ChannelDensityParam name="GlossDensity" /></subchannel>
+          <channel name="l18050_white_light_magenta_base" index="5">
+            <subchannel color="1" subchannel="1" name="LightMagentaWhite" text="Light Magenta White" translate="text">
+              <ChannelDensityParam name="GlossDensity" />
+            </subchannel>
           </channel>
         </Channels>
       </InkName>
@@ -50,25 +64,40 @@
         <shade count="1">1.000000</shade>
         <shade count="1">1.000000</shade>
       </Shades>
-      <InkName translate="text" name="WhiteOffset6" text="Base Color + Offset White Raw" InkID="Extended">
+      <InkName translate="text" name="WhiteOffset6" text="Base Color + Offset White Raw"
+        InkID="Extended">
         <Channels>
           <channel name="l18050_cyan_base" index="0">
-            <subchannel color="2" headOffset="1" name="Cyan" text="Cyan" translate="text"><ChannelDensityParam name="CyanDensity" /></subchannel>
+            <subchannel color="2" headOffset="1" name="Cyan" text="Cyan" translate="text">
+              <ChannelDensityParam name="CyanDensity" />
+            </subchannel>
           </channel>
           <channel name="l18050_magenta_base" index="1">
-            <subchannel color="1" headOffset="1" name="Magenta" text="Magenta" translate="text"><ChannelDensityParam name="MagentaDensity" /></subchannel>
+            <subchannel color="1" headOffset="1" name="Magenta" text="Magenta" translate="text">
+              <ChannelDensityParam name="MagentaDensity" />
+            </subchannel>
           </channel>
           <channel name="l18050_yellow_base" index="2">
-            <subchannel color="4" name="Yellow" text="Yellow" translate="text"><ChannelDensityParam name="YellowDensity" /></subchannel>
+            <subchannel color="4" name="Yellow" text="Yellow" translate="text">
+              <ChannelDensityParam name="YellowDensity" />
+            </subchannel>
           </channel>
           <channel name="l18050_black_base" index="3">
-            <subchannel color="0" headOffset="1" name="Black" text="Black" translate="text"><ChannelDensityParam name="BlackDensity" /></subchannel>
+            <subchannel color="0" headOffset="1" name="Black" text="Black" translate="text">
+              <ChannelDensityParam name="BlackDensity" />
+            </subchannel>
           </channel>
-          <channel name="l18050_white_photoblack_offset" index="4">
-            <subchannel color="0" subchannel="4" headOffset="188" name="PhotoblackWhite" text="Photoblack White" translate="text"><ChannelDensityParam name="GlossDensity" /></subchannel>
+          <channel name="l18050_white_light_cyan_offset" index="4">
+            <subchannel color="2" subchannel="1" headOffset="188" name="LightCyanWhite"
+              text="Light Cyan White" translate="text">
+              <ChannelDensityParam name="GlossDensity" />
+            </subchannel>
           </channel>
-          <channel name="l18050_white_gray_offset" index="5">
-            <subchannel color="0" subchannel="1" headOffset="188" name="GrayWhite" text="Gray White" translate="text"><ChannelDensityParam name="GlossDensity" /></subchannel>
+          <channel name="l18050_white_light_magenta_offset" index="5">
+            <subchannel color="1" subchannel="1" headOffset="188" name="LightMagentaWhite" text="Light Magenta White"
+              translate="text">
+              <ChannelDensityParam name="GlossDensity" />
+            </subchannel>
           </channel>
         </Channels>
       </InkName>
