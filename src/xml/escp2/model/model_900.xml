@@ -9,7 +9,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 </copyright>
 <escp2Model id="900" base="escp2/model/base/baseline_360.xml">
  <media src="escp2/media/standard.xml"/>
- <inputSlots src="escp2/inputslots/rx680.xml"/>
+ <inputSlots src="escp2/inputslots/l18050.xml"/>
  <qualityPresets src="escp2/qualitypresets/v2880.xml"/>
  <inkGroup src="escp2/inks/l18050.xml"/>
  <mediaSizes src="escp2/mediasizes/standard.xml"/>
@@ -35,7 +35,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <maximumResolution>2880 5760</maximumResolution>
  <extraVerticalFeed>10</extraVerticalFeed>
  <separationRows>1</separationRows>
- <zeroMarginOffset>80</zeroMarginOffset>
+ <zeroMarginOffset>96</zeroMarginOffset>
  <microLeftMargin>42</microLeftMargin>
  <minHorizontalAlignment>1</minHorizontalAlignment>
  <baseHorizontalAlignment>28800</baseHorizontalAlignment>
@@ -43,8 +43,8 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <minimumMediaSize>144 144</minimumMediaSize>
  <maximumMediaSize>1191 1684</maximumMediaSize>
  <maximumImageableArea>1191 1684</maximumImageableArea>
- <margins interleave="soft" media="sheet">9 9 0 9</margins>
- <margins interleave="printer" media="sheet">9 9 0 9</margins>
+<margins interleave="soft" media="sheet">0 0 0 0</margins>
+  <margins interleave="printer" media="sheet">0 0 0 0</margins>
  <AlignmentChoices>4 15 0 0</AlignmentChoices>
  <ChannelNames>
   <ChannelName translate="text" name="Cyan" text="Cyan"/>
