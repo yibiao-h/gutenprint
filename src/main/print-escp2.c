@@ -53,6 +53,14 @@
 #define ESCP2_ESC_I_FEATHER_EDGE 0.95
 #endif
 
+#ifndef ESCP2_ESC_I_FEATHER_EDGE_MIN
+#define ESCP2_ESC_I_FEATHER_EDGE_MIN 0.0
+#endif
+
+#ifndef ESCP2_ESC_I_FEATHER_EDGE_MAX
+#define ESCP2_ESC_I_FEATHER_EDGE_MAX 1.0
+#endif
+
 #ifndef ESCP2_ESC_I_FEATHER_APPLY_ALL_CHANNELS
 #define ESCP2_ESC_I_FEATHER_APPLY_ALL_CHANNELS 1
 #endif
@@ -140,19 +148,34 @@ escp2_esc_i_feather_debug_row(int row)
   return row < 100 || (row % 128) == 0;
 }
 
+static double
+escp2_esc_i_feather_edge(const stp_vars_t *v)
+{
+  double edge = ESCP2_ESC_I_FEATHER_EDGE;
+  if (v && stp_check_float_parameter(v, "EscIFeatherEdge", STP_PARAMETER_ACTIVE))
+    edge = stp_get_float_parameter(v, "EscIFeatherEdge");
+  if (edge < ESCP2_ESC_I_FEATHER_EDGE_MIN)
+    edge = ESCP2_ESC_I_FEATHER_EDGE_MIN;
+  if (edge > ESCP2_ESC_I_FEATHER_EDGE_MAX)
+    edge = ESCP2_ESC_I_FEATHER_EDGE_MAX;
+  return edge;
+}
+
 static void
 escp2_set_esc_i_feather_factors(stp_vars_t *v, const escp2_privdata_t *pd,
 				int printed_row, int errline, double *factors)
 {
   int i;
+  double edge;
   double common_factor = 1.0;
   if (!escp2_esc_i_feather_enabled(pd) || !factors)
     return;
 
+  edge = escp2_esc_i_feather_edge(v);
+
 #if !ESCP2_ESC_I_FEATHER_PER_CHANNEL_MAPPING
   common_factor =
-    stp_weave_esc_i_feather_factor(v, printed_row, 0,
-				   ESCP2_ESC_I_FEATHER_EDGE);
+    stp_weave_esc_i_feather_factor(v, printed_row, 0, edge);
 #endif
 
   for (i = 0; i < pd->channels_in_use; i++)
@@ -160,20 +183,18 @@ escp2_set_esc_i_feather_factors(stp_vars_t *v, const escp2_privdata_t *pd,
 #if ESCP2_ESC_I_FEATHER_APPLY_ALL_CHANNELS
 #if ESCP2_ESC_I_FEATHER_PER_CHANNEL_MAPPING
       factors[i] =
-	stp_weave_esc_i_feather_factor(v, printed_row, i,
-				       ESCP2_ESC_I_FEATHER_EDGE);
+	stp_weave_esc_i_feather_factor(v, printed_row, i, edge);
 #else
       factors[i] = common_factor;
 #endif
 #else
       factors[i] = (i == 0) ?
-	stp_weave_esc_i_feather_factor(v, printed_row, i,
-				       ESCP2_ESC_I_FEATHER_EDGE) : 1.0;
+	stp_weave_esc_i_feather_factor(v, printed_row, i, edge) : 1.0;
 #endif
       if (escp2_esc_i_feather_debug_row(printed_row))
 	stp_dprintf(STP_DBG_ROWS, v,
-		    "esc-i feather set y %d errline %d channel %d factor %.6f duplicate_line disabled %d\n",
-		    printed_row, errline, i, factors[i],
+		    "esc-i feather set y %d errline %d channel %d edge %.6f factor %.6f duplicate_line disabled %d\n",
+		    printed_row, errline, i, edge, factors[i],
 		    ESCP2_ESC_I_FEATHER_DISABLE_DUPLICATE_LINE ? 1 : 0);
     }
   stp_channel_set_physical_channel_factors(v, factors, pd->channels_in_use);
@@ -1019,6 +1040,15 @@ static const float_param_t float_parameters[] =
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, 0, 1, 0
     }, 0.0, 1.0, 1.0, 1
+  },
+  {
+    {
+      "EscIFeatherEdge", N_("ESC i Feather Edge"), "Color=Yes,Category=Advanced Output Control",
+      N_("Set the ESC i row feather edge factor"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_FEATURE,
+      STP_PARAMETER_LEVEL_INTERNAL, 0, 1, STP_CHANNEL_NONE, 1, 0
+    }, ESCP2_ESC_I_FEATHER_EDGE_MIN, ESCP2_ESC_I_FEATHER_EDGE_MAX,
+       ESCP2_ESC_I_FEATHER_EDGE, 1
   },
   {
     {
