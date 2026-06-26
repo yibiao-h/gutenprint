@@ -1230,18 +1230,24 @@ static double
 esc_i_feather_weight(int row_in_esc_i, int height, double edge)
 {
   static const double pi = 3.14159265358979323846;
-  double average_sine;
+  double average_shape;
   double average_base;
+  double phase;
+  double shape;
   double base;
   if (height <= 0)
     return 1.0;
+  if (height == 1)
+    return 1.0;
   edge = esc_i_feather_clamp_edge(edge);
-  average_sine = 1.0 / ((double) height * sin(pi / (2.0 * height)));
-  average_base = edge + (1.0 - edge) * average_sine;
+  average_shape = 0.5;
+  average_base = edge + (1.0 - edge) * average_shape;
   if (average_base <= 0.0)
     return 1.0;
-  base = edge + (1.0 - edge) *
-    sin(pi * ((double) row_in_esc_i + 0.5) / (double) height);
+  phase = (-pi / 2.0) +
+    (2.0 * pi * ((double) row_in_esc_i + 0.5) / (double) height);
+  shape = 0.5 * (sin(phase) + 1.0);
+  base = edge + (1.0 - edge) * shape;
   return base / average_base;
 }
 
@@ -1249,15 +1255,14 @@ static int
 esc_i_feather_factor_range(int height, double edge,
 			   double *min_factor, double *max_factor)
 {
-  static const double pi = 3.14159265358979323846;
-  double average_sine;
+  double average_shape;
   double average_base;
   int i;
   if (height <= 0)
     return 0;
   edge = esc_i_feather_clamp_edge(edge);
-  average_sine = 1.0 / ((double) height * sin(pi / (2.0 * height)));
-  average_base = edge + (1.0 - edge) * average_sine;
+  average_shape = (height == 1) ? 1.0 : 0.5;
+  average_base = edge + (1.0 - edge) * average_shape;
   if (average_base <= 0.0)
     return 0;
 
