@@ -52,7 +52,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <ChannelName translate="text" name="Yellow" text="Yellow"/>
   <ChannelName translate="text" name="Black" text="Black"/>
   <ChannelName translate="text" name="LightCyanWhite" text="Light Cyan White"/>
-  <ChannelName translate="text" name="LightMagentaWhite" text="Light Magenta White"/>
+  <ChannelName translate="text" name="MagentaWhite" text="Magenta White"/>
  </ChannelNames>
  <resolutions>
   <resolution translate="text" name="1440x1440ov" text="1440 x 1440 DPI">
