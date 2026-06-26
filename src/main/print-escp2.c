@@ -161,17 +161,70 @@ escp2_esc_i_feather_edge(const stp_vars_t *v)
   return edge;
 }
 
+static double
+escp2_esc_i_feather_density_value(const stp_vars_t *v, const char *name,
+				  double fallback, int *found)
+{
+  double value = fallback;
+  if (v && name && stp_check_float_parameter(v, name, STP_PARAMETER_ACTIVE))
+    {
+      value = stp_get_float_parameter(v, name);
+      if (found)
+	*found = 1;
+    }
+  if (!(value > 0.0))
+    value = 0.0;
+  return value;
+}
+
+static double
+escp2_esc_i_feather_max_density(const stp_vars_t *v)
+{
+  static const char *density_params[] =
+  {
+    "CyanDensity",
+    "MagentaDensity",
+    "YellowDensity",
+    "BlackDensity",
+    "GlossDensity",
+    NULL
+  };
+  double global_density =
+    escp2_esc_i_feather_density_value(v, "Density", 1.0, NULL);
+  double max_channel_density = 0.0;
+  int found_channel_density = 0;
+  int i;
+  for (i = 0; density_params[i]; i++)
+    {
+      int found = 0;
+      double value =
+	escp2_esc_i_feather_density_value(v, density_params[i], 1.0, &found);
+      if (found)
+	{
+	  found_channel_density = 1;
+	  if (value > max_channel_density)
+	    max_channel_density = value;
+	}
+    }
+  if (!found_channel_density)
+    max_channel_density = 1.0;
+  return global_density * max_channel_density;
+}
+
 static void
 escp2_set_esc_i_feather_factors(stp_vars_t *v, const escp2_privdata_t *pd,
 				int printed_row, int errline, double *factors)
 {
   int i;
   double edge;
+  double max_density;
   double common_factor = 1.0;
   if (!escp2_esc_i_feather_enabled(pd) || !factors)
     return;
 
   edge = escp2_esc_i_feather_edge(v);
+  max_density = escp2_esc_i_feather_max_density(v);
+  stp_set_float_parameter(v, "EscIFeatherMaxDensity", max_density);
 
 #if !ESCP2_ESC_I_FEATHER_PER_CHANNEL_MAPPING
   common_factor =
@@ -193,8 +246,8 @@ escp2_set_esc_i_feather_factors(stp_vars_t *v, const escp2_privdata_t *pd,
 #endif
       if (escp2_esc_i_feather_debug_row(printed_row))
 	stp_dprintf(STP_DBG_ROWS, v,
-		    "esc-i feather set y %d errline %d channel %d edge %.6f factor %.6f duplicate_line disabled %d\n",
-		    printed_row, errline, i, edge, factors[i],
+		    "esc-i feather set y %d errline %d channel %d edge %.6f max_density %.6f factor %.6f duplicate_line disabled %d\n",
+		    printed_row, errline, i, edge, max_density, factors[i],
 		    ESCP2_ESC_I_FEATHER_DISABLE_DUPLICATE_LINE ? 1 : 0);
     }
   stp_channel_set_physical_channel_factors(v, factors, pd->channels_in_use);
@@ -1049,6 +1102,14 @@ static const float_param_t float_parameters[] =
       STP_PARAMETER_LEVEL_INTERNAL, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, ESCP2_ESC_I_FEATHER_EDGE_MIN, ESCP2_ESC_I_FEATHER_EDGE_MAX,
        ESCP2_ESC_I_FEATHER_EDGE, 1
+  },
+  {
+    {
+      "EscIFeatherMaxDensity", N_("ESC i Feather Max Density"), "Color=Yes,Category=Advanced Output Control",
+      N_("Set the maximum density used to keep ESC i feather within range"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_FEATURE,
+      STP_PARAMETER_LEVEL_INTERNAL, 0, 1, STP_CHANNEL_NONE, 1, 0
+    }, 0.0, 2.0, 1.0, 1
   },
   {
     {

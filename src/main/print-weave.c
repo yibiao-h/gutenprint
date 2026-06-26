@@ -1217,6 +1217,16 @@ stp_weave_parameters_by_row(const stp_vars_t *v, int row,
 }
 
 static double
+esc_i_feather_clamp_edge(double edge)
+{
+  if (edge < 0.0)
+    return 0.0;
+  if (edge > 1.0)
+    return 1.0;
+  return edge;
+}
+
+static double
 esc_i_feather_weight(int row_in_esc_i, int height, double edge)
 {
   static const double pi = 3.14159265358979323846;
@@ -1225,10 +1235,7 @@ esc_i_feather_weight(int row_in_esc_i, int height, double edge)
   double base;
   if (height <= 0)
     return 1.0;
-  if (edge < 0.0)
-    edge = 0.0;
-  else if (edge > 1.0)
-    edge = 1.0;
+  edge = esc_i_feather_clamp_edge(edge);
   average_sine = 1.0 / ((double) height * sin(pi / (2.0 * height)));
   average_base = edge + (1.0 - edge) * average_sine;
   if (average_base <= 0.0)
@@ -1236,6 +1243,82 @@ esc_i_feather_weight(int row_in_esc_i, int height, double edge)
   base = edge + (1.0 - edge) *
     sin(pi * ((double) row_in_esc_i + 0.5) / (double) height);
   return base / average_base;
+}
+
+static int
+esc_i_feather_factor_range(int height, double edge,
+			   double *min_factor, double *max_factor)
+{
+  static const double pi = 3.14159265358979323846;
+  double average_sine;
+  double average_base;
+  int i;
+  if (height <= 0)
+    return 0;
+  edge = esc_i_feather_clamp_edge(edge);
+  average_sine = 1.0 / ((double) height * sin(pi / (2.0 * height)));
+  average_base = edge + (1.0 - edge) * average_sine;
+  if (average_base <= 0.0)
+    return 0;
+
+  *min_factor = esc_i_feather_weight(0, height, edge);
+  *max_factor = *min_factor;
+  for (i = 1; i < height; i++)
+    {
+      double factor = esc_i_feather_weight(i, height, edge);
+      if (factor < *min_factor)
+	*min_factor = factor;
+      if (factor > *max_factor)
+	*max_factor = factor;
+    }
+  return 1;
+}
+
+static int
+esc_i_feather_edge_is_safe(int height, double edge, double max_density)
+{
+  double min_factor;
+  double max_factor;
+  if (!esc_i_feather_factor_range(height, edge, &min_factor, &max_factor))
+    return 0;
+  if (min_factor < 0.0)
+    return 0;
+  if (max_density > 0.0 && max_factor * max_density > 1.0)
+    return 0;
+  return 1;
+}
+
+static double
+esc_i_feather_safe_edge(const stp_vars_t *v, int height, double edge)
+{
+  double max_density;
+  double low;
+  double high;
+  int i;
+  edge = esc_i_feather_clamp_edge(edge);
+  if (height <= 0 ||
+      !stp_check_float_parameter(v, "EscIFeatherMaxDensity", STP_PARAMETER_ACTIVE))
+    return edge;
+
+  max_density = stp_get_float_parameter(v, "EscIFeatherMaxDensity");
+  if (max_density <= 0.0)
+    return edge;
+  if (esc_i_feather_edge_is_safe(height, edge, max_density))
+    return edge;
+
+  low = edge;
+  high = 1.0;
+  if (!esc_i_feather_edge_is_safe(height, high, max_density))
+    return high;
+  for (i = 0; i < 32; i++)
+    {
+      double mid = (low + high) * 0.5;
+      if (esc_i_feather_edge_is_safe(height, mid, max_density))
+	high = mid;
+      else
+	low = mid;
+    }
+  return high;
 }
 
 double
@@ -1263,6 +1346,8 @@ stp_weave_esc_i_feather_factor(const stp_vars_t *v, int printed_row,
   h_passes = sw->horizontal_weave * sw->vertical_subpasses;
   if (h_passes <= 0)
     return 1.0;
+
+  edge = esc_i_feather_safe_edge(v, sw->virtual_jets, edge);
 
   row = sw->lineno + sw->head_offset[channel];
   cpass = sw->current_vertical_subpass * h_passes;
