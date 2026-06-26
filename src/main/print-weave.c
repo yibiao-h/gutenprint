@@ -1300,6 +1300,48 @@ esc_i_feather_pass_height(const stpi_softweave_t *sw, const stp_weave_t *w)
   return height;
 }
 
+static int
+esc_i_feather_effective_height(const stpi_softweave_t *sw,
+			       const stp_weave_t *w)
+{
+  int pass_height = esc_i_feather_pass_height(sw, w);
+  if (!sw)
+    return 0;
+  if (sw->jets > 0)
+    return sw->jets;
+  if (pass_height > 0)
+    return pass_height;
+  return sw->virtual_jets;
+}
+
+static int
+esc_i_feather_next_effective_row(const stpi_softweave_t *sw,
+				 const stp_weave_t *w, int channel)
+{
+  int row_in_esc_i;
+  int slot;
+  if (!sw || !w || sw->vmod <= 0)
+    return 0;
+
+  row_in_esc_i = w->jet;
+  if (row_in_esc_i < 0)
+    row_in_esc_i = 0;
+
+  slot = w->pass % sw->vmod;
+  if (slot < 0)
+    slot += sw->vmod;
+
+  if (sw->passes && sw->passes[slot].pass == w->pass &&
+      sw->linecounts && sw->linecounts[slot].v &&
+      channel >= 0 && channel < sw->linecounts[slot].ncolors)
+    {
+      int next_row = sw->linecounts[slot].v[channel];
+      if (next_row >= 0)
+	row_in_esc_i = next_row;
+    }
+  return row_in_esc_i;
+}
+
 static double
 esc_i_feather_safe_edge(const stp_vars_t *v, int height, double edge)
 {
@@ -1365,27 +1407,26 @@ stp_weave_esc_i_feather_factor(const stp_vars_t *v, int printed_row,
   cpass = sw->current_vertical_subpass * h_passes;
   for (i = 0; i < h_passes; i++)
     {
-      int jet;
-      int pass_height;
+      int row_in_esc_i;
+      int height;
       double factor;
       weave_parameters_by_row(v, sw, row, cpass + i, &w);
-      jet = w.jet;
-      if (jet < 0)
-	jet = 0;
-      pass_height = esc_i_feather_pass_height(sw, &w);
-      if (pass_height <= 0)
-	pass_height = sw->virtual_jets;
-      if (jet >= pass_height)
-	jet = pass_height - 1;
+      row_in_esc_i = esc_i_feather_next_effective_row(sw, &w, channel);
+      height = esc_i_feather_effective_height(sw, &w);
+      if (height <= 0)
+	height = sw->virtual_jets;
+      if (row_in_esc_i >= height)
+	row_in_esc_i = height - 1;
       factor =
-	esc_i_feather_weight(jet, pass_height,
-			     esc_i_feather_safe_edge(v, pass_height, edge));
+	esc_i_feather_weight(row_in_esc_i, height,
+			     esc_i_feather_safe_edge(v, height, edge));
       factor_sum += factor;
       if (debug_row)
 	stp_dprintf(STP_DBG_ROWS, v,
-		    "esc-i feather row %d weave_row %d channel %d head_offset %d virtual_jets %d pass_height %d pass %d jet %d factor %.6f\n",
+		    "esc-i feather row %d weave_row %d channel %d head_offset %d virtual_jets %d height %d pass %d jet %d effective_row %d factor %.6f\n",
 		    printed_row, row, channel, sw->head_offset[channel],
-		    sw->virtual_jets, pass_height, w.pass, jet, factor);
+		    sw->virtual_jets, height, w.pass, w.jet, row_in_esc_i,
+		    factor);
     }
   return factor_sum / (double) h_passes;
 }
