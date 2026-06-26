@@ -27,6 +27,7 @@
 #include <config.h>
 #endif
 #include <string.h>
+#include <math.h>
 #include <gutenprint/gutenprint.h>
 #include "gutenprint-internal.h"
 #include <gutenprint/gutenprint-intl-internal.h>
@@ -1213,6 +1214,77 @@ stp_weave_parameters_by_row(const stp_vars_t *v, int row,
 {
   stpi_softweave_t *sw = get_sw(v);
   weave_parameters_by_row(v, sw, row, vertical_subpass, w);
+}
+
+static double
+esc_i_feather_weight(int row_in_esc_i, int height, double edge)
+{
+  static const double pi = 3.14159265358979323846;
+  double average_sine;
+  double average_base;
+  double base;
+  if (height <= 0)
+    return 1.0;
+  if (edge < 0.0)
+    edge = 0.0;
+  else if (edge > 1.0)
+    edge = 1.0;
+  average_sine = 1.0 / ((double) height * sin(pi / (2.0 * height)));
+  average_base = edge + (1.0 - edge) * average_sine;
+  if (average_base <= 0.0)
+    return 1.0;
+  base = edge + (1.0 - edge) *
+    sin(pi * ((double) row_in_esc_i + 0.5) / (double) height);
+  return base / average_base;
+}
+
+double
+stp_weave_esc_i_feather_factor(const stp_vars_t *v, int printed_row,
+			       int channel, double edge)
+{
+  stpi_softweave_t *sw = get_sw(v);
+  stp_weave_t w;
+  double factor_sum = 0.0;
+  int h_passes;
+  int cpass;
+  int row;
+  int i;
+  int debug_row = (printed_row < 100 || (printed_row % 128) == 0);
+  if (!sw || !sw->head_offset || channel < 0 || channel >= sw->ncolors ||
+      sw->virtual_jets <= 0)
+    {
+      stp_dprintf(STP_DBG_ROWS, v,
+		  "esc-i feather fallback row %d channel %d ncolors %d virtual_jets %d\n",
+		  printed_row, channel, sw ? sw->ncolors : 0,
+		  sw ? sw->virtual_jets : 0);
+      return 1.0;
+    }
+
+  h_passes = sw->horizontal_weave * sw->vertical_subpasses;
+  if (h_passes <= 0)
+    return 1.0;
+
+  row = sw->lineno + sw->head_offset[channel];
+  cpass = sw->current_vertical_subpass * h_passes;
+  for (i = 0; i < h_passes; i++)
+    {
+      int jet;
+      double factor;
+      weave_parameters_by_row(v, sw, row, cpass + i, &w);
+      jet = w.jet;
+      if (jet < 0)
+	jet = 0;
+      else if (jet >= sw->virtual_jets)
+	jet = sw->virtual_jets - 1;
+      factor = esc_i_feather_weight(jet, sw->virtual_jets, edge);
+      factor_sum += factor;
+      if (debug_row)
+	stp_dprintf(STP_DBG_ROWS, v,
+		    "esc-i feather row %d weave_row %d channel %d head_offset %d virtual_jets %d pass %d jet %d factor %.6f\n",
+		    printed_row, row, channel, sw->head_offset[channel],
+		    sw->virtual_jets, w.pass, jet, factor);
+    }
+  return factor_sum / (double) h_passes;
 }
 
 

@@ -167,6 +167,10 @@ extern void
 stp_weave_parameters_by_row(const stp_vars_t *v, int row,
 			    int vertical_subpass, stp_weave_t *w);
 
+extern double
+stp_weave_esc_i_feather_factor(const stp_vars_t *v, int printed_row,
+			       int channel, double edge);
+
 #ifdef __cplusplus
   }
 #endif

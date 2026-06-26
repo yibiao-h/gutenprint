@@ -76,6 +76,11 @@ extern const stp_curve_t *stp_channel_get_gcr_curve(stp_vars_t *v);
 extern void stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
 				   int input_channel_count);
 
+extern void stp_channel_set_physical_channel_factors(stp_vars_t *v,
+						     const double *factors,
+						     unsigned count);
+extern void stp_channel_clear_physical_channel_factors(stp_vars_t *v);
+
 extern void stp_channel_convert(const stp_vars_t *v, unsigned *zero_mask);
 
 extern unsigned short * stp_channel_get_input(const stp_vars_t *v);

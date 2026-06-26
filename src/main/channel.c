@@ -79,6 +79,7 @@ typedef struct
   unsigned short *alloc_data_2;
   unsigned short *alloc_data_3;
   unsigned char *output_data_8bit;
+  double *physical_channel_factors;
   size_t width;
   double cyan_balance;
   double magenta_balance;
@@ -95,8 +96,13 @@ typedef struct
   int gloss_physical_channel;
   int initialized;
   int valid_8bit;
+  unsigned physical_channel_factor_count;
+  unsigned physical_channel_factor_debug_count;
+  unsigned physical_channel_factor_cap_debug_count;
+  int physical_channel_factors_active;
 } stpi_channel_group_t;
 
+static void stpi_channel_free(void *vc);
 
 static stpi_channel_group_t *
 get_channel_group(const stp_vars_t *v)
@@ -104,6 +110,54 @@ get_channel_group(const stp_vars_t *v)
   stpi_channel_group_t *cg =
     ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
   return cg;
+}
+
+static stpi_channel_group_t *
+get_or_create_channel_group(stp_vars_t *v)
+{
+  stpi_channel_group_t *cg = get_channel_group(v);
+  if (!cg)
+    {
+      cg = stp_zalloc(sizeof(stpi_channel_group_t));
+      cg->black_channel = -1;
+      cg->gloss_channel = -1;
+      stp_allocate_component_data(v, "Channel", NULL, stpi_channel_free, cg);
+    }
+  return cg;
+}
+
+static void
+ensure_physical_channel_factors(stpi_channel_group_t *cg, unsigned count)
+{
+  double *factors;
+  unsigned i;
+  unsigned copy_count;
+  if (!cg || count == 0 || cg->physical_channel_factor_count == count)
+    return;
+
+  factors = stp_malloc(sizeof(double) * count);
+  for (i = 0; i < count; i++)
+    factors[i] = 1.0;
+  copy_count = cg->physical_channel_factor_count;
+  if (copy_count > count)
+    copy_count = count;
+  for (i = 0; i < copy_count; i++)
+    factors[i] = cg->physical_channel_factors[i];
+
+  STP_SAFE_FREE(cg->physical_channel_factors);
+  cg->physical_channel_factors = factors;
+  cg->physical_channel_factor_count = count;
+}
+
+static void
+clear_physical_channel_factors(stpi_channel_group_t *cg)
+{
+  unsigned i;
+  if (!cg || !cg->physical_channel_factors)
+    return;
+  for (i = 0; i < cg->physical_channel_factor_count; i++)
+    cg->physical_channel_factors[i] = 1.0;
+  cg->physical_channel_factors_active = 0;
 }
 
 static void
@@ -134,6 +188,7 @@ stpi_channel_clear(void *vc)
   STP_SAFE_FREE(cg->alloc_data_1);
   STP_SAFE_FREE(cg->alloc_data_2);
   STP_SAFE_FREE(cg->alloc_data_3);
+  STP_SAFE_FREE(cg->physical_channel_factors);
   STP_SAFE_FREE(cg->c);
   if (cg->gcr_curve)
     {
@@ -147,6 +202,10 @@ stpi_channel_clear(void *vc)
   cg->input_channels = 0;
   cg->initialized = 0;
   cg->valid_8bit = 0;
+  cg->physical_channel_factor_count = 0;
+  cg->physical_channel_factor_debug_count = 0;
+  cg->physical_channel_factor_cap_debug_count = 0;
+  cg->physical_channel_factors_active = 0;
 }
 
 void
@@ -163,6 +222,48 @@ stp_channel_reset_channel(stp_vars_t *v, int channel)
   stpi_channel_group_t *cg = get_channel_group(v);
   if (cg)
     clear_a_channel(cg, channel);
+}
+
+void
+stp_channel_set_physical_channel_factors(stp_vars_t *v,
+					 const double *factors,
+					 unsigned count)
+{
+  stpi_channel_group_t *cg = get_or_create_channel_group(v);
+  unsigned target_count;
+  unsigned i;
+  int active = 0;
+  if (!cg)
+    return;
+  if (!factors || count == 0)
+    {
+      clear_physical_channel_factors(cg);
+      return;
+    }
+
+  target_count = count;
+  if (cg->total_channels > target_count)
+    target_count = cg->total_channels;
+  ensure_physical_channel_factors(cg, target_count);
+
+  for (i = 0; i < cg->physical_channel_factor_count; i++)
+    {
+      double factor = 1.0;
+      if (i < count)
+	factor = factors[i];
+      if (factor != factor || factor < 0.0)
+	factor = 1.0;
+      cg->physical_channel_factors[i] = factor;
+      if (factor < 0.999999 || factor > 1.000001)
+	active = 1;
+    }
+  cg->physical_channel_factors_active = active;
+}
+
+void
+stp_channel_clear_physical_channel_factors(stp_vars_t *v)
+{
+  clear_physical_channel_factors(get_channel_group(v));
 }
 
 static void
@@ -605,6 +706,9 @@ stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
 
   cg->input_channels = input_channel_count;
   cg->width = width;
+  ensure_physical_channel_factors(cg, cg->total_channels);
+  cg->physical_channel_factor_debug_count = 0;
+  cg->physical_channel_factor_cap_debug_count = 0;
   cg->alloc_data_1 =
     stp_malloc(sizeof(unsigned short) * cg->total_channels * width);
   cg->output_data = cg->alloc_data_1;
@@ -1059,6 +1163,87 @@ scale_channels(stpi_channel_group_t *cg, unsigned *zero_mask,
 }
 
 static void NOINLINE
+apply_current_physical_channel_factors(const stp_vars_t *v,
+				       stpi_channel_group_t *cg,
+				       unsigned *zero_mask)
+{
+  unsigned ch;
+  if (!cg || !cg->physical_channel_factors_active ||
+      !cg->physical_channel_factors)
+    return;
+  for (ch = 0; ch < cg->total_channels; ch++)
+    {
+      double factor = 1.0;
+      double applied_factor;
+      unsigned short max_value = 0;
+      unsigned i;
+      unsigned short *output;
+      int capped = 0;
+
+      if (ch < cg->physical_channel_factor_count)
+	factor = cg->physical_channel_factors[ch];
+      if (factor != factor || factor < 0.0)
+	factor = 1.0;
+      if (factor >= 0.999999 && factor <= 1.000001)
+	continue;
+
+      output = cg->output_data + ch;
+      for (i = 0; i < cg->width; i++)
+	{
+	  if (*output > max_value)
+	    max_value = *output;
+	  output += cg->total_channels;
+	}
+
+      applied_factor = factor;
+      if (max_value > 0 && applied_factor > 65535.0 / (double) max_value)
+	{
+	  applied_factor = 65535.0 / (double) max_value;
+	  capped = 1;
+	}
+
+      if (max_value == 0)
+	{
+	  if (zero_mask && ch < sizeof(unsigned) * 8)
+	    *zero_mask |= 1U << ch;
+	  continue;
+	}
+
+      output = cg->output_data + ch;
+      for (i = 0; i < cg->width; i++)
+	{
+	  double scaled = (double) *output * applied_factor;
+	  if (scaled >= 65535.0)
+	    *output = 65535;
+	  else if (scaled <= 0.0)
+	    *output = 0;
+	  else
+	    *output = (unsigned short) (scaled + 0.5);
+	  output += cg->total_channels;
+	}
+      cg->valid_8bit = 0;
+
+      if ((stp_get_debug_level() & STP_DBG_INK) &&
+	  cg->physical_channel_factor_debug_count < 512)
+	{
+	  stp_dprintf(STP_DBG_INK, v,
+		      "esc-i feather apply channel %u factor %.6f applied %.6f max %u%s\n",
+		      ch, factor, applied_factor, (unsigned) max_value,
+		      capped ? " capped" : "");
+	  cg->physical_channel_factor_debug_count++;
+	}
+      if (capped && (stp_get_debug_level() & STP_DBG_INK) &&
+	  cg->physical_channel_factor_cap_debug_count < 128)
+	{
+	  stp_dprintf(STP_DBG_INK, v,
+		      "esc-i feather cap channel %u factor %.6f capped %.6f max %u\n",
+		      ch, factor, applied_factor, (unsigned) max_value);
+	  cg->physical_channel_factor_cap_debug_count++;
+	}
+    }
+}
+
+static void NOINLINE
 generate_gloss(stpi_channel_group_t *cg, unsigned *zero_mask)
 {
   unsigned short *output;
@@ -1168,6 +1353,7 @@ stp_channel_convert(const stp_vars_t *v, unsigned *zero_mask)
     split_channels(cg, zero_mask);
   else
     scale_channels(cg, zero_mask, zero_mask_valid);
+  apply_current_physical_channel_factors(v, cg, zero_mask);
   (void) limit_ink(cg);
   (void) generate_gloss(cg, zero_mask);
 }

@@ -28,7 +28,9 @@
 #include <config.h>
 #endif
 #include <gutenprint/gutenprint.h>
+#include <gutenprint/channel.h>
 #include <gutenprint/gutenprint-intl-internal.h>
+#include <gutenprint/weave.h>
 #include "gutenprint-internal.h"
 #include <string.h>
 #include <math.h>
@@ -42,6 +44,26 @@
 #define OP_JOB_START 1
 #define OP_JOB_PRINT 2
 #define OP_JOB_END   4
+
+#ifndef ESCP2_ESC_I_FEATHER_ENABLE
+#define ESCP2_ESC_I_FEATHER_ENABLE 1
+#endif
+
+#ifndef ESCP2_ESC_I_FEATHER_EDGE
+#define ESCP2_ESC_I_FEATHER_EDGE 0.95
+#endif
+
+#ifndef ESCP2_ESC_I_FEATHER_APPLY_ALL_CHANNELS
+#define ESCP2_ESC_I_FEATHER_APPLY_ALL_CHANNELS 1
+#endif
+
+#ifndef ESCP2_ESC_I_FEATHER_PER_CHANNEL_MAPPING
+#define ESCP2_ESC_I_FEATHER_PER_CHANNEL_MAPPING 1
+#endif
+
+#ifndef ESCP2_ESC_I_FEATHER_DISABLE_DUPLICATE_LINE
+#define ESCP2_ESC_I_FEATHER_DISABLE_DUPLICATE_LINE 1
+#endif
 
 #ifndef MAX
 #  define MAX(a, b) ((a) > (b) ? (a) : (b))
@@ -105,6 +127,57 @@ static const double ink_darknesses[] =
 {
   1.0, 0.31 / .4, 0.61 / .96, 0.08, 0.31 * 0.33 / .4, 0.61 * 0.33 / .96, 0.33, 1.0
 };
+
+static int
+escp2_esc_i_feather_enabled(const escp2_privdata_t *pd)
+{
+  return ESCP2_ESC_I_FEATHER_ENABLE && pd && pd->channels_in_use > 0;
+}
+
+static int
+escp2_esc_i_feather_debug_row(int row)
+{
+  return row < 100 || (row % 128) == 0;
+}
+
+static void
+escp2_set_esc_i_feather_factors(stp_vars_t *v, const escp2_privdata_t *pd,
+				int printed_row, int errline, double *factors)
+{
+  int i;
+  double common_factor = 1.0;
+  if (!escp2_esc_i_feather_enabled(pd) || !factors)
+    return;
+
+#if !ESCP2_ESC_I_FEATHER_PER_CHANNEL_MAPPING
+  common_factor =
+    stp_weave_esc_i_feather_factor(v, printed_row, 0,
+				   ESCP2_ESC_I_FEATHER_EDGE);
+#endif
+
+  for (i = 0; i < pd->channels_in_use; i++)
+    {
+#if ESCP2_ESC_I_FEATHER_APPLY_ALL_CHANNELS
+#if ESCP2_ESC_I_FEATHER_PER_CHANNEL_MAPPING
+      factors[i] =
+	stp_weave_esc_i_feather_factor(v, printed_row, i,
+				       ESCP2_ESC_I_FEATHER_EDGE);
+#else
+      factors[i] = common_factor;
+#endif
+#else
+      factors[i] = (i == 0) ?
+	stp_weave_esc_i_feather_factor(v, printed_row, i,
+				       ESCP2_ESC_I_FEATHER_EDGE) : 1.0;
+#endif
+      if (escp2_esc_i_feather_debug_row(printed_row))
+	stp_dprintf(STP_DBG_ROWS, v,
+		    "esc-i feather set y %d errline %d channel %d factor %.6f duplicate_line disabled %d\n",
+		    printed_row, errline, i, factors[i],
+		    ESCP2_ESC_I_FEATHER_DISABLE_DUPLICATE_LINE ? 1 : 0);
+    }
+  stp_channel_set_physical_channel_factors(v, factors, pd->channels_in_use);
+}
 
 #define INCH(x)		(72 * x)
 
@@ -4384,24 +4457,41 @@ escp2_print_data(stp_vars_t *v, stp_image_t *image)
   stp_dimension_t inner_r_sq = 0;
   int x_center = pd->cd_x_offset * pd->res->printed_hres / pd->micro_units;
   unsigned char *cd_mask = NULL;
+  double *esc_i_feather_factors = NULL;
+  int esc_i_feather_enabled = escp2_esc_i_feather_enabled(pd);
+  int status = 1;
   if (pd->cd_outer_radius > 0)
     {
       cd_mask = stp_malloc(1 + (pd->image_printed_width + 7) / 8);
       outer_r_sq = pd->cd_outer_radius * pd->cd_outer_radius;
       inner_r_sq = pd->cd_inner_radius * pd->cd_inner_radius;
     }
+  if (esc_i_feather_enabled)
+    esc_i_feather_factors =
+      stp_malloc(sizeof(double) * pd->channels_in_use);
+  else
+    stp_channel_clear_physical_channel_factors(v);
 
   for (y = 0; y < pd->image_printed_height; y ++)
     {
       int duplicate_line = 1;
       unsigned zero_mask = 0;
 
-      if (errline != errlast)
+      if (esc_i_feather_enabled)
+	escp2_set_esc_i_feather_factors(v, pd, y, errline,
+					esc_i_feather_factors);
+
+      if (errline != errlast ||
+	  (esc_i_feather_enabled &&
+	   ESCP2_ESC_I_FEATHER_DISABLE_DUPLICATE_LINE))
 	{
 	  errlast = errline;
 	  duplicate_line = 0;
 	  if (stp_color_get_row(v, image, errline, &zero_mask))
-	    return 2;
+	    {
+	      status = 2;
+	      goto done;
+	    }
 	}
 
       if (cd_mask)
@@ -4440,9 +4530,13 @@ escp2_print_data(stp_vars_t *v, stp_image_t *image)
 	  errline ++;
 	}
     }
+ done:
+  stp_channel_clear_physical_channel_factors(v);
+  if (esc_i_feather_factors)
+    stp_free(esc_i_feather_factors);
   if (cd_mask)
     stp_free(cd_mask);
-  return 1;
+  return status;
 }
 
 static int
