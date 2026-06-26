@@ -178,37 +178,54 @@ escp2_esc_i_feather_density_value(const stp_vars_t *v, const char *name,
 }
 
 static double
-escp2_esc_i_feather_max_density(const stp_vars_t *v)
+escp2_esc_i_feather_global_density(const stp_vars_t *v)
 {
-  static const char *density_params[] =
-  {
-    "CyanDensity",
-    "MagentaDensity",
-    "YellowDensity",
-    "BlackDensity",
-    "GlossDensity",
-    NULL
-  };
-  double global_density =
-    escp2_esc_i_feather_density_value(v, "Density", 1.0, NULL);
+  return escp2_esc_i_feather_density_value(v, "Density", 1.0, NULL);
+}
+
+static double
+escp2_esc_i_feather_channel_density(const stp_vars_t *v,
+				    const escp2_privdata_t *pd,
+				    int channel)
+{
+  const physical_subchannel_t *subchannel = NULL;
+  double channel_density = 1.0;
+  double subchannel_scale = 1.0;
+
+  if (!pd || channel < 0 || channel >= pd->channels_in_use ||
+      !pd->channels || !pd->channels[channel])
+    return escp2_esc_i_feather_global_density(v);
+
+  subchannel = pd->channels[channel];
+  if (subchannel->channel_density)
+    channel_density =
+      escp2_esc_i_feather_density_value(v, subchannel->channel_density,
+					1.0, NULL);
+  if (subchannel->subchannel_scale)
+    subchannel_scale =
+      escp2_esc_i_feather_density_value(v, subchannel->subchannel_scale,
+					1.0, NULL);
+
+  return escp2_esc_i_feather_global_density(v) *
+    channel_density * subchannel_scale;
+}
+
+static double
+escp2_esc_i_feather_max_density(const stp_vars_t *v,
+				const escp2_privdata_t *pd)
+{
   double max_channel_density = 0.0;
-  int found_channel_density = 0;
   int i;
-  for (i = 0; density_params[i]; i++)
+  if (!pd || pd->channels_in_use <= 0)
+    return escp2_esc_i_feather_global_density(v);
+
+  for (i = 0; i < pd->channels_in_use; i++)
     {
-      int found = 0;
-      double value =
-	escp2_esc_i_feather_density_value(v, density_params[i], 1.0, &found);
-      if (found)
-	{
-	  found_channel_density = 1;
-	  if (value > max_channel_density)
-	    max_channel_density = value;
-	}
+      double value = escp2_esc_i_feather_channel_density(v, pd, i);
+      if (value > max_channel_density)
+	max_channel_density = value;
     }
-  if (!found_channel_density)
-    max_channel_density = 1.0;
-  return global_density * max_channel_density;
+  return max_channel_density;
 }
 
 static void
@@ -218,27 +235,24 @@ escp2_set_esc_i_feather_factors(stp_vars_t *v, const escp2_privdata_t *pd,
   int i;
   double edge;
   double max_density;
-  double common_factor = 1.0;
   if (!escp2_esc_i_feather_enabled(pd) || !factors)
     return;
 
   edge = escp2_esc_i_feather_edge(v);
-  max_density = escp2_esc_i_feather_max_density(v);
+  max_density = escp2_esc_i_feather_max_density(v, pd);
   stp_set_float_parameter(v, "EscIFeatherMaxDensity", max_density);
-
-#if !ESCP2_ESC_I_FEATHER_PER_CHANNEL_MAPPING
-  common_factor =
-    stp_weave_esc_i_feather_factor(v, printed_row, 0, edge);
-#endif
 
   for (i = 0; i < pd->channels_in_use; i++)
     {
+      double channel_density = escp2_esc_i_feather_channel_density(v, pd, i);
+      stp_set_float_parameter(v, "EscIFeatherMaxDensity", channel_density);
 #if ESCP2_ESC_I_FEATHER_APPLY_ALL_CHANNELS
 #if ESCP2_ESC_I_FEATHER_PER_CHANNEL_MAPPING
       factors[i] =
 	stp_weave_esc_i_feather_factor(v, printed_row, i, edge);
 #else
-      factors[i] = common_factor;
+      factors[i] =
+	stp_weave_esc_i_feather_factor(v, printed_row, 0, edge);
 #endif
 #else
       factors[i] = (i == 0) ?
@@ -247,9 +261,10 @@ escp2_set_esc_i_feather_factors(stp_vars_t *v, const escp2_privdata_t *pd,
       if (escp2_esc_i_feather_debug_row(printed_row))
 	stp_dprintf(STP_DBG_ROWS, v,
 		    "esc-i feather set y %d errline %d channel %d edge %.6f max_density %.6f factor %.6f duplicate_line disabled %d\n",
-		    printed_row, errline, i, edge, max_density, factors[i],
+		    printed_row, errline, i, edge, channel_density, factors[i],
 		    ESCP2_ESC_I_FEATHER_DISABLE_DUPLICATE_LINE ? 1 : 0);
     }
+  stp_set_float_parameter(v, "EscIFeatherMaxDensity", max_density);
   stp_channel_set_physical_channel_factors(v, factors, pd->channels_in_use);
 }
 
