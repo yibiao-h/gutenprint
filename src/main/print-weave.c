@@ -1321,11 +1321,58 @@ esc_i_feather_factor_range(int height, double edge,
 }
 
 static int
-esc_i_feather_edge_is_safe(int height, double edge, double max_density)
+esc_i_feather_periodic_factor_range(int height, int separation,
+				    int period_rows, double edge,
+				    double *min_factor, double *max_factor)
+{
+  double average_base;
+  double sum = 0.0;
+  int i;
+  if (height <= 0)
+    return 0;
+  if (height <= 1 || separation <= 0 || period_rows <= 0)
+    return esc_i_feather_factor_range(height, edge, min_factor, max_factor);
+
+  for (i = 0; i < height; i++)
+    sum += esc_i_feather_periodic_base((double) i * (double) separation,
+				       (double) period_rows, edge);
+  average_base = sum / (double) height;
+  if (average_base <= 0.0)
+    return 0;
+
+  *min_factor =
+    esc_i_feather_periodic_base(0.0, (double) period_rows, edge) /
+    average_base;
+  *max_factor = *min_factor;
+  for (i = 1; i < height; i++)
+    {
+      double factor =
+	esc_i_feather_periodic_base((double) i * (double) separation,
+				    (double) period_rows, edge) /
+	average_base;
+      if (factor < *min_factor)
+	*min_factor = factor;
+      if (factor > *max_factor)
+	*max_factor = factor;
+    }
+  return 1;
+}
+
+static int
+esc_i_feather_edge_is_safe(int height, int separation, int period_rows,
+			   double edge, double max_density)
 {
   double min_factor;
   double max_factor;
-  if (!esc_i_feather_factor_range(height, edge, &min_factor, &max_factor))
+  if (period_rows > 0 && separation > 0)
+    {
+      if (!esc_i_feather_periodic_factor_range(height, separation,
+					       period_rows, edge,
+					       &min_factor, &max_factor))
+	return 0;
+    }
+  else if (!esc_i_feather_factor_range(height, edge,
+				       &min_factor, &max_factor))
     return 0;
   if (min_factor < 0.0)
     return 0;
@@ -1389,7 +1436,8 @@ esc_i_feather_next_effective_row(const stpi_softweave_t *sw,
 }
 
 static double
-esc_i_feather_safe_edge(const stp_vars_t *v, int height, double edge)
+esc_i_feather_safe_edge(const stp_vars_t *v, int height, int separation,
+			int period_rows, double edge)
 {
   double max_density;
   double low;
@@ -1403,17 +1451,20 @@ esc_i_feather_safe_edge(const stp_vars_t *v, int height, double edge)
   max_density = stp_get_float_parameter(v, "EscIFeatherMaxDensity");
   if (max_density <= 0.0)
     return edge;
-  if (esc_i_feather_edge_is_safe(height, edge, max_density))
+  if (esc_i_feather_edge_is_safe(height, separation, period_rows, edge,
+				 max_density))
     return edge;
 
   low = edge;
   high = 1.0;
-  if (!esc_i_feather_edge_is_safe(height, high, max_density))
+  if (!esc_i_feather_edge_is_safe(height, separation, period_rows, high,
+				  max_density))
     return high;
   for (i = 0; i < 32; i++)
     {
       double mid = (low + high) * 0.5;
-      if (esc_i_feather_edge_is_safe(height, mid, max_density))
+      if (esc_i_feather_edge_is_safe(height, separation, period_rows, mid,
+				     max_density))
 	high = mid;
       else
 	low = mid;
@@ -1422,17 +1473,15 @@ esc_i_feather_safe_edge(const stp_vars_t *v, int height, double edge)
 }
 
 static int
-esc_i_feather_pass_advance_rows(const stpi_softweave_t *sw)
+esc_i_feather_half_inch_period_rows(const stpi_softweave_t *sw)
 {
-  int oversample;
-  int advance;
+  int period;
   if (!sw)
     return 0;
-  oversample = sw->oversample > 0 ? sw->oversample : 1;
-  advance = sw->jets / oversample;
-  if (advance < 1)
-    advance = 1;
-  return advance;
+  period = sw->separation * 90;
+  if (period < 1)
+    period = 1;
+  return period;
 }
 
 double
@@ -1446,6 +1495,7 @@ stp_weave_esc_i_feather_factor(const stp_vars_t *v, int printed_row,
   int row;
   int row_in_esc_i;
   int height;
+  int period_rows = 0;
   double factor;
   double safe_edge;
   int debug_row = (printed_row < 100 || (printed_row % 128) == 0);
@@ -1480,12 +1530,14 @@ stp_weave_esc_i_feather_factor(const stp_vars_t *v, int printed_row,
     row_in_esc_i = (row_in_esc_i + (height / 2)) % height;
   if (row_in_esc_i >= height)
     row_in_esc_i = height - 1;
-  safe_edge = esc_i_feather_safe_edge(v, height, edge);
+  if (h_passes > 1 || sw->oversample > 1)
+    period_rows = esc_i_feather_half_inch_period_rows(sw);
+  safe_edge = esc_i_feather_safe_edge(v, height, sw->separation,
+				      period_rows, edge);
   if (h_passes > 1 || sw->oversample > 1)
     factor =
       esc_i_feather_periodic_weight(row_in_esc_i, height, sw->separation,
-				    esc_i_feather_pass_advance_rows(sw),
-				    safe_edge);
+				    period_rows, safe_edge);
   else
     factor = esc_i_feather_weight(row_in_esc_i, height, safe_edge);
   if (debug_row)
