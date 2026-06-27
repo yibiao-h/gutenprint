@@ -1386,11 +1386,12 @@ stp_weave_esc_i_feather_factor(const stp_vars_t *v, int printed_row,
 {
   stpi_softweave_t *sw = get_sw(v);
   stp_weave_t w;
-  double factor_sum = 0.0;
   int h_passes;
   int cpass;
   int row;
-  int i;
+  int row_in_esc_i;
+  int height;
+  double factor;
   int debug_row = (printed_row < 100 || (printed_row % 128) == 0);
   if (!sw || !sw->head_offset || channel < 0 || channel >= sw->ncolors ||
       sw->virtual_jets <= 0)
@@ -1410,30 +1411,23 @@ stp_weave_esc_i_feather_factor(const stp_vars_t *v, int printed_row,
 
   row = sw->lineno + sw->head_offset[channel];
   cpass = sw->current_vertical_subpass * h_passes;
-  for (i = 0; i < h_passes; i++)
-    {
-      int row_in_esc_i;
-      int height;
-      double factor;
-      weave_parameters_by_row(v, sw, row, cpass + i, &w);
-      row_in_esc_i = esc_i_feather_next_effective_row(sw, &w, channel);
-      height = esc_i_feather_effective_height(sw, &w);
-      if (height <= 0)
-	height = sw->virtual_jets;
-      if (row_in_esc_i >= height)
-	row_in_esc_i = height - 1;
-      factor =
-	esc_i_feather_weight(row_in_esc_i, height,
-			     esc_i_feather_safe_edge(v, height, edge));
-      factor_sum += factor;
-      if (debug_row)
-	stp_dprintf(STP_DBG_ROWS, v,
-		    "esc-i feather row %d weave_row %d channel %d head_offset %d virtual_jets %d height %d pass %d jet %d effective_row %d factor %.6f\n",
-		    printed_row, row, channel, sw->head_offset[channel],
-		    sw->virtual_jets, height, w.pass, w.jet, row_in_esc_i,
-		    factor);
-    }
-  return factor_sum / (double) h_passes;
+  weave_parameters_by_row(v, sw, row, cpass + (h_passes / 2), &w);
+  height = esc_i_feather_effective_height(sw, &w);
+  if (height <= 0)
+    height = sw->virtual_jets;
+  row_in_esc_i = esc_i_feather_next_effective_row(sw, &w, channel);
+  if (row_in_esc_i >= height)
+    row_in_esc_i = height - 1;
+  factor =
+    esc_i_feather_weight(row_in_esc_i, height,
+			 esc_i_feather_safe_edge(v, height, edge));
+  if (debug_row)
+    stp_dprintf(STP_DBG_ROWS, v,
+		"esc-i feather row %d weave_row %d channel %d head_offset %d virtual_jets %d height %d pass %d jet %d effective_row %d factor %.6f\n",
+		printed_row, row, channel, sw->head_offset[channel],
+		sw->virtual_jets, height, w.pass, w.jet, row_in_esc_i,
+		factor);
+  return factor;
 }
 
 
