@@ -1473,12 +1473,12 @@ esc_i_feather_safe_edge(const stp_vars_t *v, int height, int separation,
 }
 
 static int
-esc_i_feather_half_inch_period_rows(const stpi_softweave_t *sw)
+esc_i_feather_nozzle_span_period_rows(const stpi_softweave_t *sw)
 {
   int period;
-  if (!sw)
+  if (!sw || sw->jets <= 0 || sw->separation <= 0)
     return 0;
-  period = sw->separation * 90;
+  period = sw->jets * sw->separation;
   if (period < 1)
     period = 1;
   return period;
@@ -1525,7 +1525,7 @@ stp_weave_esc_i_feather_factor(const stp_vars_t *v, int printed_row,
   if (height <= 0)
     height = sw->virtual_jets;
   if (h_passes > 1 || sw->oversample > 1)
-    period_rows = esc_i_feather_half_inch_period_rows(sw);
+    period_rows = esc_i_feather_nozzle_span_period_rows(sw);
   safe_edge = esc_i_feather_safe_edge(v, height, sw->separation,
 				      period_rows, edge);
   for (i = 0; i < h_passes; i++)
