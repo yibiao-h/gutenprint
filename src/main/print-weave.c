@@ -1522,12 +1522,6 @@ stp_weave_esc_i_feather_factor(const stp_vars_t *v, int printed_row,
   if (height <= 0)
     height = sw->virtual_jets;
   row_in_esc_i = esc_i_feather_next_effective_row(sw, &w, channel);
-  /*
-   * Multi-pass ESC i buffers report the middle pass line count half a nozzle
-   * span out of phase with the final row order.
-   */
-  if (height > 1 && h_passes > 1)
-    row_in_esc_i = (row_in_esc_i + (height / 2)) % height;
   if (row_in_esc_i >= height)
     row_in_esc_i = height - 1;
   if (h_passes > 1 || sw->oversample > 1)
