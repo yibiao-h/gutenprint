@@ -1615,7 +1615,19 @@ stp_weave_esc_i_feather_overlap_strength(const stp_vars_t *v)
 
   h_passes = sw->horizontal_weave * sw->vertical_subpasses;
   if (h_passes > 1 || sw->oversample > 1)
-    return 1.0;
+    {
+      if (sw->vertical_subpasses > 1 || sw->vertical_oversample > 1)
+	return 1.0;
+      /*
+       * Horizontal-only weave splits the row into x phases. It interleaves
+       * neighboring paper rows through the pass schedule, but a single paper
+       * row still has no Y-direction companion pass to complement a full
+       * low/high/low head curve.
+       */
+      if (sw->horizontal_weave > 1)
+	return 1.0 / (2.0 * (double) sw->horizontal_weave);
+      return 1.0 / (2.0 * (double) sw->oversample);
+    }
   return 0.0;
 }
 
