@@ -1251,6 +1251,47 @@ esc_i_feather_weight(int row_in_esc_i, int height, double edge)
   return base / average_base;
 }
 
+static double
+esc_i_feather_periodic_base(double offset_rows, double period_rows,
+			    double edge)
+{
+  static const double pi = 3.14159265358979323846;
+  double phase_offset;
+  double phase;
+  double shape;
+  if (period_rows <= 0.0)
+    return 1.0;
+  edge = esc_i_feather_clamp_edge(edge);
+  phase_offset = fmod(offset_rows, period_rows);
+  if (phase_offset < 0.0)
+    phase_offset += period_rows;
+  phase = (-pi / 2.0) + (2.0 * pi * phase_offset / period_rows);
+  shape = 0.5 * (sin(phase) + 1.0);
+  return edge + (1.0 - edge) * shape;
+}
+
+static double
+esc_i_feather_periodic_weight(int row_in_esc_i, int height, int separation,
+			      int period_rows, double edge)
+{
+  double average_base;
+  double sum = 0.0;
+  double base;
+  int i;
+  if (height <= 1 || separation <= 0 || period_rows <= 0)
+    return esc_i_feather_weight(row_in_esc_i, height, edge);
+  for (i = 0; i < height; i++)
+    sum += esc_i_feather_periodic_base((double) i * (double) separation,
+				       (double) period_rows, edge);
+  average_base = sum / (double) height;
+  if (average_base <= 0.0)
+    return 1.0;
+  base =
+    esc_i_feather_periodic_base((double) row_in_esc_i * (double) separation,
+				(double) period_rows, edge);
+  return base / average_base;
+}
+
 static int
 esc_i_feather_factor_range(int height, double edge,
 			   double *min_factor, double *max_factor)
@@ -1380,45 +1421,18 @@ esc_i_feather_safe_edge(const stp_vars_t *v, int height, double edge)
   return high;
 }
 
-static double
-esc_i_feather_limit_aggregate_delta(const stpi_softweave_t *sw, int height,
-				    double edge, double factor)
+static int
+esc_i_feather_pass_advance_rows(const stpi_softweave_t *sw)
 {
-  const double max_delta = 0.25;
-  int h_passes;
-  double average;
-  double sum;
-  double delta;
-  int i;
+  int oversample;
+  int advance;
   if (!sw)
-    return factor;
-  h_passes = sw->horizontal_weave * sw->vertical_subpasses;
-  if (h_passes <= 1 && sw->oversample <= 1)
-    return factor;
-
-  delta = factor - 1.0;
-  if (delta > max_delta)
-    factor = 1.0 + max_delta;
-  else if (delta < -max_delta)
-    factor = 1.0 - max_delta;
-
-  if (height <= 1)
-    return factor;
-  sum = 0.0;
-  for (i = 0; i < height; i++)
-    {
-      double clipped = esc_i_feather_weight(i, height, edge);
-      double clipped_delta = clipped - 1.0;
-      if (clipped_delta > max_delta)
-	clipped = 1.0 + max_delta;
-      else if (clipped_delta < -max_delta)
-	clipped = 1.0 - max_delta;
-      sum += clipped;
-    }
-  average = sum / (double) height;
-  if (average <= 0.0)
-    return factor;
-  return factor / average;
+    return 0;
+  oversample = sw->oversample > 0 ? sw->oversample : 1;
+  advance = sw->jets / oversample;
+  if (advance < 1)
+    advance = 1;
+  return advance;
 }
 
 double
@@ -1467,8 +1481,13 @@ stp_weave_esc_i_feather_factor(const stp_vars_t *v, int printed_row,
   if (row_in_esc_i >= height)
     row_in_esc_i = height - 1;
   safe_edge = esc_i_feather_safe_edge(v, height, edge);
-  factor = esc_i_feather_weight(row_in_esc_i, height, safe_edge);
-  factor = esc_i_feather_limit_aggregate_delta(sw, height, safe_edge, factor);
+  if (h_passes > 1 || sw->oversample > 1)
+    factor =
+      esc_i_feather_periodic_weight(row_in_esc_i, height, sw->separation,
+				    esc_i_feather_pass_advance_rows(sw),
+				    safe_edge);
+  else
+    factor = esc_i_feather_weight(row_in_esc_i, height, safe_edge);
   if (debug_row)
     stp_dprintf(STP_DBG_ROWS, v,
 		"esc-i feather row %d weave_row %d channel %d head_offset %d virtual_jets %d height %d pass %d jet %d effective_row %d factor %.6f\n",
