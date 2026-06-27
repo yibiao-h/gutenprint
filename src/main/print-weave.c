@@ -1380,6 +1380,47 @@ esc_i_feather_safe_edge(const stp_vars_t *v, int height, double edge)
   return high;
 }
 
+static double
+esc_i_feather_limit_aggregate_delta(const stpi_softweave_t *sw, int height,
+				    double edge, double factor)
+{
+  const double max_delta = 0.25;
+  int h_passes;
+  double average;
+  double sum;
+  double delta;
+  int i;
+  if (!sw)
+    return factor;
+  h_passes = sw->horizontal_weave * sw->vertical_subpasses;
+  if (h_passes <= 1 && sw->oversample <= 1)
+    return factor;
+
+  delta = factor - 1.0;
+  if (delta > max_delta)
+    factor = 1.0 + max_delta;
+  else if (delta < -max_delta)
+    factor = 1.0 - max_delta;
+
+  if (height <= 1)
+    return factor;
+  sum = 0.0;
+  for (i = 0; i < height; i++)
+    {
+      double clipped = esc_i_feather_weight(i, height, edge);
+      double clipped_delta = clipped - 1.0;
+      if (clipped_delta > max_delta)
+	clipped = 1.0 + max_delta;
+      else if (clipped_delta < -max_delta)
+	clipped = 1.0 - max_delta;
+      sum += clipped;
+    }
+  average = sum / (double) height;
+  if (average <= 0.0)
+    return factor;
+  return factor / average;
+}
+
 double
 stp_weave_esc_i_feather_factor(const stp_vars_t *v, int printed_row,
 			       int channel, double edge)
@@ -1392,6 +1433,7 @@ stp_weave_esc_i_feather_factor(const stp_vars_t *v, int printed_row,
   int row_in_esc_i;
   int height;
   double factor;
+  double safe_edge;
   int debug_row = (printed_row < 100 || (printed_row % 128) == 0);
   if (!sw || !sw->head_offset || channel < 0 || channel >= sw->ncolors ||
       sw->virtual_jets <= 0)
@@ -1424,9 +1466,9 @@ stp_weave_esc_i_feather_factor(const stp_vars_t *v, int printed_row,
     row_in_esc_i = (row_in_esc_i + (height / 2)) % height;
   if (row_in_esc_i >= height)
     row_in_esc_i = height - 1;
-  factor =
-    esc_i_feather_weight(row_in_esc_i, height,
-			 esc_i_feather_safe_edge(v, height, edge));
+  safe_edge = esc_i_feather_safe_edge(v, height, edge);
+  factor = esc_i_feather_weight(row_in_esc_i, height, safe_edge);
+  factor = esc_i_feather_limit_aggregate_delta(sw, height, safe_edge, factor);
   if (debug_row)
     stp_dprintf(STP_DBG_ROWS, v,
 		"esc-i feather row %d weave_row %d channel %d head_offset %d virtual_jets %d height %d pass %d jet %d effective_row %d factor %.6f\n",
