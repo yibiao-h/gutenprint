@@ -97,6 +97,7 @@ typedef struct
   int initialized;
   int valid_8bit;
   unsigned physical_channel_factor_count;
+  unsigned physical_channel_factor_phase_count;
   unsigned physical_channel_factor_debug_count;
   unsigned physical_channel_factor_cap_debug_count;
   int physical_channel_factors_active;
@@ -127,26 +128,47 @@ get_or_create_channel_group(stp_vars_t *v)
 }
 
 static void
-ensure_physical_channel_factors(stpi_channel_group_t *cg, unsigned count)
+ensure_physical_channel_factors(stpi_channel_group_t *cg, unsigned count,
+				unsigned phase_count)
 {
   double *factors;
   unsigned i;
-  unsigned copy_count;
-  if (!cg || count == 0 || cg->physical_channel_factor_count == count)
+  unsigned ch;
+  unsigned phase;
+  unsigned old_count;
+  unsigned old_phase_count;
+  if (!cg || count == 0)
     return;
 
-  factors = stp_malloc(sizeof(double) * count);
-  for (i = 0; i < count; i++)
+  if (phase_count == 0)
+    phase_count = 1;
+  if (cg->physical_channel_factor_count == count &&
+      cg->physical_channel_factor_phase_count == phase_count)
+    return;
+
+  factors = stp_malloc(sizeof(double) * count * phase_count);
+  for (i = 0; i < count * phase_count; i++)
     factors[i] = 1.0;
-  copy_count = cg->physical_channel_factor_count;
-  if (copy_count > count)
-    copy_count = count;
-  for (i = 0; i < copy_count; i++)
-    factors[i] = cg->physical_channel_factors[i];
+  old_count = cg->physical_channel_factor_count;
+  old_phase_count = cg->physical_channel_factor_phase_count;
+  if (old_phase_count == 0)
+    old_phase_count = 1;
+  for (ch = 0; ch < old_count && ch < count; ch++)
+    {
+      for (phase = 0; phase < phase_count; phase++)
+	{
+	  unsigned old_phase = phase;
+	  if (old_phase >= old_phase_count)
+	    old_phase = old_phase_count - 1;
+	  factors[ch * phase_count + phase] =
+	    cg->physical_channel_factors[ch * old_phase_count + old_phase];
+	}
+    }
 
   STP_SAFE_FREE(cg->physical_channel_factors);
   cg->physical_channel_factors = factors;
   cg->physical_channel_factor_count = count;
+  cg->physical_channel_factor_phase_count = phase_count;
 }
 
 static void
@@ -155,7 +177,8 @@ clear_physical_channel_factors(stpi_channel_group_t *cg)
   unsigned i;
   if (!cg || !cg->physical_channel_factors)
     return;
-  for (i = 0; i < cg->physical_channel_factor_count; i++)
+  for (i = 0; i < cg->physical_channel_factor_count *
+	 cg->physical_channel_factor_phase_count; i++)
     cg->physical_channel_factors[i] = 1.0;
   cg->physical_channel_factors_active = 0;
 }
@@ -203,6 +226,7 @@ stpi_channel_clear(void *vc)
   cg->initialized = 0;
   cg->valid_8bit = 0;
   cg->physical_channel_factor_count = 0;
+  cg->physical_channel_factor_phase_count = 0;
   cg->physical_channel_factor_debug_count = 0;
   cg->physical_channel_factor_cap_debug_count = 0;
   cg->physical_channel_factors_active = 0;
@@ -225,39 +249,56 @@ stp_channel_reset_channel(stp_vars_t *v, int channel)
 }
 
 void
-stp_channel_set_physical_channel_factors(stp_vars_t *v,
-					 const double *factors,
-					 unsigned count)
+stp_channel_set_physical_channel_factor_profiles(stp_vars_t *v,
+						 const double *factors,
+						 unsigned channel_count,
+						 unsigned phase_count)
 {
   stpi_channel_group_t *cg = get_or_create_channel_group(v);
   unsigned target_count;
-  unsigned i;
+  unsigned ch;
+  unsigned phase;
   int active = 0;
   if (!cg)
     return;
-  if (!factors || count == 0)
+  if (!factors || channel_count == 0)
     {
       clear_physical_channel_factors(cg);
       return;
     }
 
-  target_count = count;
+  if (phase_count == 0)
+    phase_count = 1;
+
+  target_count = channel_count;
   if (cg->total_channels > target_count)
     target_count = cg->total_channels;
-  ensure_physical_channel_factors(cg, target_count);
+  ensure_physical_channel_factors(cg, target_count, phase_count);
 
-  for (i = 0; i < cg->physical_channel_factor_count; i++)
+  for (ch = 0; ch < cg->physical_channel_factor_count; ch++)
     {
-      double factor = 1.0;
-      if (i < count)
-	factor = factors[i];
-      if (factor != factor || factor < 0.0)
-	factor = 1.0;
-      cg->physical_channel_factors[i] = factor;
-      if (factor < 0.999999 || factor > 1.000001)
-	active = 1;
+      for (phase = 0; phase < cg->physical_channel_factor_phase_count; phase++)
+	{
+	  double factor = 1.0;
+	  if (ch < channel_count && phase < phase_count)
+	    factor = factors[ch * phase_count + phase];
+	  if (factor != factor || factor < 0.0)
+	    factor = 1.0;
+	  cg->physical_channel_factors
+	    [ch * cg->physical_channel_factor_phase_count + phase] = factor;
+	  if (factor < 0.999999 || factor > 1.000001)
+	    active = 1;
+	}
     }
   cg->physical_channel_factors_active = active;
+}
+
+void
+stp_channel_set_physical_channel_factors(stp_vars_t *v,
+					 const double *factors,
+					 unsigned count)
+{
+  stp_channel_set_physical_channel_factor_profiles(v, factors, count, 1);
 }
 
 void
@@ -706,7 +747,7 @@ stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
 
   cg->input_channels = input_channel_count;
   cg->width = width;
-  ensure_physical_channel_factors(cg, cg->total_channels);
+  ensure_physical_channel_factors(cg, cg->total_channels, 1);
   cg->physical_channel_factor_debug_count = 0;
   cg->physical_channel_factor_cap_debug_count = 0;
   cg->alloc_data_1 =
@@ -1168,79 +1209,88 @@ apply_current_physical_channel_factors(const stp_vars_t *v,
 				       unsigned *zero_mask)
 {
   unsigned ch;
+  unsigned phase_count;
   if (!cg || !cg->physical_channel_factors_active ||
       !cg->physical_channel_factors)
     return;
+  phase_count = cg->physical_channel_factor_phase_count;
+  if (phase_count == 0)
+    phase_count = 1;
   for (ch = 0; ch < cg->total_channels; ch++)
     {
-      double factor = 1.0;
-      double applied_factor;
-      unsigned short max_value = 0;
-      unsigned i;
-      unsigned short *output;
-      int capped = 0;
-
-      if (ch < cg->physical_channel_factor_count)
-	factor = cg->physical_channel_factors[ch];
-      if (factor != factor || factor < 0.0)
-	factor = 1.0;
-      if (factor >= 0.999999 && factor <= 1.000001)
-	continue;
-
-      output = cg->output_data + ch;
-      for (i = 0; i < cg->width; i++)
+      unsigned phase;
+      for (phase = 0; phase < phase_count; phase++)
 	{
-	  if (*output > max_value)
-	    max_value = *output;
-	  output += cg->total_channels;
-	}
+	  double factor = 1.0;
+	  double applied_factor;
+	  unsigned short max_value = 0;
+	  unsigned i;
+	  unsigned short *output;
+	  int capped = 0;
 
-      applied_factor = factor;
-      if (max_value > 0 && applied_factor > 65535.0 / (double) max_value)
-	{
-	  applied_factor = 65535.0 / (double) max_value;
-	  capped = 1;
-	}
+	  if (ch < cg->physical_channel_factor_count)
+	    factor = cg->physical_channel_factors[ch * phase_count + phase];
+	  if (factor != factor || factor < 0.0)
+	    factor = 1.0;
+	  if (factor >= 0.999999 && factor <= 1.000001)
+	    continue;
+	  if (phase >= cg->width)
+	    continue;
 
-      if (max_value == 0)
-	{
-	  if (zero_mask && ch < sizeof(unsigned) * 8)
-	    *zero_mask |= 1U << ch;
-	  continue;
-	}
+	  output = cg->output_data + ch + phase * cg->total_channels;
+	  for (i = phase; i < cg->width; i += phase_count)
+	    {
+	      if (*output > max_value)
+		max_value = *output;
+	      output += cg->total_channels * phase_count;
+	    }
 
-      output = cg->output_data + ch;
-      for (i = 0; i < cg->width; i++)
-	{
-	  double scaled = (double) *output * applied_factor;
-	  if (scaled >= 65535.0)
-	    *output = 65535;
-	  else if (scaled <= 0.0)
-	    *output = 0;
-	  else
-	    *output = (unsigned short) (scaled + 0.5);
-	  output += cg->total_channels;
-	}
-      cg->valid_8bit = 0;
+	  applied_factor = factor;
+	  if (max_value > 0 &&
+	      applied_factor > 65535.0 / (double) max_value)
+	    {
+	      applied_factor = 65535.0 / (double) max_value;
+	      capped = 1;
+	    }
 
-      if ((stp_get_debug_level() & STP_DBG_INK) &&
-	  cg->physical_channel_factor_debug_count < 512)
-	{
-	  stp_dprintf(STP_DBG_INK, v,
-		      "esc-i feather apply channel %u factor %.6f applied %.6f max %u%s\n",
-		      ch, factor, applied_factor, (unsigned) max_value,
-		      capped ? " capped" : "");
-	  cg->physical_channel_factor_debug_count++;
-	}
-      if (capped && (stp_get_debug_level() & STP_DBG_INK) &&
-	  cg->physical_channel_factor_cap_debug_count < 128)
-	{
-	  stp_dprintf(STP_DBG_INK, v,
-		      "esc-i feather cap channel %u factor %.6f capped %.6f max %u\n",
-		      ch, factor, applied_factor, (unsigned) max_value);
-	  cg->physical_channel_factor_cap_debug_count++;
+	  if (max_value == 0)
+	    continue;
+
+	  output = cg->output_data + ch + phase * cg->total_channels;
+	  for (i = phase; i < cg->width; i += phase_count)
+	    {
+	      double scaled = (double) *output * applied_factor;
+	      if (scaled >= 65535.0)
+		*output = 65535;
+	      else if (scaled <= 0.0)
+		*output = 0;
+	      else
+		*output = (unsigned short) (scaled + 0.5);
+	      output += cg->total_channels * phase_count;
+	    }
+	  cg->valid_8bit = 0;
+
+	  if ((stp_get_debug_level() & STP_DBG_INK) &&
+	      cg->physical_channel_factor_debug_count < 512)
+	    {
+	      stp_dprintf(STP_DBG_INK, v,
+			  "esc-i feather apply channel %u phase %u/%u factor %.6f applied %.6f max %u%s\n",
+			  ch, phase, phase_count, factor, applied_factor,
+			  (unsigned) max_value, capped ? " capped" : "");
+	      cg->physical_channel_factor_debug_count++;
+	    }
+	  if (capped && (stp_get_debug_level() & STP_DBG_INK) &&
+	      cg->physical_channel_factor_cap_debug_count < 128)
+	    {
+	      stp_dprintf(STP_DBG_INK, v,
+			  "esc-i feather cap channel %u phase %u/%u factor %.6f capped %.6f max %u\n",
+			  ch, phase, phase_count, factor, applied_factor,
+			  (unsigned) max_value);
+	      cg->physical_channel_factor_cap_debug_count++;
+	    }
 	}
     }
+  (void) zero_mask;
 }
 
 static void NOINLINE

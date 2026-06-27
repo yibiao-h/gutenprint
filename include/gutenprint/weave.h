@@ -171,6 +171,14 @@ extern double
 stp_weave_esc_i_feather_factor(const stp_vars_t *v, int printed_row,
 			       int channel, double edge);
 
+extern unsigned
+stp_weave_esc_i_feather_phase_count(const stp_vars_t *v);
+
+extern void
+stp_weave_esc_i_feather_profile(const stp_vars_t *v, int printed_row,
+				int channel, double edge,
+				double *factors, unsigned factor_count);
+
 extern double
 stp_weave_esc_i_feather_overlap_strength(const stp_vars_t *v);
 

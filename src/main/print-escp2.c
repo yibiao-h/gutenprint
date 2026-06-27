@@ -230,13 +230,15 @@ escp2_esc_i_feather_max_density(const stp_vars_t *v,
 
 static void
 escp2_set_esc_i_feather_factors(stp_vars_t *v, const escp2_privdata_t *pd,
-				int printed_row, int errline, double *factors)
+				int printed_row, int errline, double *factors,
+				unsigned factor_phase_count)
 {
   int i;
   double edge;
   double max_density;
   double overlap_strength;
-  if (!escp2_esc_i_feather_enabled(pd) || !factors)
+  if (!escp2_esc_i_feather_enabled(pd) || !factors ||
+      factor_phase_count == 0)
     return;
 
   edge = escp2_esc_i_feather_edge(v);
@@ -247,30 +249,41 @@ escp2_set_esc_i_feather_factors(stp_vars_t *v, const escp2_privdata_t *pd,
   for (i = 0; i < pd->channels_in_use; i++)
     {
       double channel_density = escp2_esc_i_feather_channel_density(v, pd, i);
-      double raw_factor;
+      double *channel_factors = factors + i * factor_phase_count;
+      unsigned phase;
       stp_set_float_parameter(v, "EscIFeatherMaxDensity", channel_density);
 #if ESCP2_ESC_I_FEATHER_APPLY_ALL_CHANNELS
 #if ESCP2_ESC_I_FEATHER_PER_CHANNEL_MAPPING
-      raw_factor =
-	stp_weave_esc_i_feather_factor(v, printed_row, i, edge);
+      stp_weave_esc_i_feather_profile(v, printed_row, i, edge,
+				      channel_factors, factor_phase_count);
 #else
-      raw_factor =
-	stp_weave_esc_i_feather_factor(v, printed_row, 0, edge);
+      stp_weave_esc_i_feather_profile(v, printed_row, 0, edge,
+				      channel_factors, factor_phase_count);
 #endif
 #else
-      raw_factor = (i == 0) ?
-	stp_weave_esc_i_feather_factor(v, printed_row, i, edge) : 1.0;
+      if (i == 0)
+	stp_weave_esc_i_feather_profile(v, printed_row, i, edge,
+					channel_factors, factor_phase_count);
+      else
+	for (phase = 0; phase < factor_phase_count; phase++)
+	  channel_factors[phase] = 1.0;
 #endif
-      factors[i] = 1.0 + (raw_factor - 1.0) * overlap_strength;
+      for (phase = 0; phase < factor_phase_count; phase++)
+	channel_factors[phase] =
+	  1.0 + (channel_factors[phase] - 1.0) * overlap_strength;
       if (escp2_esc_i_feather_debug_row(printed_row))
 	stp_dprintf(STP_DBG_ROWS, v,
-		    "esc-i feather set y %d errline %d channel %d edge %.6f max_density %.6f raw_factor %.6f overlap_strength %.6f factor %.6f duplicate_line disabled %d\n",
-		    printed_row, errline, i, edge, channel_density, raw_factor,
-		    overlap_strength, factors[i],
+		    "esc-i feather set y %d errline %d channel %d edge %.6f max_density %.6f profile_first %.6f profile_last %.6f phases %u overlap_strength %.6f duplicate_line disabled %d\n",
+		    printed_row, errline, i, edge, channel_density,
+		    channel_factors[0],
+		    channel_factors[factor_phase_count - 1],
+		    factor_phase_count, overlap_strength,
 		    ESCP2_ESC_I_FEATHER_DISABLE_DUPLICATE_LINE ? 1 : 0);
     }
   stp_set_float_parameter(v, "EscIFeatherMaxDensity", max_density);
-  stp_channel_set_physical_channel_factors(v, factors, pd->channels_in_use);
+  stp_channel_set_physical_channel_factor_profiles(v, factors,
+						   pd->channels_in_use,
+						   factor_phase_count);
 }
 
 #define INCH(x)		(72 * x)
@@ -4569,6 +4582,7 @@ escp2_print_data(stp_vars_t *v, stp_image_t *image)
   int x_center = pd->cd_x_offset * pd->res->printed_hres / pd->micro_units;
   unsigned char *cd_mask = NULL;
   double *esc_i_feather_factors = NULL;
+  unsigned esc_i_feather_factor_phase_count = 1;
   int esc_i_feather_enabled = escp2_esc_i_feather_enabled(pd);
   int status = 1;
   if (pd->cd_outer_radius > 0)
@@ -4578,8 +4592,15 @@ escp2_print_data(stp_vars_t *v, stp_image_t *image)
       inner_r_sq = pd->cd_inner_radius * pd->cd_inner_radius;
     }
   if (esc_i_feather_enabled)
-    esc_i_feather_factors =
-      stp_malloc(sizeof(double) * pd->channels_in_use);
+    {
+      esc_i_feather_factor_phase_count =
+	stp_weave_esc_i_feather_phase_count(v);
+      if (esc_i_feather_factor_phase_count == 0)
+	esc_i_feather_factor_phase_count = 1;
+      esc_i_feather_factors =
+	stp_malloc(sizeof(double) * pd->channels_in_use *
+		   esc_i_feather_factor_phase_count);
+    }
   else
     stp_channel_clear_physical_channel_factors(v);
 
@@ -4590,7 +4611,8 @@ escp2_print_data(stp_vars_t *v, stp_image_t *image)
 
       if (esc_i_feather_enabled)
 	escp2_set_esc_i_feather_factors(v, pd, y, errline,
-					esc_i_feather_factors);
+					esc_i_feather_factors,
+					esc_i_feather_factor_phase_count);
 
       if (errline != errlast ||
 	  (esc_i_feather_enabled &&
