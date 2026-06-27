@@ -235,33 +235,38 @@ escp2_set_esc_i_feather_factors(stp_vars_t *v, const escp2_privdata_t *pd,
   int i;
   double edge;
   double max_density;
+  double overlap_strength;
   if (!escp2_esc_i_feather_enabled(pd) || !factors)
     return;
 
   edge = escp2_esc_i_feather_edge(v);
   max_density = escp2_esc_i_feather_max_density(v, pd);
+  overlap_strength = stp_weave_esc_i_feather_overlap_strength(v);
   stp_set_float_parameter(v, "EscIFeatherMaxDensity", max_density);
 
   for (i = 0; i < pd->channels_in_use; i++)
     {
       double channel_density = escp2_esc_i_feather_channel_density(v, pd, i);
+      double raw_factor;
       stp_set_float_parameter(v, "EscIFeatherMaxDensity", channel_density);
 #if ESCP2_ESC_I_FEATHER_APPLY_ALL_CHANNELS
 #if ESCP2_ESC_I_FEATHER_PER_CHANNEL_MAPPING
-      factors[i] =
+      raw_factor =
 	stp_weave_esc_i_feather_factor(v, printed_row, i, edge);
 #else
-      factors[i] =
+      raw_factor =
 	stp_weave_esc_i_feather_factor(v, printed_row, 0, edge);
 #endif
 #else
-      factors[i] = (i == 0) ?
+      raw_factor = (i == 0) ?
 	stp_weave_esc_i_feather_factor(v, printed_row, i, edge) : 1.0;
 #endif
+      factors[i] = 1.0 + (raw_factor - 1.0) * overlap_strength;
       if (escp2_esc_i_feather_debug_row(printed_row))
 	stp_dprintf(STP_DBG_ROWS, v,
-		    "esc-i feather set y %d errline %d channel %d edge %.6f max_density %.6f factor %.6f duplicate_line disabled %d\n",
-		    printed_row, errline, i, edge, channel_density, factors[i],
+		    "esc-i feather set y %d errline %d channel %d edge %.6f max_density %.6f raw_factor %.6f overlap_strength %.6f factor %.6f duplicate_line disabled %d\n",
+		    printed_row, errline, i, edge, channel_density, raw_factor,
+		    overlap_strength, factors[i],
 		    ESCP2_ESC_I_FEATHER_DISABLE_DUPLICATE_LINE ? 1 : 0);
     }
   stp_set_float_parameter(v, "EscIFeatherMaxDensity", max_density);

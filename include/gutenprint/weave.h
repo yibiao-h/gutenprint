@@ -171,6 +171,9 @@ extern double
 stp_weave_esc_i_feather_factor(const stp_vars_t *v, int printed_row,
 			       int channel, double edge);
 
+extern double
+stp_weave_esc_i_feather_overlap_strength(const stp_vars_t *v);
+
 #ifdef __cplusplus
   }
 #endif

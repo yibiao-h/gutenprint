@@ -1567,6 +1567,20 @@ stp_weave_esc_i_feather_factor(const stp_vars_t *v, int printed_row,
   return factor;
 }
 
+double
+stp_weave_esc_i_feather_overlap_strength(const stp_vars_t *v)
+{
+  stpi_softweave_t *sw = get_sw(v);
+  int h_passes;
+  if (!sw)
+    return 0.0;
+
+  h_passes = sw->horizontal_weave * sw->vertical_subpasses;
+  if (h_passes > 1 || sw->oversample > 1)
+    return 1.0;
+  return 0.0;
+}
+
 
 static stp_lineoff_t *
 stpi_get_lineoffsets(const stp_vars_t *v, stpi_softweave_t *sw,
