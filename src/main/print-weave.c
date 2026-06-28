@@ -1547,10 +1547,12 @@ stp_weave_esc_i_feather_profile(const stp_vars_t *v, int printed_row,
 				      period_rows, edge);
   for (phase = 0; phase < factor_count; phase++)
     {
-      int horizontal_phase = (int) (phase % (unsigned) horizontal_weave);
+      int horizontal_phase = (factor_count == 1)
+	? h_passes / 2 : (int) (phase % (unsigned) horizontal_weave);
+      int pass_step = (factor_count == 1) ? h_passes : horizontal_weave;
       int pass_count = 0;
       double factor_sum = 0.0;
-      for (i = horizontal_phase; i < h_passes; i += horizontal_weave)
+      for (i = horizontal_phase; i < h_passes; i += pass_step)
 	{
 	  stp_weave_t pass_w;
 	  double pass_factor;
@@ -1622,7 +1624,7 @@ stp_weave_esc_i_feather_overlap_strength(const stp_vars_t *v)
 	{
 	  if (sw->separation > 16)
 	    return 1.0 / (2.0 * (double) sw->horizontal_weave);
-	  return 0.8;
+	  return 1.0;
 	}
       return 1.0;
     }
