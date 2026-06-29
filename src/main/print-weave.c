@@ -1430,7 +1430,12 @@ esc_i_feather_next_effective_row(const stpi_softweave_t *sw,
     {
       int next_row = sw->linecounts[slot].v[channel];
       if (next_row >= 0)
-	row_in_esc_i = next_row;
+	{
+	  int missingstartrows = sw->passes[slot].missingstartrows;
+	  if (missingstartrows > 0 && next_row >= missingstartrows)
+	    next_row -= missingstartrows;
+	  row_in_esc_i = next_row;
+	}
     }
   return row_in_esc_i;
 }
@@ -1488,9 +1493,15 @@ unsigned
 stp_weave_esc_i_feather_phase_count(const stp_vars_t *v)
 {
   stpi_softweave_t *sw = get_sw(v);
-  if (!sw || sw->horizontal_weave <= 0)
+  int h_passes;
+  if (!sw)
     return 1;
-  return (unsigned) sw->horizontal_weave;
+  h_passes = sw->horizontal_weave * sw->vertical_subpasses;
+  if (h_passes <= 0)
+    return 1;
+  if (h_passes > STP_MAX_WEAVE)
+    return STP_MAX_WEAVE;
+  return (unsigned) h_passes;
 }
 
 void
@@ -1507,6 +1518,7 @@ stp_weave_esc_i_feather_profile(const stp_vars_t *v, int printed_row,
   int row_in_esc_i;
   int height;
   int i;
+  int use_periodic;
   unsigned phase;
   int period_rows = 0;
   double safe_edge;
@@ -1541,18 +1553,33 @@ stp_weave_esc_i_feather_profile(const stp_vars_t *v, int printed_row,
   height = esc_i_feather_effective_height(sw, &w);
   if (height <= 0)
     height = sw->virtual_jets;
-  if (h_passes > 1 || sw->oversample > 1)
+  use_periodic = horizontal_weave > 1;
+  if (use_periodic)
     period_rows = esc_i_feather_nozzle_span_period_rows(sw);
   safe_edge = esc_i_feather_safe_edge(v, height, sw->separation,
 				      period_rows, edge);
   for (phase = 0; phase < factor_count; phase++)
     {
-      int horizontal_phase = (factor_count == 1)
-	? h_passes / 2 : (int) (phase % (unsigned) horizontal_weave);
-      int pass_step = (factor_count == 1) ? h_passes : horizontal_weave;
+      int pass_phase;
+      int pass_step;
       int pass_count = 0;
       double factor_sum = 0.0;
-      for (i = horizontal_phase; i < h_passes; i += pass_step)
+      if (factor_count == 1)
+	{
+	  pass_phase = h_passes / 2;
+	  pass_step = h_passes;
+	}
+      else if (factor_count >= (unsigned) h_passes)
+	{
+	  pass_phase = (int) (phase % (unsigned) h_passes);
+	  pass_step = h_passes;
+	}
+      else
+	{
+	  pass_phase = (int) (phase % (unsigned) horizontal_weave);
+	  pass_step = horizontal_weave;
+	}
+      for (i = pass_phase; i < h_passes; i += pass_step)
 	{
 	  stp_weave_t pass_w;
 	  double pass_factor;
@@ -1561,7 +1588,7 @@ stp_weave_esc_i_feather_profile(const stp_vars_t *v, int printed_row,
 	    esc_i_feather_next_effective_row(sw, &pass_w, channel);
 	  if (row_in_esc_i >= height)
 	    row_in_esc_i = height - 1;
-	  if (h_passes > 1 || sw->oversample > 1)
+	  if (use_periodic)
 	    pass_factor =
 	      esc_i_feather_periodic_weight(row_in_esc_i, height,
 					    sw->separation, period_rows,
@@ -1571,7 +1598,7 @@ stp_weave_esc_i_feather_profile(const stp_vars_t *v, int printed_row,
 					       safe_edge);
 	  factor_sum += pass_factor;
 	  pass_count++;
-	  if (phase == 0 && i == horizontal_phase)
+	  if (phase == 0 && i == pass_phase)
 	    w = pass_w;
 	}
       if (pass_count > 0)
