@@ -169,6 +169,10 @@ typedef struct dither
   unsigned total_channel_count;
   unsigned *channel_index;
   unsigned *subchannel_count;
+  double *output_channel_factors;
+  unsigned output_channel_factor_count;
+  unsigned output_channel_factor_phase_count;
+  int output_channel_factors_active;
 
   stpi_ditherfunc_t *ditherfunc;
   void *aux_data;
@@ -179,6 +183,36 @@ typedef struct dither
 #define CHANNEL_COUNT(d) ((d)->total_channel_count)
 
 #define USMIN(a, b) ((a) < (b) ? (a) : (b))
+
+static inline unsigned short
+stpi_dither_output_channel_value(const stpi_dither_t *d, unsigned channel,
+				 int x, unsigned short value)
+{
+  unsigned phase_count;
+  unsigned phase;
+  double factor;
+  double scaled;
+  if (!d || !d->output_channel_factors_active ||
+      !d->output_channel_factors || value == 0)
+    return value;
+  phase_count = d->output_channel_factor_phase_count;
+  if (phase_count == 0)
+    phase_count = 1;
+  phase = (unsigned) (x >= 0 ? x : -x) % phase_count;
+  factor = 1.0;
+  if (channel < d->output_channel_factor_count)
+    factor = d->output_channel_factors[channel * phase_count + phase];
+  if (factor != factor || factor < 0.0)
+    factor = 1.0;
+  if (factor >= 0.999999 && factor <= 1.000001)
+    return value;
+  scaled = (double) value * factor;
+  if (scaled >= 65535.0)
+    return 65535;
+  if (scaled <= 0.0)
+    return 0;
+  return (unsigned short) (scaled + 0.5);
+}
 
 
 extern stpi_ditherfunc_t stpi_dither_predithered;

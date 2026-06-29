@@ -160,6 +160,11 @@ extern void stp_dither_set_transition(stp_vars_t *v, double);
 extern void stp_dither_set_randomizer(stp_vars_t *v, int color, double);
 extern void stp_dither_set_ink_spread(stp_vars_t *v, int spread);
 extern void stp_dither_set_adaptive_limit(stp_vars_t *v, double limit);
+extern void stp_dither_set_output_channel_factor_profiles(stp_vars_t *v,
+							  const double *factors,
+							  unsigned channel_count,
+							  unsigned phase_count);
+extern void stp_dither_clear_output_channel_factors(stp_vars_t *v);
 extern int stp_dither_get_first_position(stp_vars_t *v, int color, int subchan);
 extern int stp_dither_get_last_position(stp_vars_t *v, int color, int subchan);
 extern void stp_dither_set_inks_simple(stp_vars_t *v, int color, int nlevels,

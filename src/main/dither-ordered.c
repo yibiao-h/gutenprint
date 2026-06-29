@@ -379,8 +379,11 @@ stpi_dither_ordered(stp_vars_t *v,
 	    {
 	      for (i = 0; i < CHANNEL_COUNT(d); i++)
 		{
-		  if (raw[i] &&
-		      raw[i] >= ditherpoint(d, &(CHANNEL(d, i).dithermat), x))
+		  unsigned short value =
+		    stpi_dither_output_channel_value(d, (unsigned) i, x,
+						     raw[i]);
+		  if (value &&
+		      value >= ditherpoint(d, &(CHANNEL(d, i).dithermat), x))
 		    {
 		      set_row_ends(&(CHANNEL(d, i)), x);
 		      CHANNEL(d, i).ptr[d->ptr_offset] |= bit;
@@ -401,8 +404,11 @@ stpi_dither_ordered(stp_vars_t *v,
 		{
 		  stpi_dither_channel_t *dc = &CHANNEL(d, i);
 		  stpi_ordered_t *s = (stpi_ordered_t *) dc->aux_data;
-		  unsigned short bits = raw[i] >> s->shift;
-		  unsigned short val = raw[i] << dc->signif_bits;
+		  unsigned short value =
+		    stpi_dither_output_channel_value(d, (unsigned) i, x,
+						     raw[i]);
+		  unsigned short bits = value >> s->shift;
+		  unsigned short val = value << dc->signif_bits;
 		  val |= val >> s->shift;
 
 		  if (bits)
@@ -443,8 +449,11 @@ stpi_dither_ordered(stp_vars_t *v,
 	    {
 	      for (i = 0; i < CHANNEL_COUNT(d); i++)
 		{
-		  if (CHANNEL(d, i).ptr && raw[i])
-		    print_color_ordered(d, &(CHANNEL(d, i)), raw[i], x, row,
+		  unsigned short value =
+		    stpi_dither_output_channel_value(d, (unsigned) i, x,
+						     raw[i]);
+		  if (CHANNEL(d, i).ptr && value)
+		    print_color_ordered(d, &(CHANNEL(d, i)), value, x, row,
 					bit, length);
 		}
 	    }
@@ -460,8 +469,11 @@ stpi_dither_ordered(stp_vars_t *v,
 	    {
 	      for (i = 0; i < CHANNEL_COUNT(d); i++)
 		{
-		  if (CHANNEL(d, i).ptr && raw[i])
-		    print_color_ordered_new(d, &(CHANNEL(d, i)), raw[i], x,
+		  unsigned short value =
+		    stpi_dither_output_channel_value(d, (unsigned) i, x,
+						     raw[i]);
+		  if (CHANNEL(d, i).ptr && value)
+		    print_color_ordered_new(d, &(CHANNEL(d, i)), value, x,
 					    row, bit, length);
 		}
 	    }

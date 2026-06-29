@@ -335,11 +335,90 @@ stpi_dither_free(void *vd)
     stpi_dither_channel_destroy(&(CHANNEL(d, j)));
   STP_SAFE_FREE(d->offset0_table);
   STP_SAFE_FREE(d->offset1_table);
+  STP_SAFE_FREE(d->output_channel_factors);
   stp_dither_matrix_destroy(&(d->dither_matrix));
   stp_free(d->channel);
   stp_free(d->channel_index);
   stp_free(d->subchannel_count);
   stp_free(d);
+}
+
+static void
+ensure_output_channel_factors(stpi_dither_t *d, unsigned count,
+			      unsigned phase_count)
+{
+  size_t total;
+  if (!d)
+    return;
+  if (phase_count == 0)
+    phase_count = 1;
+  if (count == 0)
+    count = 1;
+  if (d->output_channel_factor_count == count &&
+      d->output_channel_factor_phase_count == phase_count &&
+      d->output_channel_factors)
+    return;
+  total = (size_t) count * (size_t) phase_count;
+  STP_SAFE_FREE(d->output_channel_factors);
+  d->output_channel_factors = stp_malloc(sizeof(double) * total);
+  d->output_channel_factor_count = count;
+  d->output_channel_factor_phase_count = phase_count;
+}
+
+void stp_dither_clear_output_channel_factors(stp_vars_t *v);
+
+void
+stp_dither_set_output_channel_factor_profiles(stp_vars_t *v,
+					      const double *factors,
+					      unsigned channel_count,
+					      unsigned phase_count)
+{
+  stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
+  unsigned count;
+  unsigned total;
+  unsigned i;
+  int active = 0;
+  if (!d)
+    return;
+  if (!factors || channel_count == 0 || phase_count == 0)
+    {
+      stp_dither_clear_output_channel_factors(v);
+      return;
+    }
+  count = channel_count;
+  if (count < CHANNEL_COUNT(d))
+    count = CHANNEL_COUNT(d);
+  ensure_output_channel_factors(d, count, phase_count);
+  if (!d->output_channel_factors)
+    return;
+  total = count * phase_count;
+  for (i = 0; i < total; i++)
+    d->output_channel_factors[i] = 1.0;
+  for (i = 0; i < channel_count * phase_count; i++)
+    {
+      double factor = factors[i];
+      if (factor != factor || factor < 0.0)
+	factor = 1.0;
+      d->output_channel_factors[i] = factor;
+      if (factor < 0.999999 || factor > 1.000001)
+	active = 1;
+    }
+  d->output_channel_factors_active = active;
+}
+
+void
+stp_dither_clear_output_channel_factors(stp_vars_t *v)
+{
+  stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
+  unsigned total;
+  unsigned i;
+  if (!d)
+    return;
+  total = d->output_channel_factor_count *
+    d->output_channel_factor_phase_count;
+  for (i = 0; d->output_channel_factors && i < total; i++)
+    d->output_channel_factors[i] = 1.0;
+  d->output_channel_factors_active = 0;
 }
 
 void

@@ -448,7 +448,9 @@ stpi_dither_ed(stp_vars_t *v,
 	{
 	  if (CHANNEL(d, i).ptr)
 	    {
-	      CHANNEL(d, i).v = raw[i];
+	      CHANNEL(d, i).v =
+		stpi_dither_output_channel_value(d, (unsigned) i, x,
+						 raw[i]);
 	      CHANNEL(d, i).o = CHANNEL(d, i).v;
 	      CHANNEL(d, i).b = CHANNEL(d, i).v;
 	      CHANNEL(d, i).v = UPDATE_COLOR(CHANNEL(d, i).v, ndither[i]);

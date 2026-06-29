@@ -103,8 +103,11 @@ stpi_dither_very_fast(stp_vars_t *v,
 	    {
 	      for (i = 0; i < CHANNEL_COUNT(d); i++)
 		{
-		  if (raw[i] &&
-		      raw[i] >= ditherpoint(d, &(CHANNEL(d, i).dithermat), x))
+		  unsigned short value =
+		    stpi_dither_output_channel_value(d, (unsigned) i, x,
+						     raw[i]);
+		  if (value &&
+		      value >= ditherpoint(d, &(CHANNEL(d, i).dithermat), x))
 		    {
 		      set_row_ends(&(CHANNEL(d, i)), x);
 		      CHANNEL(d, i).ptr[d->ptr_offset] |= bit;
@@ -123,8 +126,11 @@ stpi_dither_very_fast(stp_vars_t *v,
 	    {
 	      for (i = 0; i < CHANNEL_COUNT(d); i++)
 		{
-		  if (CHANNEL(d, i).ptr && raw[i])
-		    print_color_very_fast(d, &(CHANNEL(d, i)), raw[i], x, row,
+		  unsigned short value =
+		    stpi_dither_output_channel_value(d, (unsigned) i, x,
+						     raw[i]);
+		  if (CHANNEL(d, i).ptr && value)
+		    print_color_very_fast(d, &(CHANNEL(d, i)), value, x, row,
 					  bit, bit_patterns[i], length);
 		}
 	    }

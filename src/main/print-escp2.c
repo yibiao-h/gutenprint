@@ -29,6 +29,7 @@
 #endif
 #include <gutenprint/gutenprint.h>
 #include <gutenprint/channel.h>
+#include <gutenprint/dither.h>
 #include <gutenprint/gutenprint-intl-internal.h>
 #include <gutenprint/weave.h>
 #include "gutenprint-internal.h"
@@ -281,9 +282,10 @@ escp2_set_esc_i_feather_factors(stp_vars_t *v, const escp2_privdata_t *pd,
 		    ESCP2_ESC_I_FEATHER_DISABLE_DUPLICATE_LINE ? 1 : 0);
     }
   stp_set_float_parameter(v, "EscIFeatherMaxDensity", max_density);
-  stp_channel_set_physical_channel_factor_profiles(v, factors,
-						   pd->channels_in_use,
-						   factor_phase_count);
+  stp_channel_clear_physical_channel_factors(v);
+  stp_dither_set_output_channel_factor_profiles(v, factors,
+						pd->channels_in_use,
+						factor_phase_count);
 }
 
 #define INCH(x)		(72 * x)
@@ -4602,7 +4604,10 @@ escp2_print_data(stp_vars_t *v, stp_image_t *image)
 		   esc_i_feather_factor_phase_count);
     }
   else
-    stp_channel_clear_physical_channel_factors(v);
+    {
+      stp_channel_clear_physical_channel_factors(v);
+      stp_dither_clear_output_channel_factors(v);
+    }
 
   for (y = 0; y < pd->image_printed_height; y ++)
     {
@@ -4665,6 +4670,7 @@ escp2_print_data(stp_vars_t *v, stp_image_t *image)
     }
  done:
   stp_channel_clear_physical_channel_factors(v);
+  stp_dither_clear_output_channel_factors(v);
   if (esc_i_feather_factors)
     stp_free(esc_i_feather_factors);
   if (cd_mask)
