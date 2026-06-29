@@ -1649,8 +1649,10 @@ stp_weave_esc_i_feather_overlap_strength(const stp_vars_t *v)
 	return 1.0;
       if (sw->horizontal_weave > 1)
 	{
-	  if (sw->separation > 16)
-	    return 1.0 / (2.0 * (double) sw->horizontal_weave);
+	  if (sw->separation >= 32)
+	    return 0.9 / (double) sw->horizontal_weave;
+	  if (sw->separation >= 16)
+	    return 1.5 / (double) sw->horizontal_weave;
 	  return 1.0;
 	}
       return 1.0;
