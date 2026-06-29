@@ -51,7 +51,7 @@
 #endif
 
 #ifndef ESCP2_ESC_I_FEATHER_EDGE
-#define ESCP2_ESC_I_FEATHER_EDGE 0.95
+#define ESCP2_ESC_I_FEATHER_EDGE 1.0
 #endif
 
 #ifndef ESCP2_ESC_I_FEATHER_EDGE_MIN
@@ -138,12 +138,6 @@ static const double ink_darknesses[] =
 };
 
 static int
-escp2_esc_i_feather_enabled(const escp2_privdata_t *pd)
-{
-  return ESCP2_ESC_I_FEATHER_ENABLE && pd && pd->channels_in_use > 0;
-}
-
-static int
 escp2_esc_i_feather_debug_row(int row)
 {
   return row < 100 || (row % 128) == 0;
@@ -160,6 +154,13 @@ escp2_esc_i_feather_edge(const stp_vars_t *v)
   if (edge > ESCP2_ESC_I_FEATHER_EDGE_MAX)
     edge = ESCP2_ESC_I_FEATHER_EDGE_MAX;
   return edge;
+}
+
+static int
+escp2_esc_i_feather_enabled(const stp_vars_t *v, const escp2_privdata_t *pd)
+{
+  return ESCP2_ESC_I_FEATHER_ENABLE && pd && pd->channels_in_use > 0 &&
+    escp2_esc_i_feather_edge(v) < 0.999;
 }
 
 static double
@@ -238,7 +239,7 @@ escp2_set_esc_i_feather_factors(stp_vars_t *v, const escp2_privdata_t *pd,
   double edge;
   double max_density;
   double overlap_strength;
-  if (!escp2_esc_i_feather_enabled(pd) || !factors ||
+  if (!escp2_esc_i_feather_enabled(v, pd) || !factors ||
       factor_phase_count == 0)
     return;
 
@@ -4585,7 +4586,7 @@ escp2_print_data(stp_vars_t *v, stp_image_t *image)
   unsigned char *cd_mask = NULL;
   double *esc_i_feather_factors = NULL;
   unsigned esc_i_feather_factor_phase_count = 1;
-  int esc_i_feather_enabled = escp2_esc_i_feather_enabled(pd);
+  int esc_i_feather_enabled = escp2_esc_i_feather_enabled(v, pd);
   int status = 1;
   if (pd->cd_outer_radius > 0)
     {
