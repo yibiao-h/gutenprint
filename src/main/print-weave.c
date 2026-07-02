@@ -35,6 +35,8 @@
 #include <limits.h>
 #endif
 
+#define STP_ESC_I_FEATHER_SINGLE_PASS_STRENGTH 0.35
+
 static int
 gcd(int x, int y)
 {
@@ -1657,7 +1659,7 @@ stp_weave_esc_i_feather_overlap_strength(const stp_vars_t *v)
 	}
       return 1.0;
     }
-  return 0.0;
+  return STP_ESC_I_FEATHER_SINGLE_PASS_STRENGTH;
 }
 
 
