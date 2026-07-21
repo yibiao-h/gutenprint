@@ -19,32 +19,32 @@
       <InkName translate="text" name="Physical6" text="Physical Six Channel Raw" InkID="Extended">
         <Channels>
           <channel name="l18050_physical_k" index="0">
-            <subchannel color="0" subchannel="0" headOffset="1" name="Black" text="Black" translate="text">
+            <subchannel color="0" subchannel="0" headOffset="0" name="Black" text="Black" translate="text">
               <ChannelDensityParam name="RawChannelDensity0" />
             </subchannel>
           </channel>
           <channel name="l18050_physical_lc" index="1">
-            <subchannel color="2" subchannel="1" headOffset="0" name="LightCyan" text="Light Cyan" translate="text">
+            <subchannel color="2" subchannel="1" headOffset="1" name="LightCyan" text="Light Cyan" translate="text">
               <ChannelDensityParam name="RawChannelDensity1" />
             </subchannel>
           </channel>
           <channel name="l18050_physical_m" index="2">
-            <subchannel color="1" subchannel="0" headOffset="1" name="Magenta" text="Magenta" translate="text">
+            <subchannel color="1" subchannel="0" headOffset="0" name="Magenta" text="Magenta" translate="text">
               <ChannelDensityParam name="RawChannelDensity2" />
             </subchannel>
           </channel>
           <channel name="l18050_physical_c" index="3">
-            <subchannel color="2" subchannel="0" headOffset="0" name="Cyan" text="Cyan" translate="text">
+            <subchannel color="2" subchannel="0" headOffset="1" name="Cyan" text="Cyan" translate="text">
               <ChannelDensityParam name="RawChannelDensity3" />
             </subchannel>
           </channel>
           <channel name="l18050_physical_y" index="4">
-            <subchannel color="4" subchannel="0" headOffset="1" name="Yellow" text="Yellow" translate="text">
+            <subchannel color="4" subchannel="0" headOffset="0" name="Yellow" text="Yellow" translate="text">
               <ChannelDensityParam name="RawChannelDensity4" />
             </subchannel>
           </channel>
           <channel name="l18050_physical_lm" index="5">
-            <subchannel color="1" subchannel="1" headOffset="0" name="LightMagenta" text="Light Magenta" translate="text">
+            <subchannel color="1" subchannel="1" headOffset="1" name="LightMagenta" text="Light Magenta" translate="text">
               <ChannelDensityParam name="RawChannelDensity5" />
             </subchannel>
           </channel>
