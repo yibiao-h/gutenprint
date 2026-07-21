@@ -230,6 +230,20 @@ escp2_esc_i_feather_max_density(const stp_vars_t *v,
   return max_channel_density;
 }
 
+static int
+escp2_esc_i_feather_channel_correction_rows(const stp_vars_t *v,
+					    int channel)
+{
+  char parameter[40];
+  if (!v || channel < 0)
+    return 0;
+  snprintf(parameter, sizeof(parameter),
+	   "RawChannelCorrectionRows%d", channel);
+  if (!stp_check_int_parameter(v, parameter, STP_PARAMETER_ACTIVE))
+    return 0;
+  return stp_get_int_parameter(v, parameter);
+}
+
 static void
 escp2_set_esc_i_feather_factors(stp_vars_t *v, const escp2_privdata_t *pd,
 				int printed_row, int errline, double *factors,
@@ -252,31 +266,44 @@ escp2_set_esc_i_feather_factors(stp_vars_t *v, const escp2_privdata_t *pd,
     {
       double channel_density = escp2_esc_i_feather_channel_density(v, pd, i);
       double *channel_factors = factors + i * factor_phase_count;
+      int correction_rows =
+	escp2_esc_i_feather_channel_correction_rows(v, i);
       unsigned phase;
       stp_set_float_parameter(v, "EscIFeatherMaxDensity", channel_density);
+      /* Post-render leading rows cannot preserve this per-pass feather phase. */
+      if (correction_rows > 0)
+	{
+	  for (phase = 0; phase < factor_phase_count; phase++)
+	    channel_factors[phase] = 1.0;
+	}
+      else
+	{
 #if ESCP2_ESC_I_FEATHER_APPLY_ALL_CHANNELS
 #if ESCP2_ESC_I_FEATHER_PER_CHANNEL_MAPPING
-      stp_weave_esc_i_feather_profile(v, printed_row, i, edge,
-				      channel_factors, factor_phase_count);
+	  stp_weave_esc_i_feather_profile(v, printed_row, i, edge,
+					  channel_factors, factor_phase_count);
 #else
-      stp_weave_esc_i_feather_profile(v, printed_row, 0, edge,
-				      channel_factors, factor_phase_count);
+	  stp_weave_esc_i_feather_profile(v, printed_row, 0, edge,
+					  channel_factors, factor_phase_count);
 #endif
 #else
-      if (i == 0)
-	stp_weave_esc_i_feather_profile(v, printed_row, i, edge,
-					channel_factors, factor_phase_count);
-      else
-	for (phase = 0; phase < factor_phase_count; phase++)
-	  channel_factors[phase] = 1.0;
+	  if (i == 0)
+	    stp_weave_esc_i_feather_profile(v, printed_row, i, edge,
+					    channel_factors,
+					    factor_phase_count);
+	  else
+	    for (phase = 0; phase < factor_phase_count; phase++)
+	      channel_factors[phase] = 1.0;
 #endif
-      for (phase = 0; phase < factor_phase_count; phase++)
-	channel_factors[phase] =
-	  1.0 + (channel_factors[phase] - 1.0) * overlap_strength;
+	  for (phase = 0; phase < factor_phase_count; phase++)
+	    channel_factors[phase] =
+	      1.0 + (channel_factors[phase] - 1.0) * overlap_strength;
+	}
       if (escp2_esc_i_feather_debug_row(printed_row))
 	stp_dprintf(STP_DBG_ROWS, v,
-		    "esc-i feather set y %d errline %d channel %d edge %.6f max_density %.6f profile_first %.6f profile_last %.6f phases %u overlap_strength %.6f duplicate_line disabled %d\n",
+		    "esc-i feather set y %d errline %d channel %d edge %.6f max_density %.6f correction_rows %d profile_first %.6f profile_last %.6f phases %u overlap_strength %.6f duplicate_line disabled %d\n",
 		    printed_row, errline, i, edge, channel_density,
+		    correction_rows,
 		    channel_factors[0],
 		    channel_factors[factor_phase_count - 1],
 		    factor_phase_count, overlap_strength,
@@ -357,6 +384,18 @@ typedef struct
       "RawHeadOffset" #n, N_("Runtime Raw Head Offset"),               \
       "Color=Yes,Category=Advanced Printer Functionality",             \
       N_("Add a runtime offset to one physical print channel"),         \
+      STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,              \
+      STP_PARAMETER_LEVEL_INTERNAL, 0, 1, STP_CHANNEL_NONE, 1, 0        \
+    }, 0, 359, 0                                                       \
+  }
+
+#define RAW_CHANNEL_CORRECTION_ROWS_PARAMETER(n)                        \
+  {                                                                     \
+    {                                                                   \
+      "RawChannelCorrectionRows" #n,                                  \
+      N_("Runtime Raw Channel Correction Rows"),                      \
+      "Color=Yes,Category=Advanced Printer Functionality",            \
+      N_("Set post-render leading blank rows for one raw channel"),    \
       STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,              \
       STP_PARAMETER_LEVEL_INTERNAL, 0, 1, STP_CHANNEL_NONE, 1, 0        \
     }, 0, 359, 0                                                       \
@@ -1221,6 +1260,12 @@ static const int_param_t int_parameters[] =
   RAW_HEAD_OFFSET_PARAMETER(3),
   RAW_HEAD_OFFSET_PARAMETER(4),
   RAW_HEAD_OFFSET_PARAMETER(5),
+  RAW_CHANNEL_CORRECTION_ROWS_PARAMETER(0),
+  RAW_CHANNEL_CORRECTION_ROWS_PARAMETER(1),
+  RAW_CHANNEL_CORRECTION_ROWS_PARAMETER(2),
+  RAW_CHANNEL_CORRECTION_ROWS_PARAMETER(3),
+  RAW_CHANNEL_CORRECTION_ROWS_PARAMETER(4),
+  RAW_CHANNEL_CORRECTION_ROWS_PARAMETER(5),
   {
     {
       "BandEnhancement", N_("Quality Enhancement"), "Color=No,Category=Advanced Printer Functionality",
