@@ -4,11 +4,10 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd">
   <copyright>
-    * EPSON L18050 white/color raw inks.
-    * The main app prepares CMYK and white raw interop rasters.
+    * EPSON L18050 physical six-channel raw ink layout.
   </copyright>
   <escp2InkGroup name="l18050">
-    <InkList translate="text" name="ColorOffset" text="L18050 Color Offset Raw Inks">
+    <InkList translate="text" name="Physical" text="L18050 Physical Raw Inks">
       <Shades>
         <shade count="1">1.000000</shade>
         <shade count="1">1.000000</shade>
@@ -17,86 +16,36 @@
         <shade count="1">1.000000</shade>
         <shade count="1">1.000000</shade>
       </Shades>
-      <InkName translate="text" name="ColorOffset6" text="Offset Color + Base White Raw"
-        InkID="Extended">
+      <InkName translate="text" name="Physical6" text="Physical Six Channel Raw" InkID="Extended">
         <Channels>
-          <channel name="l18050_cyan_offset" index="0">
-            <subchannel color="2" subchannel="0" headOffset="189" name="Cyan" text="Cyan" translate="text">
-              <ChannelDensityParam name="CyanDensity" />
-            </subchannel>
-          </channel>
-          <channel name="l18050_light_magenta_offset" index="1">
-            <subchannel color="1" subchannel="1" headOffset="188" name="Magenta" text="Magenta" translate="text">
-              <ChannelDensityParam name="MagentaDensity" />
-            </subchannel>
-          </channel>
-          <channel name="l18050_yellow_offset" index="2">
-            <subchannel color="4" subchannel="0" headOffset="188" name="Yellow" text="Yellow" translate="text">
-              <ChannelDensityParam name="YellowDensity" />
-            </subchannel>
-          </channel>
-          <channel name="l18050_black_offset" index="3">
-            <subchannel color="0" subchannel="0" headOffset="189" name="Black" text="Black" translate="text">
-              <ChannelDensityParam name="BlackDensity" />
-            </subchannel>
-          </channel>
-          <channel name="l18050_white_light_cyan_base" index="4">
-            <subchannel color="2" subchannel="1" headOffset="0" name="LightCyanWhite" text="Light Cyan White"
-              translate="text">
-              <ChannelDensityParam name="GlossDensity" />
-            </subchannel>
-          </channel>
-          <channel name="l18050_white_magenta_base" index="5">
-            <subchannel color="1" subchannel="0" headOffset="1" name="MagentaWhite" text="Magenta White" translate="text">
-              <ChannelDensityParam name="GlossDensity" />
-            </subchannel>
-          </channel>
-        </Channels>
-      </InkName>
-    </InkList>
-
-    <InkList translate="text" name="WhiteOffset" text="L18050 White Offset Raw Inks">
-      <Shades>
-        <shade count="1">1.000000</shade>
-        <shade count="1">1.000000</shade>
-        <shade count="1">1.000000</shade>
-        <shade count="1">1.000000</shade>
-        <shade count="1">1.000000</shade>
-        <shade count="1">1.000000</shade>
-      </Shades>
-      <InkName translate="text" name="WhiteOffset6" text="Base Color + Offset White Raw"
-        InkID="Extended">
-        <Channels>
-          <channel name="l18050_cyan_base" index="0">
-            <subchannel color="2" subchannel="0" headOffset="1" name="Cyan" text="Cyan" translate="text">
-              <ChannelDensityParam name="CyanDensity" />
-            </subchannel>
-          </channel>
-          <channel name="l18050_light_magenta_base" index="1">
-            <subchannel color="1" subchannel="1" headOffset="0" name="Magenta" text="Magenta" translate="text">
-              <ChannelDensityParam name="MagentaDensity" />
-            </subchannel>
-          </channel>
-          <channel name="l18050_yellow_base" index="2">
-            <subchannel color="4" subchannel="0" headOffset="0" name="Yellow" text="Yellow" translate="text">
-              <ChannelDensityParam name="YellowDensity" />
-            </subchannel>
-          </channel>
-          <channel name="l18050_black_base" index="3">
+          <channel name="l18050_physical_k" index="0">
             <subchannel color="0" subchannel="0" headOffset="1" name="Black" text="Black" translate="text">
-              <ChannelDensityParam name="BlackDensity" />
+              <ChannelDensityParam name="RawChannelDensity0" />
             </subchannel>
           </channel>
-          <channel name="l18050_white_light_cyan_offset" index="4">
-            <subchannel color="2" subchannel="1" headOffset="188" name="LightCyanWhite"
-              text="Light Cyan White" translate="text">
-              <ChannelDensityParam name="GlossDensity" />
+          <channel name="l18050_physical_lc" index="1">
+            <subchannel color="2" subchannel="1" headOffset="0" name="LightCyan" text="Light Cyan" translate="text">
+              <ChannelDensityParam name="RawChannelDensity1" />
             </subchannel>
           </channel>
-          <channel name="l18050_white_magenta_offset" index="5">
-            <subchannel color="1" subchannel="0" headOffset="189" name="MagentaWhite" text="Magenta White"
-              translate="text">
-              <ChannelDensityParam name="GlossDensity" />
+          <channel name="l18050_physical_m" index="2">
+            <subchannel color="1" subchannel="0" headOffset="1" name="Magenta" text="Magenta" translate="text">
+              <ChannelDensityParam name="RawChannelDensity2" />
+            </subchannel>
+          </channel>
+          <channel name="l18050_physical_c" index="3">
+            <subchannel color="2" subchannel="0" headOffset="0" name="Cyan" text="Cyan" translate="text">
+              <ChannelDensityParam name="RawChannelDensity3" />
+            </subchannel>
+          </channel>
+          <channel name="l18050_physical_y" index="4">
+            <subchannel color="4" subchannel="0" headOffset="1" name="Yellow" text="Yellow" translate="text">
+              <ChannelDensityParam name="RawChannelDensity4" />
+            </subchannel>
+          </channel>
+          <channel name="l18050_physical_lm" index="5">
+            <subchannel color="1" subchannel="1" headOffset="0" name="LightMagenta" text="Light Magenta" translate="text">
+              <ChannelDensityParam name="RawChannelDensity5" />
             </subchannel>
           </channel>
         </Channels>

@@ -4,17 +4,17 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd">
     <copyright>
-        * EPSON ET-8550 86-nozzle white/color raw model.
+        * EPSON ET-8550 physical 180-nozzle six-channel raw model.
 </copyright>
     <escp2Model id="902" base="escp2/model/model_900.xml">
         <inkGroup src="escp2/inks/et8550.xml" />
         <ChannelNames>
+            <ChannelName translate="text" name="MatteBlack" text="Matte Black" />
+            <ChannelName translate="text" name="PhotoBlack" text="Photo Black" />
             <ChannelName translate="text" name="Cyan" text="Cyan" />
-            <ChannelName translate="text" name="Magenta" text="Magenta" />
             <ChannelName translate="text" name="Yellow" text="Yellow" />
-            <ChannelName translate="text" name="Black" text="Black" />
-            <ChannelName translate="text" name="PhotoblackWhite" text="Photoblack White" />
-            <ChannelName translate="text" name="GrayWhite" text="Gray White" />
+            <ChannelName translate="text" name="Magenta" text="Magenta" />
+            <ChannelName translate="text" name="Gray" text="Gray" />
         </ChannelNames>
     </escp2Model>
 </gutenprint>

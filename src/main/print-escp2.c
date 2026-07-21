@@ -340,6 +340,28 @@ typedef struct
   int defval;
 } int_param_t;
 
+#define RAW_CHANNEL_DENSITY_PARAMETER(n)                                \
+  {                                                                     \
+    {                                                                   \
+      "RawChannelDensity" #n, N_("Runtime Raw Channel Density"),       \
+      "Color=Yes,Category=Advanced Output Control",                    \
+      N_("Set the density for one runtime raw channel"),                \
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_FEATURE,           \
+      STP_PARAMETER_LEVEL_INTERNAL, 0, 1, STP_CHANNEL_NONE, 1, 0        \
+    }, 0.0, 2.0, 1.0, 1                                                \
+  }
+
+#define RAW_HEAD_OFFSET_PARAMETER(n)                                    \
+  {                                                                     \
+    {                                                                   \
+      "RawHeadOffset" #n, N_("Runtime Raw Head Offset"),               \
+      "Color=Yes,Category=Advanced Printer Functionality",             \
+      N_("Add a runtime offset to one physical print channel"),         \
+      STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,              \
+      STP_PARAMETER_LEVEL_INTERNAL, 0, 1, STP_CHANNEL_NONE, 1, 0        \
+    }, 0, 359, 0                                                       \
+  }
+
 static const stp_parameter_t the_parameters[] =
 {
 #if 0
@@ -666,6 +688,12 @@ sizeof(the_parameters) / sizeof(const stp_parameter_t);
 
 static const float_param_t float_parameters[] =
 {
+  RAW_CHANNEL_DENSITY_PARAMETER(0),
+  RAW_CHANNEL_DENSITY_PARAMETER(1),
+  RAW_CHANNEL_DENSITY_PARAMETER(2),
+  RAW_CHANNEL_DENSITY_PARAMETER(3),
+  RAW_CHANNEL_DENSITY_PARAMETER(4),
+  RAW_CHANNEL_DENSITY_PARAMETER(5),
   {
     {
       "CyanDensity", N_("Cyan Density"), "Color=Yes,Category=Output Level Adjustment",
@@ -1178,6 +1206,21 @@ static const unsigned int float_parameter_count =
 
 static const int_param_t int_parameters[] =
 {
+  {
+    {
+      "RawActiveNozzles", N_("Runtime Active Nozzles"),
+      "Color=Yes,Category=Advanced Printer Functionality",
+      N_("Set the active nozzle count for the current raw print job"),
+      STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+      STP_PARAMETER_LEVEL_INTERNAL, 0, 1, STP_CHANNEL_NONE, 1, 0
+    }, 1, 180, 180
+  },
+  RAW_HEAD_OFFSET_PARAMETER(0),
+  RAW_HEAD_OFFSET_PARAMETER(1),
+  RAW_HEAD_OFFSET_PARAMETER(2),
+  RAW_HEAD_OFFSET_PARAMETER(3),
+  RAW_HEAD_OFFSET_PARAMETER(4),
+  RAW_HEAD_OFFSET_PARAMETER(5),
   {
     {
       "BandEnhancement", N_("Quality Enhancement"), "Color=No,Category=Advanced Printer Functionality",
@@ -3887,8 +3930,13 @@ setup_head_offset(stp_vars_t *v)
 	  int j;
 	  for (j = 0; j < channel->n_subchannels; j++)
 	    {
+	      char parameter[32];
+	      int runtime_offset = 0;
+	      snprintf(parameter, sizeof(parameter), "RawHeadOffset%d", channel_id);
+	      if (stp_check_int_parameter(v, parameter, STP_PARAMETER_ACTIVE))
+		runtime_offset = stp_get_int_parameter(v, parameter);
 	      pd->head_offset[channel_id] =
-		channel->subchannels[j].head_offset;
+		channel->subchannels[j].head_offset + runtime_offset;
 	      channel_id++;
 	    }
 	}
@@ -3903,8 +3951,13 @@ setup_head_offset(stp_vars_t *v)
 	      int j;
 	      for (j = 0; j < channel->n_subchannels; j++)
 		{
+		  char parameter[32];
+		  int runtime_offset = 0;
+		  snprintf(parameter, sizeof(parameter), "RawHeadOffset%d", channel_id);
+		  if (stp_check_int_parameter(v, parameter, STP_PARAMETER_ACTIVE))
+		    runtime_offset = stp_get_int_parameter(v, parameter);
 		  pd->head_offset[channel_id] =
-		    channel->subchannels[j].head_offset;
+		    channel->subchannels[j].head_offset + runtime_offset;
 		  channel_id++;
 		}
 	    }
@@ -4226,6 +4279,8 @@ setup_softweave_parameters(stp_vars_t *v)
       pd->nozzle_start = escp2_nozzle_start(v);
       pd->min_nozzles = escp2_min_nozzles(v);
     }
+  if (stp_check_int_parameter(v, "RawActiveNozzles", STP_PARAMETER_ACTIVE))
+    pd->nozzles = stp_get_int_parameter(v, "RawActiveNozzles");
 }
 
 static void

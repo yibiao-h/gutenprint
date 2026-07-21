@@ -4,7 +4,7 @@
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd">
 <copyright>
- * EPSON L18050 86-nozzle white/color raw model.
+ * EPSON L18050 physical 180-nozzle six-channel raw model.
  * This file belongs to the isolated worker distribution.
 </copyright>
 <escp2Model id="900" base="escp2/model/base/baseline_360.xml">
@@ -24,14 +24,14 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <sendZeroAdvance/>
  <supportsD4Mode/>
  <headConfiguration type="default">
-  <Nozzles>86</Nozzles>
+  <Nozzles>180</Nozzles>
   <MinNozzles>1</MinNozzles>
   <FirstNozzle>0</FirstNozzle>
   <NozzleSeparation>2</NozzleSeparation>
  </headConfiguration>
  <physicalChannels>6</physicalChannels>
  <resolutionScale>14400</resolutionScale>
- <minimumResolution>1440 1440</minimumResolution>
+ <minimumResolution>720 1440</minimumResolution>
  <maximumResolution>2880 5760</maximumResolution>
  <extraVerticalFeed>10</extraVerticalFeed>
  <separationRows>1</separationRows>
@@ -47,14 +47,24 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <margins interleave="printer" media="sheet">0 0 0 0</margins>
  <AlignmentChoices>4 15 0 0</AlignmentChoices>
  <ChannelNames>
-  <ChannelName translate="text" name="Cyan" text="Cyan"/>
-  <ChannelName translate="text" name="Magenta" text="Magenta"/>
-  <ChannelName translate="text" name="Yellow" text="Yellow"/>
   <ChannelName translate="text" name="Black" text="Black"/>
-  <ChannelName translate="text" name="LightCyanWhite" text="Light Cyan White"/>
-  <ChannelName translate="text" name="MagentaWhite" text="Magenta White"/>
+  <ChannelName translate="text" name="LightCyan" text="Light Cyan"/>
+  <ChannelName translate="text" name="Magenta" text="Magenta"/>
+  <ChannelName translate="text" name="Cyan" text="Cyan"/>
+  <ChannelName translate="text" name="Yellow" text="Yellow"/>
+  <ChannelName translate="text" name="LightMagenta" text="Light Magenta"/>
  </ChannelNames>
  <resolutions>
+  <resolution translate="text" name="720x1440sw" text="720 x 1440 DPI">
+   <physicalResolution>720 1440</physicalResolution>
+   <parameter type="float" name="escp2_density">1.000000</parameter>
+   <parameter type="integer" name="escp2_ink_type">19</parameter>
+   <parameter type="integer" name="escp2_base_res">720</parameter>
+   <parameter type="integer" name="escp2_bits">2</parameter>
+   <parameter type="float" name="DropSize1">0.300000</parameter>
+   <parameter type="float" name="DropSize2">0.650000</parameter>
+   <parameter type="float" name="DropSize3">1.000000</parameter>
+  </resolution>
   <resolution translate="text" name="1440x1440ov" text="1440 x 1440 DPI">
    <physicalResolution>2880 1440</physicalResolution>
    <printedResolution>1440 1440</printedResolution>

@@ -282,7 +282,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 <paper translate="text" name="ColorOffset" text="Color Offset Raw Inks" class="photo">
  <parameter type="integer" name="FeedSequence">3</parameter>
 
- <ink translate="text" name="ColorOffset" text="Color Offset Raw Inks">
+ <ink translate="text" name="Physical" text="Physical Raw Inks">
   <parameter type="float" name="Density">1.000000</parameter>
   <parameter type="float" name="SubchannelCutoff">1.000000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>

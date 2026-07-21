@@ -45,9 +45,7 @@ pkgxmldata_DATA =				\
 	f360_ultrachrome_k3v.xml		\
 	f360_ultrachrome_k3v_2.xml		\
 	et8550.xml				\
-	et8550_83.xml				\
 	l18050.xml				\
-	l18050_83.xml				\
 	nx100.xml				\
 	photo_gen0.xml				\
 	photo_gen1.xml				\
