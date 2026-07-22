@@ -19,32 +19,32 @@
       <InkName translate="text" name="Physical6" text="Physical Six Channel Raw" InkID="Extended">
         <Channels>
           <channel name="et8550_physical_mb" index="0">
-            <subchannel color="0" subchannel="0" headOffset="0" name="MatteBlack" text="Matte Black" translate="text">
+            <subchannel color="0" subchannel="0" headOffset="1" name="MatteBlack" text="Matte Black" translate="text">
               <ChannelDensityParam name="RawChannelDensity0" />
             </subchannel>
           </channel>
           <channel name="et8550_physical_pb" index="1">
-            <subchannel color="0" subchannel="4" headOffset="1" name="PhotoBlack" text="Photo Black" translate="text">
+            <subchannel color="0" subchannel="4" headOffset="0" name="PhotoBlack" text="Photo Black" translate="text">
               <ChannelDensityParam name="RawChannelDensity1" />
             </subchannel>
           </channel>
           <channel name="et8550_physical_c" index="2">
-            <subchannel color="2" subchannel="0" headOffset="0" name="Cyan" text="Cyan" translate="text">
+            <subchannel color="2" subchannel="0" headOffset="1" name="Cyan" text="Cyan" translate="text">
               <ChannelDensityParam name="RawChannelDensity2" />
             </subchannel>
           </channel>
           <channel name="et8550_physical_y" index="3">
-            <subchannel color="4" subchannel="0" headOffset="1" name="Yellow" text="Yellow" translate="text">
+            <subchannel color="4" subchannel="0" headOffset="0" name="Yellow" text="Yellow" translate="text">
               <ChannelDensityParam name="RawChannelDensity3" />
             </subchannel>
           </channel>
           <channel name="et8550_physical_m" index="4">
-            <subchannel color="1" subchannel="0" headOffset="0" name="Magenta" text="Magenta" translate="text">
+            <subchannel color="1" subchannel="0" headOffset="1" name="Magenta" text="Magenta" translate="text">
               <ChannelDensityParam name="RawChannelDensity4" />
             </subchannel>
           </channel>
           <channel name="et8550_physical_g" index="5">
-            <subchannel color="0" subchannel="1" headOffset="1" name="Gray" text="Gray" translate="text">
+            <subchannel color="0" subchannel="1" headOffset="0" name="Gray" text="Gray" translate="text">
               <ChannelDensityParam name="RawChannelDensity5" />
             </subchannel>
           </channel>
