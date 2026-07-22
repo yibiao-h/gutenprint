@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+<gutenprint xmlns="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd">
+    <copyright>
+        * EPSON ET-2750 physical 60-nozzle four-channel raw model.
+    </copyright>
+    <escp2Model id="901" base="escp2/model/model_80.xml">
+        <media src="escp2/media/standard.xml" />
+        <inkGroup src="escp2/inks/et2750.xml" />
+        <headConfiguration type="default">
+            <Nozzles>60</Nozzles>
+            <MinNozzles>1</MinNozzles>
+            <FirstNozzle>1</FirstNozzle>
+            <NozzleSeparation>2</NozzleSeparation>
+        </headConfiguration>
+        <headConfiguration type="black">
+            <Nozzles>60</Nozzles>
+            <MinNozzles>1</MinNozzles>
+            <FirstNozzle>1</FirstNozzle>
+            <NozzleSeparation>2</NozzleSeparation>
+        </headConfiguration>
+        <headConfiguration type="fast">
+            <Nozzles>60</Nozzles>
+            <MinNozzles>1</MinNozzles>
+            <FirstNozzle>1</FirstNozzle>
+            <NozzleSeparation>2</NozzleSeparation>
+        </headConfiguration>
+        <physicalChannels>4</physicalChannels>
+        <ChannelNames>
+            <ChannelName translate="text" name="Black" text="Black" />
+            <ChannelName translate="text" name="Yellow" text="Yellow" />
+            <ChannelName translate="text" name="Magenta" text="Magenta" />
+            <ChannelName translate="text" name="Cyan" text="Cyan" />
+        </ChannelNames>
+    </escp2Model>
+</gutenprint>

@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<gutenprint xmlns="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd">
+  <copyright>
+    * EPSON ET-2750 physical four-channel raw ink layout.
+  </copyright>
+  <escp2InkGroup name="et2750">
+    <InkList translate="text" name="Physical" text="ET-2750 Physical Raw Inks">
+      <Shades>
+        <shade count="1">1.000000</shade>
+        <shade count="1">1.000000</shade>
+        <shade count="1">1.000000</shade>
+        <shade count="1">1.000000</shade>
+      </Shades>
+      <InkName translate="text" name="Physical4" text="Physical Four Channel Raw" InkID="Extended">
+        <Channels>
+          <channel name="et2750_physical_k" index="0">
+            <subchannel color="0" subchannel="0" headOffset="1" name="Black" text="Black" translate="text">
+              <ChannelDensityParam name="RawChannelDensity0" />
+            </subchannel>
+          </channel>
+          <channel name="et2750_physical_y" index="1">
+            <subchannel color="4" subchannel="0" headOffset="240" name="Yellow" text="Yellow" translate="text">
+              <ChannelDensityParam name="RawChannelDensity1" />
+            </subchannel>
+          </channel>
+          <channel name="et2750_physical_m" index="2">
+            <subchannel color="1" subchannel="0" headOffset="120" name="Magenta" text="Magenta" translate="text">
+              <ChannelDensityParam name="RawChannelDensity2" />
+            </subchannel>
+          </channel>
+          <channel name="et2750_physical_c" index="3">
+            <subchannel color="2" subchannel="0" headOffset="0" name="Cyan" text="Cyan" translate="text">
+              <ChannelDensityParam name="RawChannelDensity3" />
+            </subchannel>
+          </channel>
+        </Channels>
+      </InkName>
+    </InkList>
+  </escp2InkGroup>
+</gutenprint>

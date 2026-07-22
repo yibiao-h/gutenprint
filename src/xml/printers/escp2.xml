@@ -84,7 +84,7 @@
       <printer translate="name" name="Epson Expression ET-2600 EcoTank" driver="escp2-et2600" manufacturer="Epson" model="80" parameters="cx3500_params" />
       <printer translate="name" name="Epson Expression ET-2650 EcoTank" driver="escp2-et2650" manufacturer="Epson" model="80" parameters="cx3500_params" />
       <printer translate="name" name="Epson Expression ET-2700 EcoTank" driver="escp2-et2700" manufacturer="Epson" model="80" parameters="cx3500_params" />
-      <printer translate="name" name="Epson Expression ET-2750 EcoTank" driver="escp2-et2750" manufacturer="Epson" model="80" parameters="cx3500_params" />
+      <printer translate="name" name="Epson ET-2750" driver="escp2-et2750" manufacturer="Epson" model="901" parameters="cx3500_params">physical four-channel raw driver</printer>
       <printer translate="name" name="Epson Expression ET-2750 EcoTank Business Edition" driver="escp2-et2750be" manufacturer="Epson" model="80" parameters="cx3500_params" />
       <printer translate="name" name="Epson Expression Home XP-240" driver="escp2-xp240" manufacturer="Epson" model="135" parameters="standard_params" />
       <printer translate="name" name="Epson Expression Home XP-245" driver="escp2-xp245" manufacturer="Epson" model="121" parameters="standard_params" />
