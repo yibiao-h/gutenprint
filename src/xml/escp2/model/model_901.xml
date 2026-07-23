@@ -4,26 +4,26 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd">
     <copyright>
-        * EPSON ET-2750 physical 60-nozzle four-channel raw model.
+        * EPSON ET-2750 physical 60-position, 59-active-nozzle four-channel raw model.
     </copyright>
     <escp2Model id="901" base="escp2/model/model_80.xml">
         <media src="escp2/media/standard.xml" />
         <inkGroup src="escp2/inks/et2750.xml" />
         <headConfiguration type="default">
-            <Nozzles>60</Nozzles>
-            <MinNozzles>1</MinNozzles>
+            <Nozzles>59</Nozzles>
+            <MinNozzles>60</MinNozzles>
             <FirstNozzle>1</FirstNozzle>
             <NozzleSeparation>2</NozzleSeparation>
         </headConfiguration>
         <headConfiguration type="black">
-            <Nozzles>60</Nozzles>
-            <MinNozzles>1</MinNozzles>
+            <Nozzles>59</Nozzles>
+            <MinNozzles>60</MinNozzles>
             <FirstNozzle>1</FirstNozzle>
             <NozzleSeparation>2</NozzleSeparation>
         </headConfiguration>
         <headConfiguration type="fast">
-            <Nozzles>60</Nozzles>
-            <MinNozzles>1</MinNozzles>
+            <Nozzles>59</Nozzles>
+            <MinNozzles>60</MinNozzles>
             <FirstNozzle>1</FirstNozzle>
             <NozzleSeparation>2</NozzleSeparation>
         </headConfiguration>
