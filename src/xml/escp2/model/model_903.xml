@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+
+<gutenprint xmlns="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd">
+<copyright>
+ * EPSON L6170 128-nozzle four-channel raw model.
+ * This file belongs to the isolated worker distribution.
+</copyright>
+<escp2Model id="903" base="escp2/model/base/baseline_600.xml">
+ <media src="escp2/media/standard.xml"/>
+ <inputSlots src="escp2/inputslots/default.xml"/>
+ <qualityPresets src="escp2/qualitypresets/standard.xml"/>
+ <inkGroup src="escp2/inks/uTFP1S.xml"/>
+ <mediaSizes src="escp2/mediasizes/standard.xml"/>
+ <preinitSequence>\000\000\000\033\001@EJL\0401284.4\012@EJL\040\040\040\040\040\012\033@</preinitSequence>
+ <preinitRemoteSequence>PM\002\000\000\000</preinitRemoteSequence>
+ <postinitRemoteSequence>JE\001\000\000</postinitRemoteSequence>
+ <commandSet>2000</commandSet>
+ <borderless>Full</borderless>
+ <supportsVariableDropsizes/>
+ <hasFastGraymode/>
+ <sendZeroAdvance/>
+ <supportsD4Mode/>
+ <preferredEnvelopeOrientation>Portrait</preferredEnvelopeOrientation>
+ <headConfiguration type="default">
+  <Nozzles>128</Nozzles>
+  <MinNozzles>1</MinNozzles>
+  <FirstNozzle>0</FirstNozzle>
+  <NozzleSeparation>2</NozzleSeparation>
+ </headConfiguration>
+ <headConfiguration type="black">
+  <Nozzles>128</Nozzles>
+  <MinNozzles>1</MinNozzles>
+  <FirstNozzle>0</FirstNozzle>
+  <NozzleSeparation>2</NozzleSeparation>
+ </headConfiguration>
+ <headConfiguration type="fast">
+  <Nozzles>128</Nozzles>
+  <MinNozzles>1</MinNozzles>
+  <FirstNozzle>0</FirstNozzle>
+  <NozzleSeparation>2</NozzleSeparation>
+ </headConfiguration>
+ <physicalChannels>4</physicalChannels>
+ <resolutionScale>14400</resolutionScale>
+ <minimumResolution>1200 600</minimumResolution>
+ <maximumResolution>2400 2400</maximumResolution>
+ <extraVerticalFeed>10</extraVerticalFeed>
+ <separationRows>1</separationRows>
+ <zeroMarginOffset>160</zeroMarginOffset>
+ <microLeftMargin>70</microLeftMargin>
+ <minHorizontalAlignment>1</minHorizontalAlignment>
+ <baseHorizontalAlignment>28800</baseHorizontalAlignment>
+ <bidirectionalAutoUpperLimit>16588800</bidirectionalAutoUpperLimit>
+ <minimumMediaSize>144 144</minimumMediaSize>
+ <maximumMediaSize>612 86400</maximumMediaSize>
+ <maximumImageableArea>612 86400</maximumImageableArea>
+ <margins interleave="soft" media="sheet">0 0 0 0</margins>
+ <margins interleave="printer" media="sheet">0 0 0 0</margins>
+ <AlignmentChoices>4 15 0 0</AlignmentChoices>
+ <ChannelNames>
+  <ChannelName translate="text" name="Black" text="Black"/>
+  <ChannelName translate="text" name="Cyan" text="Cyan"/>
+  <ChannelName translate="text" name="Magenta" text="Magenta"/>
+  <ChannelName translate="text" name="Yellow" text="Yellow"/>
+ </ChannelNames>
+ <resolutions>
+  <resolution translate="text" name="1200x600sw" text="1200 x 600 DPI">
+   <physicalResolution>1200 600</physicalResolution>
+   <parameter type="float" name="escp2_density">1.000000</parameter>
+   <parameter type="integer" name="escp2_ink_type">18</parameter>
+   <parameter type="integer" name="escp2_base_res">300</parameter>
+   <parameter type="integer" name="escp2_bits">2</parameter>
+   <parameter type="float" name="DropSize1">0.250000</parameter>
+   <parameter type="float" name="DropSize2">0.500000</parameter>
+   <parameter type="float" name="DropSize3">1.000000</parameter>
+  </resolution>
+  <resolution translate="text" name="1200x1200sw" text="1200 x 1200 DPI">
+   <physicalResolution>1200 1200</physicalResolution>
+   <parameter type="float" name="escp2_density">1.000000</parameter>
+   <parameter type="integer" name="escp2_ink_type">18</parameter>
+   <parameter type="integer" name="escp2_base_res">300</parameter>
+   <parameter type="integer" name="escp2_bits">2</parameter>
+   <parameter type="float" name="DropSize1">0.250000</parameter>
+   <parameter type="float" name="DropSize2">0.500000</parameter>
+   <parameter type="float" name="DropSize3">1.000000</parameter>
+  </resolution>
+  <resolution translate="text" name="2400x1200sw" text="2400 x 1200 DPI">
+   <physicalResolution>2400 1200</physicalResolution>
+   <parameter type="float" name="escp2_density">1.000000</parameter>
+   <parameter type="integer" name="escp2_ink_type">18</parameter>
+   <parameter type="integer" name="escp2_base_res">300</parameter>
+   <parameter type="integer" name="escp2_bits">2</parameter>
+   <parameter type="float" name="DropSize1">0.250000</parameter>
+   <parameter type="float" name="DropSize2">0.500000</parameter>
+   <parameter type="float" name="DropSize3">1.000000</parameter>
+  </resolution>
+  <resolution translate="text" name="2400x2400sw" text="2400 x 2400 DPI">
+   <physicalResolution>2400 2400</physicalResolution>
+   <parameter type="float" name="escp2_density">1.000000</parameter>
+   <parameter type="integer" name="escp2_ink_type">18</parameter>
+   <parameter type="integer" name="escp2_base_res">300</parameter>
+   <parameter type="integer" name="escp2_bits">2</parameter>
+   <parameter type="float" name="DropSize1">1.000000</parameter>
+  </resolution>
+ </resolutions>
+</escp2Model>
+</gutenprint>

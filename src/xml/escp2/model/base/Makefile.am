@@ -26,6 +26,7 @@ pkgxmldatadir = $(pkgdatadir)/@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSI
 pkgxmldata_DATA =				\
 	baseline_300.xml			\
 	baseline_360.xml			\
+	baseline_600.xml			\
 	bx.xml					\
 	c1xx.xml				\
 	c2x.xml					\

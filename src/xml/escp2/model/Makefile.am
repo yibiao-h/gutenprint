@@ -169,7 +169,8 @@ pkgxmldata_DATA =				\
 	model_138.xml                           \
 	model_900.xml				\
 	model_901.xml				\
-	model_902.xml
+	model_902.xml				\
+	model_903.xml
 
 xml-stamp: $(pkgxmldata_DATA) $(STAMPS) Makefile.am
 	-rm -f $@ $@.tmp

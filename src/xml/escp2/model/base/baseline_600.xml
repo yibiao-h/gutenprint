@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<gutenprint xmlns="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd">
+<copyright>
+ * EPSON 600-DPI nozzle geometry baseline for the isolated worker distribution.
+</copyright>
+<escp2Model name="baseline_600">
+ <baseSeparation>600</baseSeparation>
+</escp2Model>
+</gutenprint>

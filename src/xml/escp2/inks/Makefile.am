@@ -47,6 +47,7 @@ pkgxmldata_DATA =				\
 	et8550.xml				\
 	et2750.xml				\
 	l18050.xml				\
+	uTFP1S.xml				\
 	nx100.xml				\
 	photo_gen0.xml				\
 	photo_gen1.xml				\
