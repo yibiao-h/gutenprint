@@ -27,12 +27,12 @@
             </subchannel>
           </channel>
           <channel name="utfp1s_physical_m" index="2">
-            <subchannel color="1" subchannel="0" headOffset="138" name="Magenta" text="Magenta" translate="text">
+            <subchannel color="1" subchannel="0" headOffset="276" name="Magenta" text="Magenta" translate="text">
               <ChannelDensityParam name="RawChannelDensity2" />
             </subchannel>
           </channel>
           <channel name="utfp1s_physical_y" index="3">
-            <subchannel color="4" subchannel="0" headOffset="272" name="Yellow" text="Yellow" translate="text">
+            <subchannel color="4" subchannel="0" headOffset="544" name="Yellow" text="Yellow" translate="text">
               <ChannelDensityParam name="RawChannelDensity3" />
             </subchannel>
           </channel>

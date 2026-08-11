@@ -55,7 +55,8 @@
 #endif
 
 #ifndef ESCP2_ESC_I_FEATHER_EDGE_MIN
-#define ESCP2_ESC_I_FEATHER_EDGE_MIN 0.0
+/* This edge normalizes the feather tail to 10 percent of average density. */
+#define ESCP2_ESC_I_FEATHER_EDGE_MIN (0.10 / (2.0 - 0.10))
 #endif
 
 #ifndef ESCP2_ESC_I_FEATHER_EDGE_MAX

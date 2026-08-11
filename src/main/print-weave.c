@@ -36,6 +36,10 @@
 #endif
 
 #define STP_ESC_I_FEATHER_SINGLE_PASS_STRENGTH 0.35
+#define STP_ESC_I_FEATHER_MINIMUM_TAIL_FACTOR 0.10
+#define STP_ESC_I_FEATHER_MAXIMUM_EDGE \
+  (STP_ESC_I_FEATHER_MINIMUM_TAIL_FACTOR / \
+   (2.0 - STP_ESC_I_FEATHER_MINIMUM_TAIL_FACTOR))
 
 static int
 gcd(int x, int y)
@@ -1221,8 +1225,8 @@ stp_weave_parameters_by_row(const stp_vars_t *v, int row,
 static double
 esc_i_feather_clamp_edge(double edge)
 {
-  if (edge < 0.0)
-    return 0.0;
+  if (edge < STP_ESC_I_FEATHER_MAXIMUM_EDGE)
+    return STP_ESC_I_FEATHER_MAXIMUM_EDGE;
   if (edge > 1.0)
     return 1.0;
   return edge;

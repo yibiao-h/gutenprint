@@ -30,13 +30,13 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <NozzleSeparation>2</NozzleSeparation>
  </headConfiguration>
  <headConfiguration type="black">
-  <Nozzles>128</Nozzles>
+  <Nozzles>400</Nozzles>
   <MinNozzles>1</MinNozzles>
   <FirstNozzle>0</FirstNozzle>
   <NozzleSeparation>2</NozzleSeparation>
  </headConfiguration>
  <headConfiguration type="fast">
-  <Nozzles>128</Nozzles>
+  <Nozzles>400</Nozzles>
   <MinNozzles>1</MinNozzles>
   <FirstNozzle>0</FirstNozzle>
   <NozzleSeparation>2</NozzleSeparation>
@@ -76,12 +76,13 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <parameter type="float" name="DropSize3">1.000000</parameter>
   </resolution>
   <resolution translate="text" name="1200x1200sw" text="1200 x 1200 DPI">
-   <physicalResolution>1200 1200</physicalResolution>
+   <physicalResolution>2400 1200</physicalResolution>
+   <printedResolution>1200 1200</printedResolution>
    <parameter type="float" name="escp2_density">1.000000</parameter>
-   <parameter type="integer" name="escp2_ink_type">18</parameter>
-   <parameter type="integer" name="escp2_base_res">300</parameter>
+   <parameter type="integer" name="escp2_ink_type">19</parameter>
+   <parameter type="integer" name="escp2_base_res">600</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
-   <parameter type="float" name="DropSize1">0.250000</parameter>
+   <!-- <parameter type="float" name="DropSize1">0.250000</parameter> -->
    <parameter type="float" name="DropSize2">0.500000</parameter>
    <parameter type="float" name="DropSize3">1.000000</parameter>
   </resolution>

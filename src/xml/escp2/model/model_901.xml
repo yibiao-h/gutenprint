@@ -65,16 +65,6 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <ChannelName translate="text" name="Cyan" text="Cyan"/>
  </ChannelNames>
  <resolutions>
-  <resolution translate="text" name="720sw" text="720 DPI">
-   <physicalResolution>720 720</physicalResolution>
-   <parameter type="float" name="escp2_density">1.000000</parameter>
-   <parameter type="integer" name="escp2_ink_type">17</parameter>
-   <parameter type="integer" name="escp2_base_res">360</parameter>
-   <parameter type="integer" name="escp2_bits">2</parameter>
-   <parameter type="float" name="DropSize1">0.280000</parameter>
-   <parameter type="float" name="DropSize2">0.000000</parameter>
-   <parameter type="float" name="DropSize3">1.000000</parameter>
-  </resolution>
   <resolution translate="text" name="1440x720sw" text="1440 x 720 DPI">
    <physicalResolution>1440 720</physicalResolution>
    <parameter type="float" name="escp2_density">1.000000</parameter>
