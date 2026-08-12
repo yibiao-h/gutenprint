@@ -67,18 +67,37 @@ buffered_image_get_row(stp_image_t* image,unsigned char *data, size_t byte_limit
 	int width = buffered_image_width(image);
 	int height = buffered_image_height(image);
 	/* FIXME this will break with padding bytes */
-	int bytes_per_pixel = byte_limit / width;
-	int inc = bytes_per_pixel;
+	int bytes_per_pixel;
+	int inc;
 	unsigned char* src;
 	int i;
+	/* Validate geometry and row index before doing anything. */
+	if (width <= 0 || height <= 0 || byte_limit == 0 ||
+	    byte_limit < (size_t) width)
+		return STP_IMAGE_STATUS_ABORT;
+	bytes_per_pixel = byte_limit / width;
+	if (bytes_per_pixel == 0)
+		return STP_IMAGE_STATUS_ABORT;
+	if (row < 0 || row >= height)
+		return STP_IMAGE_STATUS_ABORT;
+	inc = bytes_per_pixel;
 	/* fill buffer */
 	if(!priv->buf){
-		priv->buf = stp_zalloc((sizeof(unsigned short*) + 1) * height);
+		priv->buf = stp_zalloc(sizeof(unsigned char*) * (height + 1));
 		if(!priv->buf){
 			return STP_IMAGE_STATUS_ABORT;
 		}
 		for(i=0;i<height;i++){
 			priv->buf[i] = stp_malloc(byte_limit);
+			if(!priv->buf[i]){
+				/* Release the rows already buffered so that
+				   conclude has nothing left to walk. */
+				while (i > 0)
+					stp_free(priv->buf[--i]);
+				stp_free(priv->buf);
+				priv->buf = NULL;
+				return STP_IMAGE_STATUS_ABORT;
+			}
 			if(STP_IMAGE_STATUS_OK != priv->image->get_row(priv->image,priv->buf[i],byte_limit,i))
 				return STP_IMAGE_STATUS_ABORT;
 		}
