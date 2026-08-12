@@ -520,20 +520,26 @@ stp_xmlstrtoraw(const char *textval)
       else
 	{
 	  textval++;
-	  if (textval[0] >= '0' && textval[0] <= '3' &&
+	  /* Only accept a complete three-digit octal escape; anything shorter
+	     or non-octal keeps the backslash literally so that a truncated
+	     sequence can never read past the terminating NUL. */
+	  if (textval[0] >= '0' && textval[0] <= '7' &&
 	      textval[1] >= '0' && textval[1] <= '7' &&
 	      textval[2] >= '0' && textval[2] <= '7')
 	    {
-	      *aptr++ = (((textval[0] - '0') << 6) +
-			 ((textval[1] - '0') << 3) +
-			 ((textval[2] - '0') << 0));
+	      *aptr++ = (char)((textval[0] - '0') * 64 +
+			       (textval[1] - '0') * 8 +
+			       (textval[2] - '0') * 1);
 	      raw->bytes++;
 	      textval += 3;
 	    }
-	  else if (textval[0] == '\0' || textval[1] == '\0' || textval[2] == '\0')
-	    break;
 	  else
-	    textval += 3;
+	    {
+	      /* Incomplete or invalid escape: keep the backslash and let the
+		 following characters parse literally. */
+	      *aptr++ = '\\';
+	      raw->bytes++;
+	    }
 	}
     }
   *aptr = '\0';
