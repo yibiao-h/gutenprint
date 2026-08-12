@@ -464,6 +464,11 @@ typedef struct escp2_printer
 extern const inkname_t *stpi_escp2_get_default_black_inkset(void);
 extern int stpi_escp2_load_inkgroup(const stp_vars_t *v, const char *name);
 
+/* From print-escp2.c: */
+extern void stpi_escp2_set_cd_mask(unsigned char *cd_mask, int mask_len,
+				   int x_center, int scaled_x_where,
+				   int limit, int expansion, int invert);
+
 /* From escp2-papers.c: */
 extern int stpi_escp2_load_media(const stp_vars_t *v, const char *name);
 extern int stpi_escp2_has_media_feature(const stp_vars_t *v, const char *name);

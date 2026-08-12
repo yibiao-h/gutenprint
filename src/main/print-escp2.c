@@ -4626,9 +4626,10 @@ setup_page(stp_vars_t *v)
     }
 }
 
-static void
-set_mask(unsigned char *cd_mask, int x_center, int scaled_x_where,
-	 int limit, int expansion, int invert)
+void
+stpi_escp2_set_cd_mask(unsigned char *cd_mask, int mask_len, int x_center,
+		       int scaled_x_where, int limit, int expansion,
+		       int invert)
 {
   int clear_val = invert ? 255 : 0;
   int set_val = invert ? 0 : 255;
@@ -4648,24 +4649,34 @@ set_mask(unsigned char *cd_mask, int x_center, int scaled_x_where,
   if (first_x_off > (first_x_on - byteextra))
     {
       int first_x_on_byte = first_x_on / bytesize;
-      int first_x_on_mod = expansion * (byteextra - (first_x_on % bytesize));
-      int first_x_on_extra = ((1 << first_x_on_mod) - 1) ^ clear_val;
+      unsigned long long first_x_on_mod =
+	(unsigned long long) expansion * (byteextra - (first_x_on % bytesize));
+      unsigned long long first_x_on_extra =
+	((1ULL << first_x_on_mod) - 1) ^ clear_val;
       int first_x_off_byte = first_x_off / bytesize;
-      int first_x_off_mod = expansion * (byteextra - (first_x_off % bytesize));
-      int first_x_off_extra = ((1 << 8) - (1 << first_x_off_mod)) ^ clear_val;
+      unsigned long long first_x_off_mod =
+	(unsigned long long) expansion * (byteextra - (first_x_off % bytesize));
+      unsigned long long first_x_off_extra =
+	((1ULL << 8) - (1ULL << first_x_off_mod)) ^ clear_val;
       if (first_x_off_byte < first_x_on_byte)
 	{
 	  /* This can happen, if 6 or fewer points are turned on */
-	  cd_mask[first_x_on_byte] = first_x_on_extra & first_x_off_extra;
+	  if (first_x_on_byte < mask_len)
+	    cd_mask[first_x_on_byte] = first_x_on_extra & first_x_off_extra;
 	}
       else
 	{
-	  if (first_x_on_extra != clear_val)
+	  if (first_x_on_extra != clear_val && first_x_on_byte >= 1)
 	    cd_mask[first_x_on_byte - 1] = first_x_on_extra;
 	  if (first_x_off_byte > first_x_on_byte)
-	    memset(cd_mask + first_x_on_byte, set_val,
-		   first_x_off_byte - first_x_on_byte);
-	  if (first_x_off_extra != clear_val)
+	    {
+	      int fill = first_x_off_byte - first_x_on_byte;
+	      if (first_x_on_byte + fill > mask_len)
+		fill = mask_len - first_x_on_byte;
+	      if (fill > 0)
+		memset(cd_mask + first_x_on_byte, set_val, fill);
+	    }
+	  if (first_x_off_extra != clear_val && first_x_off_byte < mask_len)
 	    cd_mask[first_x_off_byte] = first_x_off_extra;
 	}
     }
@@ -4747,14 +4758,18 @@ escp2_print_data(stp_vars_t *v, stp_image_t *image)
 	      stp_dimension_t y_sq = y_distance_from_center * y_distance_from_center;
 	      stp_dimension_t x_where = sqrt(outer_r_sq - y_sq);
 	      int scaled_x_where = x_where * pd->res->printed_hres / pd->micro_units;
-	      set_mask(cd_mask, x_center, scaled_x_where,
-		       pd->image_printed_width, 1, 0);
+	      stpi_escp2_set_cd_mask(cd_mask,
+				     1 + (pd->image_printed_width + 7) / 8,
+				     x_center, scaled_x_where,
+				     pd->image_printed_width, 1, 0);
 	      if (y_distance_from_center < pd->cd_inner_radius)
 		{
 		  x_where = sqrt(inner_r_sq - y_sq);
 		  scaled_x_where = x_where * pd->res->printed_hres / pd->micro_units;
-		  set_mask(cd_mask, x_center, scaled_x_where,
-			   pd->image_printed_width, 1, 1);
+		  stpi_escp2_set_cd_mask(cd_mask,
+					 1 + (pd->image_printed_width + 7) / 8,
+					 x_center, scaled_x_where,
+					 pd->image_printed_width, 1, 1);
 		}
 	    }
 	}
