@@ -745,8 +745,9 @@ static void
 initialize_channels(stp_vars_t *v, stp_image_t *image)
 {
   lut_t *lut = (lut_t *)(stp_get_component_data(v, "Color"));
-  if (stp_check_float_parameter(v, "InkLimit", STP_PARAMETER_ACTIVE))
-    stp_channel_set_ink_limit(v, stp_get_float_parameter(v, "InkLimit"));
+  /* Total ink is governed by the output ICC, not by an engine InkLimit:
+     the host never sets the parameter and its default activation is
+     disabled below. */
   stp_channel_initialize(v, image, lut->out_channels);
   lut->channels_are_initialized = 1;
 }
@@ -1353,7 +1354,6 @@ stpi_do_dump_lut_to_file(stp_vars_t *v, FILE *fp)
   fprintf(fp, "Input color description: '%s'\n", lut->input_color_description->name);
   fprintf(fp, "Output color description: '%s'\n", lut->output_color_description->name);
   fprintf(fp, "Color correction type: '%s'\n", lut->color_correction->name);
-  fprintf(fp, "Ink limit: %f\n", stp_get_float_parameter(v, "InkLimit"));
   stpi_print_lut_curve(fp, "Brightness correction", &(lut->brightness_correction), 0);
   stpi_print_lut_curve(fp, "Contrast correction", &(lut->contrast_correction), 0);
   stpi_print_lut_curve(fp, "User color correction", &(lut->user_color_correction), 0);
@@ -1701,28 +1701,19 @@ stpi_color_traditional_describe_parameter(const stp_vars_t *v,
 	      description->bounds.integer.lower = (int) param->min;
 	      description->deflt.integer = (int) param->defval;
 	      break;
-	    case STP_PARAMETER_TYPE_DOUBLE:
-	      description->bounds.dbl.upper = param->max;
-	      description->bounds.dbl.lower = param->min;
-	      description->deflt.dbl = param->defval;
-	      if (strcmp(name, "InkLimit") == 0)
-		{
-		  stp_parameter_t ink_limit_desc;
-		  stp_describe_parameter(v, "InkChannels", &ink_limit_desc);
-		  if (ink_limit_desc.p_type == STP_PARAMETER_TYPE_INT &&
-		      ink_limit_desc.deflt.integer > 1)
-		    {
-		      description->bounds.dbl.upper =
-			ink_limit_desc.deflt.integer;
-		      description->deflt.dbl =
-			ink_limit_desc.deflt.integer;
-		    }
-		  else
-		    description->is_active = 0;
-
-		  stp_parameter_description_destroy(&ink_limit_desc);
-		}
-	      break;
+		    case STP_PARAMETER_TYPE_DOUBLE:
+		      description->bounds.dbl.upper = param->max;
+		      description->bounds.dbl.lower = param->min;
+		      description->deflt.dbl = param->defval;
+		      if (strcmp(name, "InkLimit") == 0)
+			{
+			  /* The host must not apply a total ink limit: with an
+			     output ICC the ICC controls total ink, and the
+			     direct-send path applies none. Never activate the
+			     parameter through defaults. */
+			  description->is_active = 0;
+			}
+		      break;
 	    case STP_PARAMETER_TYPE_STRING_LIST:
 	      if (!strcmp(param->param.name, "ColorCorrection"))
 		{
