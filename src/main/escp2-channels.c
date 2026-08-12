@@ -179,6 +179,8 @@ load_inkname(stp_mxml_node_t *node, stp_mxml_node_t *root, inkname_t *inl,
 		      if (name)
 			{
 			  unsigned idx = stp_xmlstrtoul(name);
+			  if (idx >= STP_CHANNEL_LIMIT)
+			    return;	/* Reject out-of-range channel indices. */
 			  if (idx + 1 > channel_count)
 			    channel_count = idx + 1;
 			}
@@ -198,6 +200,8 @@ load_inkname(stp_mxml_node_t *node, stp_mxml_node_t *root, inkname_t *inl,
 		      if (name)
 			{
 			  unsigned idx = stp_xmlstrtoul(name);
+			  if (idx >= STP_CHANNEL_LIMIT)
+			    return;	/* Reject out-of-range channel indices. */
 			  if (idx + 1 > aux_channel_count)
 			    aux_channel_count = idx + 1;
 			}
@@ -208,6 +212,8 @@ load_inkname(stp_mxml_node_t *node, stp_mxml_node_t *root, inkname_t *inl,
 	}
       child = child->next;
     }
+  if (channel_count > STP_CHANNEL_LIMIT)
+    channel_count = 0;		/* Defensive: never allocate oversized arrays. */
   inl->channel_count = channel_count;
   if (channel_count > 0)
     inl->channels = stp_zalloc(sizeof(ink_channel_t) * channel_count);
@@ -260,6 +266,8 @@ load_inkname(stp_mxml_node_t *node, stp_mxml_node_t *root, inkname_t *inl,
 		      if (name)
 			{
 			  unsigned idx = stp_xmlstrtoul(name);
+			  if (idx >= inl->channel_count)
+			    return;	/* Never write past the allocated array. */
 			  load_channel(cchild, root, &(inl->channels[idx]));
 			}
 		    }
@@ -278,6 +286,8 @@ load_inkname(stp_mxml_node_t *node, stp_mxml_node_t *root, inkname_t *inl,
 		      if (name)
 			{
 			  unsigned idx = stp_xmlstrtoul(name);
+			  if (idx >= inl->aux_channel_count)
+			    return;	/* Never write past the allocated array. */
 			  load_channel(cchild, root, &(inl->aux_channels[idx]));
 			}
 		    }
