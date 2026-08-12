@@ -47,6 +47,9 @@ extern "C" {
 /*! The maximum number of channels. */
 #define STP_CHANNEL_LIMIT	(64)
 
+/*! The maximum number of raw channels accepted by the engine. */
+#define STP_MAX_RAW_CHANNELS	(32)
+
 
 /** Image status. */
 typedef enum

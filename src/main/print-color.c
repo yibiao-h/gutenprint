@@ -239,7 +239,7 @@ static const float_param_t float_parameters[] =
       N_("Raw Channels"),
       STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_CORE,
       STP_PARAMETER_LEVEL_INTERNAL, 1, 1, -1, 1, 0
-    }, 1.0, STP_CHANNEL_LIMIT, 1.0, CMASK_EVERY, 0, -1
+    }, 1.0, STP_MAX_RAW_CHANNELS, 1.0, CMASK_EVERY, 0, -1
   },
   {
     {
@@ -1477,6 +1477,13 @@ stpi_compute_lut(stp_vars_t *v)
   stp_dprintf(STP_DBG_LUT, v, " brightness %.3f\n", lut->brightness);
   stp_dprintf(STP_DBG_LUT, v, " screen_gamma %.3f\n", lut->screen_gamma);
 
+  if (lut->out_channels > STP_MAX_RAW_CHANNELS)
+    {
+      /* Second line of defense: never set up more raw channels than the
+         engine supports, even if a caller bypassed the parameter bound. */
+      return;
+    }
+
   for (i = 0; i < STP_CHANNEL_LIMIT; i++)
     {
       STPI_ASSERT(i < raw_channel_param_count, v);
@@ -1545,6 +1552,13 @@ stpi_color_traditional_init(stp_vars_t *v,
 	  return -1;
 	}
       lut->out_channels = stp_get_int_parameter(v, "STPIRawChannels");
+      if (lut->out_channels > STP_MAX_RAW_CHANNELS)
+	{
+	  stp_eprintf(v, "stpi_color_traditional_init: raw channel count %d exceeds the engine maximum of %d\n",
+		      lut->out_channels, STP_MAX_RAW_CHANNELS);
+	  free_lut(lut);
+	  return -1;
+	}
       lut->in_channels = lut->out_channels;
     }
   else
