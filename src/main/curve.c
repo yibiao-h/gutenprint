@@ -1932,16 +1932,19 @@ stp_curve_create_from_file(const char* file)
   stp_curve_t *curve = NULL;
   stp_mxml_node_t *doc;
   FILE *fp = NULL;
-  if (file[0] != '/' && strncmp(file, "./", 2) && strncmp(file, "../", 3))
+  if (!file || !*file)
+    return NULL;		/* Empty pointer defense. */
+  if (file[0] != '/' && file[1] != ':' &&
+      strncmp(file, "./", 2) && strncmp(file, "../", 3))
     {
       char *fn = stp_path_find_file(NULL, file);
       if (fn)
 	{
-	  fp = fopen(file, "r");
+	  fp = fopen(fn, "r");
 	  free(fn);
 	}
     }
-  else if (file)
+  else
     {
       fp = fopen(file, "r");
     }
