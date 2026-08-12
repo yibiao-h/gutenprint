@@ -335,6 +335,10 @@ stp_channel_add(stp_vars_t *v, unsigned channel, unsigned subchannel,
   stpi_channel_t *chan;
   stp_dprintf(STP_DBG_INK, v, "Add channel %d, %d, %f\n",
 	      channel, subchannel, value);
+  if (channel >= STP_CHANNEL_LIMIT || channel == (unsigned) -1)
+    return;			/* Reject out-of-range channel indices. */
+  if (subchannel >= STP_CHANNEL_LIMIT || subchannel == (unsigned) -1)
+    return;			/* Reject out-of-range subchannel indices. */
   if (!cg)
     {
       cg = stp_zalloc(sizeof(stpi_channel_group_t));
@@ -682,11 +686,11 @@ stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
 	  c->hue_map = stp_curve_get_data(c->curve, &(c->h_count));
 	  cg->curve_count++;
 	}
-      if (sc > 1)
+      if (sc > 1 && sc <= STP_CHANNEL_LIMIT)
 	{
 	  int val = 0;
 	  int next_breakpoint;
-	  c->lut = stp_zalloc(sizeof(unsigned short) * sc * 65536);
+	  c->lut = stp_zalloc(sizeof(unsigned short) * (size_t) sc * 65536);
 	  next_breakpoint = c->sc[0].value * 65535 * c->sc[0].cutoff;
 	  if (next_breakpoint > 65535)
 	    next_breakpoint = 65535;
@@ -1069,6 +1073,8 @@ split_channels(stpi_channel_group_t *cg, unsigned *zero_mask)
   unsigned short *output;
   if (!cg)
     return;
+  if (cg->total_channels > STP_CHANNEL_LIMIT)
+    return;			/* Never index past the fixed nz array. */
   cg->valid_8bit = 0;
   outbytes = cg->total_channels * sizeof(unsigned short);
   input = cg->split_input;

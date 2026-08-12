@@ -69,6 +69,8 @@ insert_channel(stp_vars_t *v, stpi_dither_t *d, int channel)
   unsigned oc = d->channel_count;
   int i;
   (void)v;
+  if (channel < 0 || (unsigned) channel >= STP_CHANNEL_LIMIT)
+    return;			/* Reject out-of-range channel indices. */
 
   d->channel_index =
     stp_realloc (d->channel_index, sizeof(unsigned) * (channel + 1));
@@ -125,10 +127,17 @@ static void
 insert_subchannel(stp_vars_t *v, stpi_dither_t *d, int channel, int subchannel)
 {
   int i;
-  unsigned oc = d->subchannel_count[channel];
-  unsigned increment = subchannel - oc + 1;
-  unsigned old_place = d->channel_index[channel] + oc;
-  stpi_dither_channel_t *nc =
+  unsigned oc;
+  unsigned increment;
+  unsigned old_place;
+  stpi_dither_channel_t *nc;
+  if (channel < 0 || (unsigned) channel >= STP_CHANNEL_LIMIT ||
+      subchannel < 0 || (unsigned) subchannel >= STP_CHANNEL_LIMIT)
+    return;			/* Reject out-of-range subchannel indices. */
+  oc = d->subchannel_count[channel];
+  increment = (unsigned) subchannel - oc + 1;
+  old_place = d->channel_index[channel] + oc;
+  nc =
     stp_malloc(sizeof(stpi_dither_channel_t) *
 	       (d->total_channel_count + increment));
 
@@ -188,6 +197,8 @@ stp_dither_add_channel(stp_vars_t *v, unsigned char *data,
 {
   stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
   int idx;
+  if (channel >= STP_CHANNEL_LIMIT || subchannel >= STP_CHANNEL_LIMIT)
+    return;			/* Reject out-of-range channel indices. */
   if (channel >= d->channel_count)
     insert_channel(v, d, channel);
   if (subchannel >= d->subchannel_count[channel])
