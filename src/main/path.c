@@ -240,7 +240,23 @@ stp_path_split(stp_list_t *list, /* List to add directories to */
 
   while (start)
     {
-      end = (const char *) strchr(start, ':');
+#ifdef _WIN32
+      /* On Windows a path begins with a drive letter ("C:\..."): the
+         colon is part of the path, not a PATH-list separator, so the
+         rest of the string is a single item.  STP_DATA_PATH on Windows
+         holds a single directory; multi-directory lists would need ';'
+         handling in stp_generate_path and its callers. */
+      if ((start[0] >= 'A' && start[0] <= 'Z') ||
+          (start[0] >= 'a' && start[0] <= 'z'))
+        {
+          if (start[1] == ':' && start[2])
+            end = NULL;
+          else
+            end = (const char *) strchr(start, ':');
+        }
+      else
+#endif
+        end = (const char *) strchr(start, ':');
       if (!end)
 	len = strlen(start) + 1;
       else
