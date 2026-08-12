@@ -1178,7 +1178,7 @@ name##_to_color_threshold(const stp_vars_t *vars,			\
   int i;								\
   int z = 7;								\
   int desired_high_bit = 0;						\
-  unsigned high_bit = ((1 << ((sizeof(T) * 8) - 1)) * 4);		\
+  unsigned high_bit = ((1 << ((sizeof(T) * 8) - 1)));			\
   const T *s_in = (const T *) in;					\
   lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));	\
   int width = lut->image_width;						\
@@ -1198,7 +1198,7 @@ name##_to_color_threshold(const stp_vars_t *vars,			\
 	  z &= 5;							\
 	  out[1] = 65535;						\
 	}								\
-      if ((s_in[1] & high_bit) == desired_high_bit)			\
+      if ((s_in[2] & high_bit) == desired_high_bit)			\
 	{								\
 	  z &= 3;							\
 	  out[2] = 65535;						\
@@ -1349,7 +1349,7 @@ cmyk_##size##_to_kcmy(const stp_vars_t *vars,				    \
       stp_curve_resample(lut->channel_curves[i].curve, 65536);		    \
       maps[i] = stp_curve_cache_get_ushort_data(&(lut->channel_curves[i])); \
     }									    \
-  stp_curve_resample(lut->user_color_correction.curve, 1 << size);	    \
+  stp_curve_resample(lut->user_color_correction.curve, 1ULL << size);	    \
   user = stp_curve_cache_get_ushort_data(&(lut->user_color_correction));    \
 									    \
   memset(nz, 0, sizeof(nz));						    \
@@ -1394,7 +1394,7 @@ kcmy_##size##_to_kcmy(const stp_vars_t *vars,				    \
       stp_curve_resample(lut->channel_curves[i].curve, 65536);		    \
       maps[i] = stp_curve_cache_get_ushort_data(&(lut->channel_curves[i])); \
     }									    \
-  stp_curve_resample(lut->user_color_correction.curve, 1 << size);	    \
+  stp_curve_resample(lut->user_color_correction.curve, 1ULL << size);	    \
   user = stp_curve_cache_get_ushort_data(&(lut->user_color_correction));    \
 									    \
   memset(nz, 0, sizeof(nz));						    \
@@ -2046,7 +2046,7 @@ raw_##size##_to_raw(const stp_vars_t *vars,				    \
       stp_curve_resample(lut->channel_curves[i].curve, 65536);		    \
       maps[i] = stp_curve_cache_get_ushort_data(&(lut->channel_curves[i])); \
     }									    \
-  stp_curve_resample(lut->user_color_correction.curve, 1 << size);	    \
+  stp_curve_resample(lut->user_color_correction.curve, 1ULL << size);	    \
   user = stp_curve_cache_get_ushort_data(&(lut->user_color_correction));    \
 									    \
   memset(nz, 0, sizeof(nz));						    \
@@ -2291,9 +2291,13 @@ stpi_color_convert_to_kcmy(const stp_vars_t *v,
 unsigned
 stpi_color_convert_raw(const stp_vars_t *v,
 		       const unsigned char *in,
-		       unsigned short *out)
+			       unsigned short *out)
 {
   lut_t *lut = (lut_t *)(stp_get_component_data(v, "Color"));
+  /* Reject raw conversions whose channel count would shift a 64-bit
+     zero mask out of range. */
+  if (lut->out_channels > 63)
+    return (unsigned) -1;
   switch (lut->color_correction->correction)
     {
     case COLOR_CORRECTION_THRESHOLD:
