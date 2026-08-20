@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+
+<gutenprint xmlns="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd">
+<copyright>
+ * Custom 720_4C_2B XP600/DX5/DX7 physical five-channel raw model.
+ * Geometry follows pro_ultrachrome_k3_base (command_pro / ESC i).
+ * This file belongs to the isolated worker distribution.
+</copyright>
+<escp2Model id="904" base="escp2/model/base/pro_ultrachrome_k3_base.xml">
+ <media src="escp2/media/standard.xml"/>
+ <qualityPresets src="escp2/qualitypresets/standard.xml"/>
+ <inkGroup src="escp2/inks/custom_720_4C_2B.xml"/>
+ <mediaSizes src="escp2/mediasizes/standard.xml"/>
+ <physicalChannels>5</physicalChannels>
+ <minimumResolution>720 1440</minimumResolution>
+ <maximumResolution>720 5760</maximumResolution>
+ <maximumMediaSize>8640 8640</maximumMediaSize>
+ <maximumImageableArea>8640 8640</maximumImageableArea>
+ <margins interleave="soft" media="sheet">0 0 0 0</margins>
+ <margins interleave="printer" media="sheet">0 0 0 0</margins>
+ <ChannelNames>
+  <ChannelName translate="text" name="Black" text="Black"/>
+  <ChannelName translate="text" name="Cyan" text="Cyan"/>
+  <ChannelName translate="text" name="Magenta" text="Magenta"/>
+  <ChannelName translate="text" name="Yellow" text="Yellow"/>
+  <ChannelName translate="text" name="White" text="White"/>
+ </ChannelNames>
+ <resolutions>
+  <resolution translate="text" name="720x1440" text="720 x 1440 DPI">
+   <physicalResolution>720 1440</physicalResolution>
+   <printerWeave command="\033(i\001\000\001"/>
+   <parameter type="float" name="escp2_density">1.000000</parameter>
+   <parameter type="integer" name="escp2_ink_type">17</parameter>
+   <parameter type="integer" name="escp2_base_res">720</parameter>
+   <parameter type="integer" name="escp2_bits">2</parameter>
+   <parameter type="float" name="DropSize1">0.250000</parameter>
+   <parameter type="float" name="DropSize2">0.500000</parameter>
+   <parameter type="float" name="DropSize3">1.000000</parameter>
+  </resolution>
+  <resolution translate="text" name="720x2880" text="720 x 2880 DPI">
+   <physicalResolution>720 2880</physicalResolution>
+   <printerWeave command="\033(i\001\000\001"/>
+   <parameter type="float" name="escp2_density">1.000000</parameter>
+   <parameter type="integer" name="escp2_ink_type">17</parameter>
+   <parameter type="integer" name="escp2_base_res">720</parameter>
+   <parameter type="integer" name="escp2_bits">2</parameter>
+   <parameter type="float" name="DropSize1">0.250000</parameter>
+   <parameter type="float" name="DropSize2">0.500000</parameter>
+   <parameter type="float" name="DropSize3">1.000000</parameter>
+  </resolution>
+  <resolution translate="text" name="720x5760" text="720 x 5760 DPI">
+   <physicalResolution>720 5760</physicalResolution>
+   <printerWeave command="\033(i\001\000\001"/>
+   <parameter type="float" name="escp2_density">1.000000</parameter>
+   <parameter type="integer" name="escp2_ink_type">17</parameter>
+   <parameter type="integer" name="escp2_base_res">720</parameter>
+   <parameter type="integer" name="escp2_bits">2</parameter>
+   <parameter type="float" name="DropSize1">0.250000</parameter>
+   <parameter type="float" name="DropSize2">0.500000</parameter>
+   <parameter type="float" name="DropSize3">1.000000</parameter>
+  </resolution>
+ </resolutions>
+</escp2Model>
+</gutenprint>
