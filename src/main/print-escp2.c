@@ -158,9 +158,18 @@ escp2_esc_i_feather_edge(const stp_vars_t *v)
 }
 
 static int
+escp2_command_supports_esc_i_feather(const stp_vars_t *v)
+{
+  return stpi_escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_1999) ||
+	 stpi_escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_2000);
+}
+
+static int
 escp2_esc_i_feather_enabled(const stp_vars_t *v, const escp2_privdata_t *pd)
 {
-  return ESCP2_ESC_I_FEATHER_ENABLE && pd && pd->channels_in_use > 0 &&
+  return ESCP2_ESC_I_FEATHER_ENABLE &&
+    escp2_command_supports_esc_i_feather(v) &&
+    pd && pd->channels_in_use > 0 &&
     escp2_esc_i_feather_edge(v) < 0.999;
 }
 
@@ -3154,6 +3163,11 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	  if (ink_name && ink_name->inkset == INKSET_OTHER)
 	    description->is_active = 1;
 	}
+    }
+  else if (strcmp(name, "EscIFeatherEdge") == 0 ||
+	   strcmp(name, "EscIFeatherMaxDensity") == 0)
+    {
+      description->is_active = escp2_command_supports_esc_i_feather(v);
     }
   else if (strcmp(name, "PageDryTime") == 0 ||
 	   strcmp(name, "ScanDryTime") == 0 ||
