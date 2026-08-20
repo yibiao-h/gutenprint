@@ -6,7 +6,7 @@
   <copyright>
     * Custom 720 4C 2B physical five-channel raw ink layout (K,C,M,Y,W).
   </copyright>
-  <escp2InkGroup name="custom_720_4C_2B">
+  <escp2InkGroup name="custom_720_CMYK_W_2b">
     <InkList translate="text" name="Physical" text="Custom 720 4C 2B Physical Raw Inks">
       <Shades>
         <shade count="1">1.000000</shade>
@@ -17,27 +17,27 @@
       </Shades>
       <InkName translate="text" name="Physical5" text="Physical Five Channel Raw" InkID="Extended">
         <Channels>
-          <channel name="custom_720_4C_2B_physical_k" index="0">
+          <channel name="custom_720_CMYK_W_2b_physical_k" index="0">
             <subchannel color="0" subchannel="0" headOffset="0" name="Black" text="Black" translate="text">
               <ChannelDensityParam name="RawChannelDensity0" />
             </subchannel>
           </channel>
-          <channel name="custom_720_4C_2B_physical_c" index="1">
+          <channel name="custom_720_CMYK_W_2b_physical_c" index="1">
             <subchannel color="2" subchannel="0" headOffset="0" name="Cyan" text="Cyan" translate="text">
               <ChannelDensityParam name="RawChannelDensity1" />
             </subchannel>
           </channel>
-          <channel name="custom_720_4C_2B_physical_m" index="2">
+          <channel name="custom_720_CMYK_W_2b_physical_m" index="2">
             <subchannel color="1" subchannel="0" headOffset="0" name="Magenta" text="Magenta" translate="text">
               <ChannelDensityParam name="RawChannelDensity2" />
             </subchannel>
           </channel>
-          <channel name="custom_720_4C_2B_physical_y" index="3">
+          <channel name="custom_720_CMYK_W_2b_physical_y" index="3">
             <subchannel color="4" subchannel="0" headOffset="0" name="Yellow" text="Yellow" translate="text">
               <ChannelDensityParam name="RawChannelDensity3" />
             </subchannel>
           </channel>
-          <channel name="custom_720_4C_2B_physical_w" index="4">
+          <channel name="custom_720_CMYK_W_2b_physical_w" index="4">
             <subchannel color="0" subchannel="4" headOffset="0" name="White" text="White" translate="text">
               <ChannelDensityParam name="RawChannelDensity4" />
             </subchannel>

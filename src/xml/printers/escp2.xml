@@ -99,7 +99,7 @@
       <printer translate="name" name="Epson L18050" driver="escp2-l18050" manufacturer="Epson" model="900" parameters="standard_params">physical six-channel raw driver</printer>
       <printer translate="name" name="Epson ET-8550" driver="escp2-et8550" manufacturer="Epson" model="902" parameters="standard_params">physical six-channel raw driver</printer>
       <printer translate="name" name="Epson L6170" driver="escp2-l6170" manufacturer="Epson" model="903" parameters="cx3500_params">physical four-channel raw driver</printer>
-      <printer translate="name" name="720_4C_2B XP600 DX5 DX7" driver="custom_720_4C_2B" manufacturer="custom" model="904" parameters="standard_params">physical five-channel custom raw driver</printer>
+      <printer translate="name" name="720_CMYK_W_2b XP600 DX5 DX7" driver="custom_720_CMYK_W_2b" manufacturer="custom" model="904" parameters="standard_params">physical five-channel custom raw driver</printer>
       <printer translate="name" name="Epson XP-15000 Series" deviceid="MFG:EPSON;CMD:ESCPL2,BDC,ESCPR7,END4,GENEP;MDL:XP-15000 Series;CLS:PRINTER;DES:EPSON XP-15000 Series;CID:EpsonRGB;FID:FXN,DPA,WFA,ETA,AFN,DAN,WRA;RID:20;DDS:022500;ELG:1000;SN:583436523031363416" driver="escp2-xp15000" manufacturer="Epson" model="132" parameters="standard_params" />
       <printer translate="name" name="Epson L120" driver="escp2-l120" manufacturer="Epson" model="80" parameters="cx3500_params" />
       <printer translate="name" name="Epson L130" driver="escp2-l130" manufacturer="Epson" model="80" parameters="cx3500_params" />

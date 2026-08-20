@@ -4,14 +4,14 @@
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd">
 <copyright>
- * Custom 720_4C_2B XP600/DX5/DX7 physical five-channel raw model.
+ * Custom 720_CMYK_W_2b XP600/DX5/DX7 physical five-channel raw model.
  * Geometry follows pro_ultrachrome_k3_base (command_pro / ESC i).
  * This file belongs to the isolated worker distribution.
 </copyright>
 <escp2Model id="904" base="escp2/model/base/pro_ultrachrome_k3_base.xml">
  <media src="escp2/media/standard.xml"/>
  <qualityPresets src="escp2/qualitypresets/standard.xml"/>
- <inkGroup src="escp2/inks/custom_720_4C_2B.xml"/>
+ <inkGroup src="escp2/inks/custom_720_CMYK_W_2b.xml"/>
  <mediaSizes src="escp2/mediasizes/standard.xml"/>
  <physicalChannels>5</physicalChannels>
  <minimumResolution>720 1440</minimumResolution>
