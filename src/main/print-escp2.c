@@ -71,10 +71,6 @@
 #define ESCP2_ESC_I_FEATHER_PER_CHANNEL_MAPPING 1
 #endif
 
-#ifndef ESCP2_ESC_I_FEATHER_DISABLE_DUPLICATE_LINE
-#define ESCP2_ESC_I_FEATHER_DISABLE_DUPLICATE_LINE 1
-#endif
-
 #ifndef MAX
 #  define MAX(a, b) ((a) > (b) ? (a) : (b))
 #endif /* !MAX */
@@ -309,15 +305,14 @@ escp2_set_esc_i_feather_factors(stp_vars_t *v, const escp2_privdata_t *pd,
 	    channel_factors[phase] =
 	      1.0 + (channel_factors[phase] - 1.0) * overlap_strength;
 	}
-      if (escp2_esc_i_feather_debug_row(printed_row))
+	  if (escp2_esc_i_feather_debug_row(printed_row))
 	stp_dprintf(STP_DBG_ROWS, v,
-		    "esc-i feather set y %d errline %d channel %d edge %.6f max_density %.6f correction_rows %d profile_first %.6f profile_last %.6f phases %u overlap_strength %.6f duplicate_line disabled %d\n",
+		    "esc-i feather set y %d errline %d channel %d edge %.6f max_density %.6f correction_rows %d profile_first %.6f profile_last %.6f phases %u overlap_strength %.6f redither enabled 1\n",
 		    printed_row, errline, i, edge, channel_density,
 		    correction_rows,
 		    channel_factors[0],
 		    channel_factors[factor_phase_count - 1],
-		    factor_phase_count, overlap_strength,
-		    ESCP2_ESC_I_FEATHER_DISABLE_DUPLICATE_LINE ? 1 : 0);
+		    factor_phase_count, overlap_strength);
     }
   stp_set_float_parameter(v, "EscIFeatherMaxDensity", max_density);
   stp_channel_clear_physical_channel_factors(v);
@@ -4712,6 +4707,7 @@ escp2_print_data(stp_vars_t *v, stp_image_t *image)
   unsigned char *cd_mask = NULL;
   double *esc_i_feather_factors = NULL;
   unsigned esc_i_feather_factor_phase_count = 1;
+  unsigned cached_zero_mask = 0;
   int esc_i_feather_enabled = escp2_esc_i_feather_enabled(v, pd);
   int status = 1;
   if (pd->cd_outer_radius > 0)
@@ -4738,6 +4734,7 @@ escp2_print_data(stp_vars_t *v, stp_image_t *image)
 
   for (y = 0; y < pd->image_printed_height; y ++)
     {
+      int source_row_changed = errline != errlast;
       int duplicate_line = 1;
       unsigned zero_mask = 0;
 
@@ -4746,17 +4743,22 @@ escp2_print_data(stp_vars_t *v, stp_image_t *image)
 					esc_i_feather_factors,
 					esc_i_feather_factor_phase_count);
 
-      if (errline != errlast ||
-	  (esc_i_feather_enabled &&
-	   ESCP2_ESC_I_FEATHER_DISABLE_DUPLICATE_LINE))
+      if (source_row_changed)
 	{
-	  errlast = errline;
-	  duplicate_line = 0;
-	  if (stp_color_get_row(v, image, errline, &zero_mask))
+	  if (stp_color_get_row(v, image, errline, &cached_zero_mask))
 	    {
 	      status = 2;
 	      goto done;
 	    }
+	  errlast = errline;
+	  duplicate_line = 0;
+	  zero_mask = cached_zero_mask;
+	}
+
+      if (esc_i_feather_enabled)
+	{
+	  duplicate_line = 0;
+	  zero_mask = cached_zero_mask;
 	}
 
       if (cd_mask)
