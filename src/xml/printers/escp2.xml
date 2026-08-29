@@ -97,6 +97,7 @@
       <printer translate="name" name="Epson Expression Photo XP-960" driver="escp2-xp960" manufacturer="Epson" model="133" parameters="standard_params" />
       <printer translate="name" name="Epson Expression Photo XP-8500" driver="escp2-xp8500" manufacturer="Epson" model="134" parameters="standard_params" />
       <printer translate="name" name="Epson L18050" driver="escp2-l18050" manufacturer="Epson" model="900" parameters="standard_params">physical six-channel raw driver</printer>
+      <printer translate="name" name="Epson SP 1390" driver="escp2-sp1390" manufacturer="Epson" model="905" parameters="standard_params">physical six-channel raw driver</printer>
       <printer translate="name" name="Epson ET-8550" driver="escp2-et8550" manufacturer="Epson" model="902" parameters="standard_params">physical six-channel raw driver</printer>
       <printer translate="name" name="Epson L6170" driver="escp2-l6170" manufacturer="Epson" model="903" parameters="cx3500_params">physical four-channel raw driver</printer>
       <printer translate="name" name="720_CMYK_W_2b XP600 DX5 DX7" driver="custom_720_CMYK_W_2b" manufacturer="custom" model="904" parameters="standard_params">physical five-channel custom raw driver</printer>

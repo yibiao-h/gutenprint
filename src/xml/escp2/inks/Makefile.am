@@ -47,6 +47,7 @@ pkgxmldata_DATA =				\
 	et8550.xml				\
 	et2750.xml				\
 	l18050.xml				\
+	sp1390.xml				\
 	custom_720_CMYK_W_2b.xml			\
 	uTFP1S.xml				\
 	nx100.xml				\
