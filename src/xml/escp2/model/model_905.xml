@@ -8,7 +8,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  * This file belongs to the isolated worker distribution.
 </copyright>
 <escp2Model id="905" base="escp2/model/base/baseline_360.xml">
- <media src="escp2/media/standard.xml"/>
+ <media src="escp2/media/claria.xml"/>
  <inputSlots src="escp2/inputslots/sp1390.xml"/>
  <qualityPresets src="escp2/qualitypresets/v2880.xml"/>
  <inkGroup src="escp2/inks/sp1390.xml"/>
@@ -69,13 +69,24 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <physicalResolution>2880 1440</physicalResolution>
    <printedResolution>1440 1440</printedResolution>
    <parameter type="float" name="escp2_density">1.000000</parameter>
-   <parameter type="integer" name="escp2_ink_type">19</parameter>
+   <parameter type="integer" name="escp2_ink_type">36</parameter>
    <parameter type="integer" name="escp2_base_res">720</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
-   <parameter type="float" name="DropSize1">0.300000</parameter>
-   <parameter type="float" name="DropSize2">0.650000</parameter>
+   <parameter type="float" name="DropSize1">0.125000</parameter>
+   <parameter type="float" name="DropSize2">0.420000</parameter>
    <parameter type="float" name="DropSize3">1.000000</parameter>
   </resolution>
+  <!-- <resolution translate="text" name="1440x1440ov" text="1440 x 1440 DPI">
+   <physicalResolution>2880 1440</physicalResolution>
+   <printedResolution>1440 1440</printedResolution>
+   <parameter type="float" name="escp2_density">1.000000</parameter>
+   <parameter type="integer" name="escp2_ink_type">36</parameter>
+   <parameter type="integer" name="escp2_base_res">720</parameter>
+   <parameter type="integer" name="escp2_bits">2</parameter>
+   <parameter type="float" name="DropSize1">0.125000</parameter>
+   <parameter type="float" name="DropSize2">0.420000</parameter>
+   <parameter type="float" name="DropSize3">1.000000</parameter>
+  </resolution> -->
   <resolution translate="text" name="1440x2880sw" text="1440 x 2880 DPI">
    <physicalResolution>1440 2880</physicalResolution>
    <parameter type="float" name="escp2_density">1.000000</parameter>

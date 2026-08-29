@@ -8,7 +8,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  * This file belongs to the isolated worker distribution.
 </copyright>
 <escp2Model id="900" base="escp2/model/base/baseline_360.xml">
- <media src="escp2/media/standard.xml"/>
+ <media src="escp2/media/claria_xp.xml"/>
  <inputSlots src="escp2/inputslots/l18050.xml"/>
  <qualityPresets src="escp2/qualitypresets/v2880.xml"/>
  <inkGroup src="escp2/inks/l18050.xml"/>
@@ -41,8 +41,8 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <baseHorizontalAlignment>28800</baseHorizontalAlignment>
  <bidirectionalAutoUpperLimit>16588800</bidirectionalAutoUpperLimit>
  <minimumMediaSize>144 144</minimumMediaSize>
- <maximumMediaSize>1191 1684</maximumMediaSize>
- <maximumImageableArea>1191 1684</maximumImageableArea>
+ <maximumMediaSize>1191 86400</maximumMediaSize>
+ <maximumImageableArea>1191 86400</maximumImageableArea>
 <margins interleave="soft" media="sheet">0 0 0 0</margins>
   <margins interleave="printer" media="sheet">0 0 0 0</margins>
  <AlignmentChoices>4 15 0 0</AlignmentChoices>
