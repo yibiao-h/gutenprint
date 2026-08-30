@@ -9,7 +9,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 </copyright>
 <escp2Model id="905" base="escp2/model/base/baseline_360.xml">
  <media src="escp2/media/claria.xml"/>
- <inputSlots src="escp2/inputslots/sp1390.xml"/>
+ <inputSlots src="escp2/inputslots/OnlyRear.xml"/>
  <qualityPresets src="escp2/qualitypresets/v2880.xml"/>
  <inkGroup src="escp2/inks/sp1390.xml"/>
  <mediaSizes src="escp2/mediasizes/standard.xml"/>

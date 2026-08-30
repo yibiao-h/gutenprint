@@ -5,9 +5,10 @@
     xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd">
     <copyright>
         * EPSON ET-8550 physical 180-nozzle six-channel raw model.
-</copyright>
+    </copyright>
     <escp2Model id="902" base="escp2/model/model_900.xml">
         <inkGroup src="escp2/inks/et8550.xml" />
+        <inputSlots src="escp2/inputslots/ET8550.xml" />
         <ChannelNames>
             <ChannelName translate="text" name="MatteBlack" text="Matte Black" />
             <ChannelName translate="text" name="PhotoBlack" text="Photo Black" />

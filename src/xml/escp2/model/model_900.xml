@@ -9,13 +9,12 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 </copyright>
 <escp2Model id="900" base="escp2/model/base/baseline_360.xml">
  <media src="escp2/media/claria_xp.xml"/>
- <inputSlots src="escp2/inputslots/l18050.xml"/>
+ <inputSlots src="escp2/inputslots/OnlyRear.xml"/>
  <qualityPresets src="escp2/qualitypresets/v2880.xml"/>
  <inkGroup src="escp2/inks/l18050.xml"/>
  <mediaSizes src="escp2/mediasizes/standard.xml"/>
- <baseSeparation>360</baseSeparation>
  <preinitSequence>\000\000\000\033\001@EJL\0401284.4\012@EJL\040\040\040\040\040\012\033@</preinitSequence>
- <preinitRemoteSequence>SN\001\000\000</preinitRemoteSequence>
+ <preinitRemoteSequence>JS\004\000\000\000\000\000SN\001\000\000</preinitRemoteSequence>
  <postinitRemoteSequence>JE\001\000\000</postinitRemoteSequence>
  <commandSet>2000</commandSet>
  <borderless>Full</borderless>

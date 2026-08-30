@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<gutenprint xmlns="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd">
+<copyright>
+ * EPSON OnlyRear custom input slots for the isolated worker distribution.
+</copyright>
+<escp2InputSlots name="OnlyRear">
+
+ <slot translate="text" name="Rear" text="Rear Tray">
+  <InitSequence>PP\003\000\000\001\000</InitSequence>
+ </slot>
+</escp2InputSlots>
+</gutenprint>
