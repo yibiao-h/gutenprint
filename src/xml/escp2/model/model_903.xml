@@ -10,7 +10,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 <escp2Model id="903" base="escp2/model/base/baseline_600.xml">
  <media src="escp2/media/standard.xml"/>
  <inputSlots src="escp2/inputslots/default.xml"/>
- <qualityPresets src="escp2/qualitypresets/standard.xml"/>
+ <qualityPresets src="escp2/qualitypresets/standard_600.xml"/>
  <inkGroup src="escp2/inks/uTFP1S.xml"/>
  <mediaSizes src="escp2/mediasizes/standard.xml"/>
  <preinitSequence>\000\000\000\033\001@EJL\0401284.4\012@EJL\040\040\040\040\040\012\033@</preinitSequence>
