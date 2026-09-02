@@ -264,11 +264,6 @@ escp2_set_esc_i_feather_factors(stp_vars_t *v, const escp2_privdata_t *pd,
     return;
 
   edge = escp2_esc_i_feather_edge(v);
-  /*
-   * Feather edge is a shared output constraint.  Keep the largest effective
-   * density across all physical channels so every normalized sine profile
-   * remains within [0, 1] and retains its requested average density.
-   */
   max_density = escp2_esc_i_feather_max_density(v, pd);
   overlap_strength = stp_weave_esc_i_feather_overlap_strength(v);
   stp_set_float_parameter(v, "EscIFeatherMaxDensity", max_density);
@@ -276,9 +271,11 @@ escp2_set_esc_i_feather_factors(stp_vars_t *v, const escp2_privdata_t *pd,
   for (i = 0; i < pd->channels_in_use; i++)
     {
       double *channel_factors = factors + i * factor_phase_count;
+      double channel_density = escp2_esc_i_feather_channel_density(v, pd, i);
       int correction_rows =
 	escp2_esc_i_feather_channel_correction_rows(v, i);
       unsigned phase;
+      stp_set_float_parameter(v, "EscIFeatherMaxDensity", channel_density);
       /* Post-render leading rows cannot preserve this per-pass feather phase. */
       if (correction_rows > 0)
 	{
@@ -310,8 +307,8 @@ escp2_set_esc_i_feather_factors(stp_vars_t *v, const escp2_privdata_t *pd,
 	}
 	  if (escp2_esc_i_feather_debug_row(printed_row))
 	stp_dprintf(STP_DBG_ROWS, v,
-		    "esc-i feather set y %d errline %d channel %d edge %.6f max_density %.6f correction_rows %d profile_first %.6f profile_last %.6f phases %u overlap_strength %.6f redither enabled 1\n",
-		    printed_row, errline, i, edge, max_density,
+		    "esc-i feather set y %d errline %d channel %d edge %.6f channel_density %.6f correction_rows %d profile_first %.6f profile_last %.6f phases %u overlap_strength %.6f redither enabled 1\n",
+		    printed_row, errline, i, edge, channel_density,
 		    correction_rows,
 		    channel_factors[0],
 		    channel_factors[factor_phase_count - 1],
@@ -1217,7 +1214,7 @@ static const float_param_t float_parameters[] =
   {
     {
       "EscIFeatherMaxDensity", N_("ESC i Feather Max Density"), "Color=Yes,Category=Advanced Output Control",
-      N_("Set the shared maximum density used to keep all ESC i feather profiles within range"),
+      N_("Set the maximum density used to keep each ESC i feather profile within range"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_FEATURE,
       STP_PARAMETER_LEVEL_INTERNAL, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 2.0, 1.0, 1
