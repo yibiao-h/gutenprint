@@ -185,9 +185,34 @@ escp2_esc_i_feather_density_value(const stp_vars_t *v, const char *name,
   return value;
 }
 
+static int
+escp2_esc_i_feather_density_is_core_applied(const stp_vars_t *v)
+{
+  const char *output_type;
+  const char *color_correction;
+  if (!v)
+    return 0;
+
+  output_type = stp_get_string_parameter(v, "STPIOutputType");
+  color_correction = stp_get_string_parameter(v, "ColorCorrection");
+  return (output_type && color_correction &&
+	  strcmp(output_type, "Raw") == 0 &&
+	  strcmp(color_correction, "None") == 0) ||
+	 (color_correction &&
+	  (strcmp(color_correction, "Raw") == 0 ||
+	   strcmp(color_correction, "Predithered") == 0));
+}
+
 static double
 escp2_esc_i_feather_global_density(const stp_vars_t *v)
 {
+  /*
+   * Raw/Predithered rows are already density-scaled by the core.  The
+   * print-engine Density is a media calibration value in this path and must
+   * not lower the density bound used to normalize an ESC i feather profile.
+   */
+  if (escp2_esc_i_feather_density_is_core_applied(v))
+    return 1.0;
   return escp2_esc_i_feather_density_value(v, "Density", 1.0, NULL);
 }
 
