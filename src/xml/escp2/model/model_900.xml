@@ -40,8 +40,8 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <baseHorizontalAlignment>28800</baseHorizontalAlignment>
  <bidirectionalAutoUpperLimit>16588800</bidirectionalAutoUpperLimit>
  <minimumMediaSize>144 144</minimumMediaSize>
- <maximumMediaSize>1191 86400</maximumMediaSize>
- <maximumImageableArea>1191 86400</maximumImageableArea>
+ <maximumMediaSize>950 86400</maximumMediaSize>
+ <maximumImageableArea>950 86400</maximumImageableArea>
 <margins interleave="soft" media="sheet">0 0 0 0</margins>
   <margins interleave="printer" media="sheet">0 0 0 0</margins>
  <AlignmentChoices>4 15 0 0</AlignmentChoices>
@@ -75,23 +75,15 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <parameter type="float" name="DropSize2">0.650000</parameter>
    <parameter type="float" name="DropSize3">1.000000</parameter>
   </resolution>
-  <resolution translate="text" name="1440x5760sw" text="1440 x 5760 DPI">
-   <physicalResolution>1440 5760</physicalResolution>
-   <parameter type="float" name="escp2_density">1.000000</parameter>
-   <parameter type="integer" name="escp2_ink_type">21</parameter>
-   <parameter type="integer" name="escp2_base_res">720</parameter>
-   <parameter type="integer" name="escp2_bits">2</parameter>
-   <parameter type="float" name="DropSize2">0.500000</parameter>
-   <parameter type="float" name="DropSize3">1.000000</parameter>
-  </resolution>
   <resolution translate="text" name="2880x1440sw" text="2880 x 1440 DPI">
    <physicalResolution>2880 1440</physicalResolution>
    <parameter type="float" name="escp2_density">1.000000</parameter>
    <parameter type="integer" name="escp2_ink_type">21</parameter>
    <parameter type="integer" name="escp2_base_res">720</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
-   <parameter type="float" name="DropSize2">0.500000</parameter>
-   <parameter type="float" name="DropSize3">1.000000</parameter>
+   <!-- <parameter type="float" name="DropSize2">0.500000</parameter>
+   <parameter type="float" name="DropSize3">1.000000</parameter> -->
+   <parameter type="float" name="DropSize2">1.000000</parameter>
   </resolution>
  </resolutions>
 </escp2Model>

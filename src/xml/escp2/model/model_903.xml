@@ -9,7 +9,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 </copyright>
 <escp2Model id="903" base="escp2/model/base/baseline_600.xml">
  <media src="escp2/media/standard.xml"/>
- <inputSlots src="escp2/inputslots/default.xml"/>
+ <inputSlots src="escp2/inputslots/RearAndFront.xml"/>
  <qualityPresets src="escp2/qualitypresets/standard_600.xml"/>
  <inkGroup src="escp2/inks/uTFP1S.xml"/>
  <mediaSizes src="escp2/mediasizes/standard.xml"/>
@@ -53,8 +53,8 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <baseHorizontalAlignment>28800</baseHorizontalAlignment>
  <bidirectionalAutoUpperLimit>16588800</bidirectionalAutoUpperLimit>
  <minimumMediaSize>144 144</minimumMediaSize>
- <maximumMediaSize>612 86400</maximumMediaSize>
- <maximumImageableArea>612 86400</maximumImageableArea>
+ <maximumMediaSize>950 86400</maximumMediaSize>
+ <maximumImageableArea>950 86400</maximumImageableArea>
  <margins interleave="soft" media="sheet">0 0 0 0</margins>
  <margins interleave="printer" media="sheet">0 0 0 0</margins>
  <AlignmentChoices>4 15 0 0</AlignmentChoices>
@@ -95,14 +95,6 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <!-- <parameter type="float" name="DropSize1">0.250000</parameter> -->
    <parameter type="float" name="DropSize2">0.500000</parameter>
    <parameter type="float" name="DropSize3">1.000000</parameter>
-  </resolution>
-  <resolution translate="text" name="2400x2400sw" text="2400 x 2400 DPI">
-   <physicalResolution>2400 2400</physicalResolution>
-   <parameter type="float" name="escp2_density">1.000000</parameter>
-   <parameter type="integer" name="escp2_ink_type">18</parameter>
-   <parameter type="integer" name="escp2_base_res">300</parameter>
-   <parameter type="integer" name="escp2_bits">2</parameter>
-   <parameter type="float" name="DropSize1">1.000000</parameter>
   </resolution>
  </resolutions>
 </escp2Model>
