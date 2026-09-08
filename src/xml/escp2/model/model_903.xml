@@ -11,7 +11,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <media src="escp2/media/standard.xml"/>
  <inputSlots src="escp2/inputslots/RearAndFront.xml"/>
  <qualityPresets src="escp2/qualitypresets/standard_600.xml"/>
- <inkGroup src="escp2/inks/uTFP1S.xml"/>
+ <inkGroup src="escp2/inks/μTFP1S.xml"/>
  <mediaSizes src="escp2/mediasizes/standard.xml"/>
  <preinitSequence>\000\000\000\033\001@EJL\0401284.4\012@EJL\040\040\040\040\040\012\033@</preinitSequence>
  <preinitRemoteSequence>JS\004\000\000\000\000\000SN\001\000\000</preinitRemoteSequence>
