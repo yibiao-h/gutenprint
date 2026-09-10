@@ -44,12 +44,6 @@ pkgxmldata_DATA =				\
 	f360_ultrachrome_k3.xml			\
 	f360_ultrachrome_k3v.xml		\
 	f360_ultrachrome_k3v_2.xml		\
-	et8550.xml				\
-	et2750.xml				\
-	l18050.xml				\
-	sp1390.xml				\
-	custom_720_CMYK_W_2b.xml			\
-	uTFP1S.xml				\
 	nx100.xml				\
 	photo_gen0.xml				\
 	photo_gen1.xml				\

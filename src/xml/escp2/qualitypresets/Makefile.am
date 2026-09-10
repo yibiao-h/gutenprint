@@ -27,7 +27,6 @@ pkgxmldata_DATA =				\
 	p1_5.xml				\
 	picturemate.xml				\
 	prox900.xml				\
-	standard_600.xml			\
 	standard.xml				\
 	surelab.xml				\
 	v2880.xml				\

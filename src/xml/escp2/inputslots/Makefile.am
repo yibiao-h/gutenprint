@@ -33,9 +33,6 @@ pkgxmldata_DATA =				\
 	cutter_roll_feed.xml			\
 	default.xml				\
 	default-duplex.xml			\
-	et2750.xml				\
-	l18050.xml				\
-	sp1390.xml				\
 	pro3880.xml				\
 	pro_roll_feed.xml			\
 	pro_cutter_roll_feed.xml		\
