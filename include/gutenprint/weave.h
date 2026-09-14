@@ -189,6 +189,11 @@ stp_weave_esc_i_feather_overlap_strength(const stp_vars_t *v);
 extern void
 stp_weave_set_esc_i_feather(stp_vars_t *v, int channel, double edge);
 
+/* Enable minimal same-coordinate overlap before writing any rows. Returns
+ * the number of overlapping nozzle positions, or zero when not needed. */
+extern int
+stp_weave_enable_esc_i_feather_overlap(stp_vars_t *v);
+
 #ifdef __cplusplus
   }
 #endif

@@ -4648,7 +4648,7 @@ escp2_print_page(stp_vars_t *v, stp_image_t *image)
   int vertical_passes = pd->res->vertical_passes * pd->extra_vertical_passes;
   int feather_enabled = escp2_esc_i_feather_enabled(v, pd);
   int channel;
-  /* Feather may redistribute existing overlap, but must never add scans. */
+  /* Keep full vertical overlap at the resolution's requested pass count. */
   if (stp_check_string_parameter(v, "Weave", STP_PARAMETER_ACTIVE))
     {
       const char *weave = stp_get_string_parameter(v, "Weave");
@@ -4700,6 +4700,8 @@ escp2_print_page(stp_vars_t *v, stp_image_t *image)
           ? 1.0 : escp2_esc_i_feather_edge(v);
         stp_weave_set_esc_i_feather(v, channel, edge);
       }
+  if (feather_enabled)
+    stp_weave_enable_esc_i_feather_overlap(v);
 
   stp_dither_init(v, image, pd->image_printed_width, pd->res->printed_hres,
 		  pd->res->printed_vres);

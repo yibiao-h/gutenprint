@@ -72,6 +72,9 @@ typedef struct stpi_softweave
   int last_pass;		/* Number of the most recently printed pass */
 
   int jets;			/* Number of jets per color */
+  int feather_overlap;
+  int page_height;
+  stp_weave_strategy_t weave_strategy;
   int virtual_jets;		/* Number of jets per color, taking into */
 				/* account the head offset */
   int separation;		/* Offset from one jet to the next in rows */
@@ -1042,6 +1045,8 @@ stp_initialize_weave(stp_vars_t *v,
 
   sw->separation = sep;
   sw->jets = jets;
+  sw->page_height = page_height;
+  sw->weave_strategy = weave_strategy;
   sw->horizontal_weave = osample;
   sw->oversample = osample * v_subpasses * v_subsample;
   if (sw->oversample > jets)
@@ -1204,6 +1209,8 @@ weave_parameters_by_row(const stp_vars_t *v, stpi_softweave_t *sw,
 
   w->physpassstart = w->logicalpassstart + sw->separation * w->missingstartrows;
   w->physpassend = w->physpassstart + sw->separation * (jetsused - 1);
+  if (sw->feather_overlap)
+    w->physpassend = w->logicalpassstart + sw->separation * (sw->jets - 1);
 
   memcpy(&(sw->wcache), w, sizeof(stp_weave_t));
   w->pass = (w->pass * sw->repeat_count) + sub_repeat_count;
@@ -1235,6 +1242,39 @@ esc_i_feather_clamp_edge(double edge)
   if (edge > 1.0)
     return 1.0;
   return edge;
+}
+
+int
+stp_weave_enable_esc_i_feather_overlap(stp_vars_t *v)
+{
+  stpi_softweave_t *sw = get_sw(v);
+  int channel, enabled = 0, max_offset = 0;
+  if (!sw || sw->feather_overlap || sw->lineno != sw->firstline ||
+      sw->vertical_subpasses != 1 || sw->vertical_oversample != 1 ||
+      sw->repeat_count != 1 || sw->jets < 42 ||
+      sw->oversample > sw->jets - 2 ||
+      sw->horizontal_weave + 2 > STP_MAX_WEAVE ||
+      sw->vertical_height < 2 * sw->jets * sw->separation)
+    return 0;
+  for (channel = 0; channel < sw->ncolors; channel++)
+    {
+      enabled |= sw->feather_edges[channel] < 0.999;
+      if (sw->head_offset[channel] > max_offset)
+        max_offset = sw->head_offset[channel];
+    }
+  if (!enabled)
+    return 0;
+  /* Two nozzle positions are the smallest overlap with a transition in both
+   * directions. Keep the physical head geometry; shorten only the weave's
+   * advance span. Existing vertical overlap needs no additional scans. */
+  sw->feather_overlap = 2;
+  stpi_destroy_weave_params(sw->weaveparm);
+  sw->weaveparm = initialize_weave_params(sw->separation,
+    sw->jets - sw->feather_overlap, sw->oversample, sw->firstline,
+    sw->firstline + sw->vertical_height - 1 + max_offset,
+    sw->page_height, sw->weave_strategy, v);
+  sw->rcache = sw->vcache = -2;
+  return sw->feather_overlap;
 }
 
 void
@@ -1749,6 +1789,141 @@ finalize_row(stp_vars_t *v, stpi_softweave_t *sw)
     }
 }
 
+static void
+esc_i_append_overlap_row(stp_vars_t *v, stpi_softweave_t *sw,
+                         const stp_weave_t *w, int phase, int channel,
+                         const unsigned char *row, int bytes)
+{
+  int slot = w->pass % sw->vmod;
+  int ch, first, last, active;
+  unsigned char *end;
+  stp_pass_t *pass = &sw->passes[slot];
+  stp_linecount_t *counts = &sw->linecounts[slot];
+  stp_lineoff_t *offsets = &sw->lineoffsets[slot];
+  stp_linebounds_t *bounds = &sw->linebounds[slot];
+  STPI_ASSERT(w->jet >= 0 && w->jet < sw->jets, v);
+  STPI_ASSERT(w->pass > sw->last_pass, v);
+  if (pass->pass < 0)
+    {
+      pass->pass = w->pass;
+      pass->subpass = phase;
+      pass->logicalpassstart = w->logicalpassstart;
+      pass->missingstartrows = w->missingstartrows;
+      pass->physpassstart = w->physpassstart;
+      pass->physpassend = w->physpassend;
+      for (ch = 0; ch < sw->ncolors; ch++)
+        {
+          counts->v[ch] = 0;
+          offsets->v[ch] = 0;
+          sw->lineactive[slot].v[ch] = 0;
+          bounds->start_pos[ch] = INT_MAX;
+          bounds->end_pos[ch] = -1;
+        }
+    }
+  STPI_ASSERT(pass->pass == w->pass && pass->subpass == phase, v);
+  STPI_ASSERT(counts->v[channel] <= w->jet, v);
+  if (!sw->linebases[slot].v[channel])
+    sw->linebases[slot].v[channel] =
+      stp_zalloc(sw->virtual_jets * sw->bitwidth * sw->horizontal_width);
+  /* Sparse alternate rows may skip unused nozzles. Pad to the physical jet,
+   * never compact the rows: that would move dots on the paper. */
+  while (counts->v[channel] <= w->jet)
+    {
+      const unsigned char *data = counts->v[channel] == w->jet
+        ? row : sw->s[sw->horizontal_weave + 1];
+      active = sw->pack(v, data, bytes, sw->comp_buf, &end, &first, &last);
+      STPI_ASSERT(offsets->v[channel] + (end - sw->comp_buf) <=
+        sw->virtual_jets * sw->bitwidth * sw->horizontal_width, v);
+      memcpy(sw->linebases[slot].v[channel] + offsets->v[channel],
+             sw->comp_buf, end - sw->comp_buf);
+      offsets->v[channel] += end - sw->comp_buf;
+      counts->v[channel]++;
+      if (active)
+        {
+          sw->lineactive[slot].v[channel] = 1;
+          if (first < bounds->start_pos[channel]) bounds->start_pos[channel] = first;
+          if (last > bounds->end_pos[channel]) bounds->end_pos[channel] = last;
+        }
+    }
+}
+
+static double
+esc_i_overlap_preference(const stpi_softweave_t *sw, int jet, double edge)
+{
+  double distance = jet + 0.5;
+  double shape;
+  if (sw->jets - jet - 0.5 < distance) distance = sw->jets - jet - 0.5;
+  if (distance >= sw->feather_overlap) return 1.0;
+  shape = sin(1.57079632679489661923 * distance / sw->feather_overlap);
+  return edge + (1.0 - edge) * shape * shape;
+}
+
+static void
+esc_i_write_small_overlap(stp_vars_t *v, stpi_softweave_t *sw,
+                          unsigned char *const cols[], int length, int xlength)
+{
+  int ch, h, x;
+  int bytes = sw->bitwidth * xlength;
+  int period = (sw->jets - sw->feather_overlap) * sw->separation;
+  unsigned char *alternate;
+  for (h = 0; h < sw->horizontal_weave + 2; h++)
+    if (!sw->s[h]) sw->s[h] = stp_zalloc(sw->bitwidth * xlength * sw->horizontal_weave);
+  alternate = sw->s[sw->horizontal_weave];
+  for (ch = 0; ch < sw->ncolors; ch++)
+    if (cols[ch])
+      {
+        const unsigned char *in = cols[ch];
+        int paper_row = sw->lineno + sw->head_offset[ch];
+        if (sw->bitwidth == 2)
+          {
+            stp_fold(in, length, sw->fold_buf);
+            in = sw->fold_buf;
+          }
+        if (sw->horizontal_weave == 1) memcpy(sw->s[0], in, bytes);
+        else stp_unpack(length, sw->bitwidth, sw->horizontal_weave, in, sw->s);
+        for (h = 0; h < sw->horizontal_weave; h++)
+          {
+            stp_weave_t primary, other;
+            int has_other = 0;
+            weave_parameters_by_row(v, sw, paper_row, h, &primary);
+            if (sw->feather_edges[ch] < 0.999 && paper_row - period >= sw->firstline)
+              {
+                weave_parameters_by_row(v, sw, paper_row - period, h, &other);
+                other.jet += sw->jets - sw->feather_overlap;
+                other.row = paper_row;
+                has_other = other.jet >= 0 && other.jet < sw->jets &&
+                            other.pass != primary.pass;
+              }
+            if (has_other)
+              {
+                double a = esc_i_overlap_preference(sw, primary.jet, sw->feather_edges[ch]);
+                double b = esc_i_overlap_preference(sw, other.jet, sw->feather_edges[ch]);
+                double probability = b / (a + b);
+                uint32_t seed = esc_i_feather_hash((uint32_t) (sw->lineno - sw->firstline) ^
+                  esc_i_feather_hash((uint32_t) ch + UINT32_C(0x9e3779b9)));
+                memset(alternate, 0, bytes);
+                for (x = 0; x < xlength * 8; x++)
+                  {
+                    int shift = 8 - sw->bitwidth - x * sw->bitwidth % 8;
+                    int index = x * sw->bitwidth / 8;
+                    unsigned mask = ((1U << sw->bitwidth) - 1) << shift;
+                    if ((sw->s[h][index] & mask) &&
+                        esc_i_feather_hash(seed ^ esc_i_feather_hash((uint32_t)
+                          (x * sw->horizontal_weave + h))) * (1.0 / 4294967296.0) < probability)
+                      {
+                        alternate[index] |= sw->s[h][index] & mask;
+                        sw->s[h][index] &= ~mask;
+                      }
+                  }
+                esc_i_append_overlap_row(v, sw, &other, h, ch, alternate, bytes);
+              }
+            esc_i_append_overlap_row(v, sw, &primary, h, ch, sw->s[h], bytes);
+          }
+      }
+  sw->lineno++;
+  stpi_flush_passes(v, 0);
+}
+
 void
 stp_write_weave(stp_vars_t *v, unsigned char *const cols[])
 {
@@ -1780,6 +1955,11 @@ stp_write_weave(stp_vars_t *v, unsigned char *const cols[])
 		  sw->bitwidth, ylength);
       sw->comp_buf = stp_zalloc(sw->bitwidth *
 				(sw->compute_linewidth)(v,ylength));
+    }
+  if (sw->feather_overlap)
+    {
+      esc_i_write_small_overlap(v, sw, cols, length, xlength);
+      return;
     }
   if (sw->current_vertical_subpass == 0)
     initialize_row(v, sw, sw->lineno, xlength, cols);
