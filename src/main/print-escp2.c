@@ -4554,7 +4554,8 @@ escp2_print_data(stp_vars_t *v, stp_image_t *image)
   int x_center = pd->cd_x_offset * pd->res->printed_hres / pd->micro_units;
   unsigned char *cd_mask = NULL;
   unsigned cached_zero_mask = 0;
-  int esc_i_feather_enabled = escp2_esc_i_feather_enabled(v, pd);
+  int esc_i_feather_enabled = escp2_esc_i_feather_enabled(v, pd) &&
+    stp_weave_esc_i_feather_overlap_strength(v) > 0.0;
   int status = 1;
   if (pd->cd_outer_radius > 0)
     {
@@ -4647,12 +4648,7 @@ escp2_print_page(stp_vars_t *v, stp_image_t *image)
   int vertical_passes = pd->res->vertical_passes * pd->extra_vertical_passes;
   int feather_enabled = escp2_esc_i_feather_enabled(v, pd);
   int channel;
-  /* Horizontal interlacing cannot compensate a dot at the same X coordinate.
-   * Add real overlap when the selected mode does not already provide it. */
-  if (feather_enabled && vertical_passes == 1 &&
-      pd->horizontal_passes * 2 <= STP_MAX_WEAVE &&
-      pd->horizontal_passes * 2 <= pd->nozzles)
-    vertical_passes = 2;
+  /* Feather may redistribute existing overlap, but must never add scans. */
   if (stp_check_string_parameter(v, "Weave", STP_PARAMETER_ACTIVE))
     {
       const char *weave = stp_get_string_parameter(v, "Weave");
