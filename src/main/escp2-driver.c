@@ -626,7 +626,7 @@ send_extra_data(stp_vars_t *v, int extralines)
 	    }
 	  if (leftover == 1)
 	    {
-	      buf[total_bytes++] = 1;
+	      buf[total_bytes++] = 0;
 	      buf[total_bytes++] = 0;
 	    }
 	  else if (leftover > 0)

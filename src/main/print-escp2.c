@@ -63,14 +63,6 @@
 #define ESCP2_ESC_I_FEATHER_EDGE_MAX 1.0
 #endif
 
-#ifndef ESCP2_ESC_I_FEATHER_APPLY_ALL_CHANNELS
-#define ESCP2_ESC_I_FEATHER_APPLY_ALL_CHANNELS 1
-#endif
-
-#ifndef ESCP2_ESC_I_FEATHER_PER_CHANNEL_MAPPING
-#define ESCP2_ESC_I_FEATHER_PER_CHANNEL_MAPPING 1
-#endif
-
 #ifndef MAX
 #  define MAX(a, b) ((a) > (b) ? (a) : (b))
 #endif /* !MAX */
@@ -134,12 +126,6 @@ static const double ink_darknesses[] =
   1.0, 0.31 / .4, 0.61 / .96, 0.08, 0.31 * 0.33 / .4, 0.61 * 0.33 / .96, 0.33, 1.0
 };
 
-static int
-escp2_esc_i_feather_debug_row(int row)
-{
-  return row < 100 || (row % 128) == 0;
-}
-
 static double
 escp2_esc_i_feather_edge(const stp_vars_t *v)
 {
@@ -169,98 +155,6 @@ escp2_esc_i_feather_enabled(const stp_vars_t *v, const escp2_privdata_t *pd)
     escp2_esc_i_feather_edge(v) < 0.999;
 }
 
-static double
-escp2_esc_i_feather_density_value(const stp_vars_t *v, const char *name,
-				  double fallback, int *found)
-{
-  double value = fallback;
-  if (v && name && stp_check_float_parameter(v, name, STP_PARAMETER_ACTIVE))
-    {
-      value = stp_get_float_parameter(v, name);
-      if (found)
-	*found = 1;
-    }
-  if (!(value > 0.0))
-    value = 0.0;
-  return value;
-}
-
-static int
-escp2_esc_i_feather_density_is_core_applied(const stp_vars_t *v)
-{
-  const char *output_type;
-  const char *color_correction;
-  if (!v)
-    return 0;
-
-  output_type = stp_get_string_parameter(v, "STPIOutputType");
-  color_correction = stp_get_string_parameter(v, "ColorCorrection");
-  return (output_type && color_correction &&
-	  strcmp(output_type, "Raw") == 0 &&
-	  strcmp(color_correction, "None") == 0) ||
-	 (color_correction &&
-	  (strcmp(color_correction, "Raw") == 0 ||
-	   strcmp(color_correction, "Predithered") == 0));
-}
-
-static double
-escp2_esc_i_feather_global_density(const stp_vars_t *v)
-{
-  /*
-   * Raw/Predithered rows are already density-scaled by the core.  The
-   * print-engine Density is a media calibration value in this path and must
-   * not lower the density bound used to normalize an ESC i feather profile.
-   */
-  if (escp2_esc_i_feather_density_is_core_applied(v))
-    return 1.0;
-  return escp2_esc_i_feather_density_value(v, "Density", 1.0, NULL);
-}
-
-static double
-escp2_esc_i_feather_channel_density(const stp_vars_t *v,
-				    const escp2_privdata_t *pd,
-				    int channel)
-{
-  const physical_subchannel_t *subchannel = NULL;
-  double channel_density = 1.0;
-  double subchannel_scale = 1.0;
-
-  if (!pd || channel < 0 || channel >= pd->channels_in_use ||
-      !pd->channels || !pd->channels[channel])
-    return escp2_esc_i_feather_global_density(v);
-
-  subchannel = pd->channels[channel];
-  if (subchannel->channel_density)
-    channel_density =
-      escp2_esc_i_feather_density_value(v, subchannel->channel_density,
-					1.0, NULL);
-  if (subchannel->subchannel_scale)
-    subchannel_scale =
-      escp2_esc_i_feather_density_value(v, subchannel->subchannel_scale,
-					1.0, NULL);
-
-  return escp2_esc_i_feather_global_density(v) *
-    channel_density * subchannel_scale;
-}
-
-static double
-escp2_esc_i_feather_max_density(const stp_vars_t *v,
-				const escp2_privdata_t *pd)
-{
-  double max_channel_density = 0.0;
-  int i;
-  if (!pd || pd->channels_in_use <= 0)
-    return escp2_esc_i_feather_global_density(v);
-
-  for (i = 0; i < pd->channels_in_use; i++)
-    {
-      double value = escp2_esc_i_feather_channel_density(v, pd, i);
-      if (value > max_channel_density)
-	max_channel_density = value;
-    }
-  return max_channel_density;
-}
-
 static int
 escp2_esc_i_feather_channel_correction_rows(const stp_vars_t *v,
 					    int channel)
@@ -273,77 +167,6 @@ escp2_esc_i_feather_channel_correction_rows(const stp_vars_t *v,
   if (!stp_check_int_parameter(v, parameter, STP_PARAMETER_ACTIVE))
     return 0;
   return stp_get_int_parameter(v, parameter);
-}
-
-static void
-escp2_set_esc_i_feather_factors(stp_vars_t *v, const escp2_privdata_t *pd,
-				int printed_row, int errline, double *factors,
-				unsigned factor_phase_count)
-{
-  int i;
-  double edge;
-  double max_density;
-  double overlap_strength;
-  if (!escp2_esc_i_feather_enabled(v, pd) || !factors ||
-      factor_phase_count == 0)
-    return;
-
-  edge = escp2_esc_i_feather_edge(v);
-  max_density = escp2_esc_i_feather_max_density(v, pd);
-  overlap_strength = stp_weave_esc_i_feather_overlap_strength(v);
-  stp_set_float_parameter(v, "EscIFeatherMaxDensity", max_density);
-
-  for (i = 0; i < pd->channels_in_use; i++)
-    {
-      double *channel_factors = factors + i * factor_phase_count;
-      double channel_density = escp2_esc_i_feather_channel_density(v, pd, i);
-      int correction_rows =
-	escp2_esc_i_feather_channel_correction_rows(v, i);
-      unsigned phase;
-      stp_set_float_parameter(v, "EscIFeatherMaxDensity", channel_density);
-      /* Post-render leading rows cannot preserve this per-pass feather phase. */
-      if (correction_rows > 0)
-	{
-	  for (phase = 0; phase < factor_phase_count; phase++)
-	    channel_factors[phase] = 1.0;
-	}
-      else
-	{
-#if ESCP2_ESC_I_FEATHER_APPLY_ALL_CHANNELS
-#if ESCP2_ESC_I_FEATHER_PER_CHANNEL_MAPPING
-	  stp_weave_esc_i_feather_profile(v, printed_row, i, edge,
-					  channel_factors, factor_phase_count);
-#else
-	  stp_weave_esc_i_feather_profile(v, printed_row, 0, edge,
-					  channel_factors, factor_phase_count);
-#endif
-#else
-	  if (i == 0)
-	    stp_weave_esc_i_feather_profile(v, printed_row, i, edge,
-					    channel_factors,
-					    factor_phase_count);
-	  else
-	    for (phase = 0; phase < factor_phase_count; phase++)
-	      channel_factors[phase] = 1.0;
-#endif
-	  for (phase = 0; phase < factor_phase_count; phase++)
-	    channel_factors[phase] =
-	      1.0 + (channel_factors[phase] - 1.0) * overlap_strength;
-	}
-	  if (escp2_esc_i_feather_debug_row(printed_row))
-	stp_dprintf(STP_DBG_ROWS, v,
-		    "esc-i feather set y %d errline %d channel %d edge %.6f channel_density %.6f correction_rows %d profile_first %.6f profile_last %.6f phases %u overlap_strength %.6f redither enabled 1\n",
-		    printed_row, errline, i, edge, channel_density,
-		    correction_rows,
-		    channel_factors[0],
-		    channel_factors[factor_phase_count - 1],
-		    factor_phase_count, overlap_strength);
-    }
-  stp_set_float_parameter(v, "EscIFeatherMaxDensity", max_density);
-  stp_channel_clear_physical_channel_factors(v);
-  stp_dither_set_output_channel_factor_profiles(v, factors,
-						pd->channels_in_use,
-						factor_phase_count);
 }
 
 #define INCH(x)		(72 * x)
@@ -1230,7 +1053,7 @@ static const float_param_t float_parameters[] =
   {
     {
       "EscIFeatherEdge", N_("ESC i Feather Edge"), "Color=Yes,Category=Advanced Output Control",
-      N_("Set the ESC i row feather edge factor"),
+      N_("Set the edge nozzle preference for overlapping passes"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_FEATURE,
       STP_PARAMETER_LEVEL_INTERNAL, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, ESCP2_ESC_I_FEATHER_EDGE_MIN, ESCP2_ESC_I_FEATHER_EDGE_MAX,
@@ -1239,7 +1062,7 @@ static const float_param_t float_parameters[] =
   {
     {
       "EscIFeatherMaxDensity", N_("ESC i Feather Max Density"), "Color=Yes,Category=Advanced Output Control",
-      N_("Set the maximum density used to keep each ESC i feather profile within range"),
+      N_("Compatibility parameter; feather dot routing preserves density"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_FEATURE,
       STP_PARAMETER_LEVEL_INTERNAL, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 2.0, 1.0, 1
@@ -4730,8 +4553,6 @@ escp2_print_data(stp_vars_t *v, stp_image_t *image)
   stp_dimension_t inner_r_sq = 0;
   int x_center = pd->cd_x_offset * pd->res->printed_hres / pd->micro_units;
   unsigned char *cd_mask = NULL;
-  double *esc_i_feather_factors = NULL;
-  unsigned esc_i_feather_factor_phase_count = 1;
   unsigned cached_zero_mask = 0;
   int esc_i_feather_enabled = escp2_esc_i_feather_enabled(v, pd);
   int status = 1;
@@ -4741,32 +4562,14 @@ escp2_print_data(stp_vars_t *v, stp_image_t *image)
       outer_r_sq = pd->cd_outer_radius * pd->cd_outer_radius;
       inner_r_sq = pd->cd_inner_radius * pd->cd_inner_radius;
     }
-  if (esc_i_feather_enabled)
-    {
-      esc_i_feather_factor_phase_count =
-	stp_weave_esc_i_feather_phase_count(v);
-      if (esc_i_feather_factor_phase_count == 0)
-	esc_i_feather_factor_phase_count = 1;
-      esc_i_feather_factors =
-	stp_malloc(sizeof(double) * pd->channels_in_use *
-		   esc_i_feather_factor_phase_count);
-    }
-  else
-    {
-      stp_channel_clear_physical_channel_factors(v);
-      stp_dither_clear_output_channel_factors(v);
-    }
+  stp_channel_clear_physical_channel_factors(v);
+  stp_dither_clear_output_channel_factors(v);
 
   for (y = 0; y < pd->image_printed_height; y ++)
     {
       int source_row_changed = errline != errlast;
       int duplicate_line = 1;
       unsigned zero_mask = 0;
-
-      if (esc_i_feather_enabled)
-	escp2_set_esc_i_feather_factors(v, pd, y, errline,
-					esc_i_feather_factors,
-					esc_i_feather_factor_phase_count);
 
       if (source_row_changed)
 	{
@@ -4829,8 +4632,6 @@ escp2_print_data(stp_vars_t *v, stp_image_t *image)
  done:
   stp_channel_clear_physical_channel_factors(v);
   stp_dither_clear_output_channel_factors(v);
-  if (esc_i_feather_factors)
-    stp_free(esc_i_feather_factors);
   if (cd_mask)
     stp_free(cd_mask);
   return status;
@@ -4843,6 +4644,15 @@ escp2_print_page(stp_vars_t *v, stp_image_t *image)
   escp2_privdata_t *pd = get_privdata(v);
   int line_width = (pd->image_printed_width + 7) / 8 * pd->bitwidth;
   int weave_pattern = STP_WEAVE_ZIGZAG;
+  int vertical_passes = pd->res->vertical_passes * pd->extra_vertical_passes;
+  int feather_enabled = escp2_esc_i_feather_enabled(v, pd);
+  int channel;
+  /* Horizontal interlacing cannot compensate a dot at the same X coordinate.
+   * Add real overlap when the selected mode does not already provide it. */
+  if (feather_enabled && vertical_passes == 1 &&
+      pd->horizontal_passes * 2 <= STP_MAX_WEAVE &&
+      pd->horizontal_passes * 2 <= pd->nozzles)
+    vertical_passes = 2;
   if (stp_check_string_parameter(v, "Weave", STP_PARAMETER_ACTIVE))
     {
       const char *weave = stp_get_string_parameter(v, "Weave");
@@ -4863,7 +4673,7 @@ escp2_print_page(stp_vars_t *v, stp_image_t *image)
      pd->nozzles,
      pd->nozzle_separation * pd->res->vres / escp2_base_separation(v),
      pd->horizontal_passes,
-     pd->res->vertical_passes * pd->extra_vertical_passes,
+     vertical_passes,
      1,
      pd->channels_in_use,
      pd->bitwidth,
@@ -4885,6 +4695,15 @@ escp2_print_page(stp_vars_t *v, stp_image_t *image)
      (((stp_get_debug_level() & STP_DBG_NO_COMPRESSION) ||
        pd->split_channel_count > 0) ?
       stp_compute_uncompressed_linewidth : stp_compute_tiff_linewidth));
+
+  if (feather_enabled)
+    for (channel = 0; channel < pd->channels_in_use; channel++)
+      {
+        /* Preserve the gate for channels repositioned by the core rewriter. */
+        double edge = escp2_esc_i_feather_channel_correction_rows(v, channel) > 0
+          ? 1.0 : escp2_esc_i_feather_edge(v);
+        stp_weave_set_esc_i_feather(v, channel, edge);
+      }
 
   stp_dither_init(v, image, pd->image_printed_width, pd->res->printed_hres,
 		  pd->res->printed_vres);

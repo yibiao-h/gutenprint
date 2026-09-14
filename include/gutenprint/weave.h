@@ -174,6 +174,8 @@ stp_weave_esc_i_feather_factor(const stp_vars_t *v, int printed_row,
 extern unsigned
 stp_weave_esc_i_feather_phase_count(const stp_vars_t *v);
 
+/* Mean-one routing weights within each horizontal phase; never apply these
+ * to the image density. A short output buffer receives neutral factors. */
 extern void
 stp_weave_esc_i_feather_profile(const stp_vars_t *v, int printed_row,
 				int channel, double edge,
@@ -181,6 +183,11 @@ stp_weave_esc_i_feather_profile(const stp_vars_t *v, int printed_row,
 
 extern double
 stp_weave_esc_i_feather_overlap_strength(const stp_vars_t *v);
+
+/* Set the nozzle preference for routing complete dots among overlapping passes.
+ * This never scales input density.  1.0 keeps the ordinary pass splitter. */
+extern void
+stp_weave_set_esc_i_feather(stp_vars_t *v, int channel, double edge);
 
 #ifdef __cplusplus
   }

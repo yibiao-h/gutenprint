@@ -28,6 +28,7 @@
 #endif
 #include <string.h>
 #include <math.h>
+#include <stdint.h>
 #include <gutenprint/gutenprint.h>
 #include "gutenprint-internal.h"
 #include <gutenprint/gutenprint-intl-internal.h>
@@ -35,7 +36,6 @@
 #include <limits.h>
 #endif
 
-#define STP_ESC_I_FEATHER_SINGLE_PASS_STRENGTH 0.35
 #define STP_ESC_I_FEATHER_MINIMUM_TAIL_FACTOR 0.10
 #define STP_ESC_I_FEATHER_MAXIMUM_EDGE \
   (STP_ESC_I_FEATHER_MINIMUM_TAIL_FACTOR / \
@@ -97,6 +97,7 @@ typedef struct stpi_softweave
   int horizontal_width;		/* Horizontal width, in bits */
   int *head_offset;		/* offset of printheads */
   unsigned char *s[STP_MAX_WEAVE];
+  double *feather_edges;
   unsigned char *fold_buf;
   unsigned char *comp_buf;
   stp_weave_t wcache;
@@ -1001,6 +1002,7 @@ stpi_destroy_weave(void *vsw)
   stp_free(sw->linebases);
   stp_free(sw->linebounds);
   stp_free(sw->head_offset);
+  stp_free(sw->feather_edges);
   stpi_destroy_weave_params(sw->weaveparm);
   stp_free(vsw);
 }
@@ -1119,6 +1121,9 @@ stp_initialize_weave(stp_vars_t *v,
   sw->last_pass = -1;
   sw->current_vertical_subpass = 0;
   sw->ncolors = ncolors;
+  sw->feather_edges = stp_malloc(ncolors * sizeof(double));
+  for (i = 0; i < ncolors; i++)
+    sw->feather_edges[i] = 1.0;
   sw->linewidth = linewidth;
   sw->vertical_height = line_count;
   sw->lineoffsets = allocate_lineoff(sw->vmod, ncolors);
@@ -1232,438 +1237,131 @@ esc_i_feather_clamp_edge(double edge)
   return edge;
 }
 
-static double
-esc_i_feather_weight(int row_in_esc_i, int height, double edge)
+void
+stp_weave_set_esc_i_feather(stp_vars_t *v, int channel, double edge)
 {
-  static const double pi = 3.14159265358979323846;
-  double average_shape;
-  double average_base;
-  double phase;
-  double shape;
-  double base;
-  if (height <= 0)
-    return 1.0;
-  if (height == 1)
-    return 1.0;
-  edge = esc_i_feather_clamp_edge(edge);
-  average_shape = 0.5;
-  average_base = edge + (1.0 - edge) * average_shape;
-  if (average_base <= 0.0)
-    return 1.0;
-  phase = (-pi / 2.0) +
-    (2.0 * pi * ((double) row_in_esc_i + 0.5) / (double) height);
-  shape = 0.5 * (sin(phase) + 1.0);
-  base = edge + (1.0 - edge) * shape;
-  return base / average_base;
-}
-
-static double
-esc_i_feather_periodic_base(double offset_rows, double period_rows,
-			    double edge)
-{
-  static const double pi = 3.14159265358979323846;
-  double phase_offset;
-  double phase;
-  double shape;
-  if (period_rows <= 0.0)
-    return 1.0;
-  edge = esc_i_feather_clamp_edge(edge);
-  phase_offset = fmod(offset_rows, period_rows);
-  if (phase_offset < 0.0)
-    phase_offset += period_rows;
-  phase = (-pi / 2.0) + (2.0 * pi * phase_offset / period_rows);
-  shape = 0.5 * (sin(phase) + 1.0);
-  return edge + (1.0 - edge) * shape;
-}
-
-static double
-esc_i_feather_periodic_weight(int row_in_esc_i, int height, int separation,
-			      int period_rows, double edge)
-{
-  double average_base;
-  double sum = 0.0;
-  double base;
-  int i;
-  if (height <= 1 || separation <= 0 || period_rows <= 0)
-    return esc_i_feather_weight(row_in_esc_i, height, edge);
-  for (i = 0; i < height; i++)
-    sum += esc_i_feather_periodic_base((double) i * (double) separation,
-				       (double) period_rows, edge);
-  average_base = sum / (double) height;
-  if (average_base <= 0.0)
-    return 1.0;
-  base =
-    esc_i_feather_periodic_base((double) row_in_esc_i * (double) separation,
-				(double) period_rows, edge);
-  return base / average_base;
-}
-
-static int
-esc_i_feather_factor_range(int height, double edge,
-			   double *min_factor, double *max_factor)
-{
-  double average_shape;
-  double average_base;
-  int i;
-  if (height <= 0)
-    return 0;
-  edge = esc_i_feather_clamp_edge(edge);
-  average_shape = (height == 1) ? 1.0 : 0.5;
-  average_base = edge + (1.0 - edge) * average_shape;
-  if (average_base <= 0.0)
-    return 0;
-
-  *min_factor = esc_i_feather_weight(0, height, edge);
-  *max_factor = *min_factor;
-  for (i = 1; i < height; i++)
-    {
-      double factor = esc_i_feather_weight(i, height, edge);
-      if (factor < *min_factor)
-	*min_factor = factor;
-      if (factor > *max_factor)
-	*max_factor = factor;
-    }
-  return 1;
-}
-
-static int
-esc_i_feather_periodic_factor_range(int height, int separation,
-				    int period_rows, double edge,
-				    double *min_factor, double *max_factor)
-{
-  double average_base;
-  double sum = 0.0;
-  int i;
-  if (height <= 0)
-    return 0;
-  if (height <= 1 || separation <= 0 || period_rows <= 0)
-    return esc_i_feather_factor_range(height, edge, min_factor, max_factor);
-
-  for (i = 0; i < height; i++)
-    sum += esc_i_feather_periodic_base((double) i * (double) separation,
-				       (double) period_rows, edge);
-  average_base = sum / (double) height;
-  if (average_base <= 0.0)
-    return 0;
-
-  *min_factor =
-    esc_i_feather_periodic_base(0.0, (double) period_rows, edge) /
-    average_base;
-  *max_factor = *min_factor;
-  for (i = 1; i < height; i++)
-    {
-      double factor =
-	esc_i_feather_periodic_base((double) i * (double) separation,
-				    (double) period_rows, edge) /
-	average_base;
-      if (factor < *min_factor)
-	*min_factor = factor;
-      if (factor > *max_factor)
-	*max_factor = factor;
-    }
-  return 1;
-}
-
-static int
-esc_i_feather_edge_is_safe(int height, int separation, int period_rows,
-			   double edge, double max_density)
-{
-  double min_factor;
-  double max_factor;
-  if (period_rows > 0 && separation > 0)
-    {
-      if (!esc_i_feather_periodic_factor_range(height, separation,
-					       period_rows, edge,
-					       &min_factor, &max_factor))
-	return 0;
-    }
-  else if (!esc_i_feather_factor_range(height, edge,
-				       &min_factor, &max_factor))
-    return 0;
-  if (min_factor < 0.0)
-    return 0;
-  if (max_density > 0.0 && max_factor * max_density > 1.0)
-    return 0;
-  return 1;
-}
-
-static int
-esc_i_feather_pass_height(const stpi_softweave_t *sw, const stp_weave_t *w)
-{
-  int height;
-  if (!sw || !w || sw->separation <= 0)
-    return 0;
-  height = ((w->physpassend - w->logicalpassstart) / sw->separation) + 1;
-  if (height < 1)
-    return 0;
-  return height;
-}
-
-static int
-esc_i_feather_effective_height(const stpi_softweave_t *sw,
-			       const stp_weave_t *w)
-{
-  int pass_height = esc_i_feather_pass_height(sw, w);
-  if (!sw)
-    return 0;
-  if (sw->jets > 0)
-    return sw->jets;
-  if (pass_height > 0)
-    return pass_height;
-  return sw->virtual_jets;
-}
-
-static int
-esc_i_feather_next_effective_row(const stpi_softweave_t *sw,
-				 const stp_weave_t *w, int channel)
-{
-  int row_in_esc_i;
-  int slot;
-  if (!sw || !w || sw->vmod <= 0)
-    return 0;
-
-  row_in_esc_i = w->jet;
-  if (row_in_esc_i < 0)
-    row_in_esc_i = 0;
-
-  slot = w->pass % sw->vmod;
-  if (slot < 0)
-    slot += sw->vmod;
-
-  if (sw->passes && sw->passes[slot].pass == w->pass &&
-      sw->linecounts && sw->linecounts[slot].v &&
-      channel >= 0 && channel < sw->linecounts[slot].ncolors)
-    {
-      int next_row = sw->linecounts[slot].v[channel];
-      if (next_row >= 0)
-	{
-	  int missingstartrows = sw->passes[slot].missingstartrows;
-	  if (missingstartrows > 0 && next_row >= missingstartrows)
-	    next_row -= missingstartrows;
-	  row_in_esc_i = next_row;
-	}
-    }
-  return row_in_esc_i;
-}
-
-static double
-esc_i_feather_safe_edge(const stp_vars_t *v, int height, int separation,
-			int period_rows, double edge)
-{
-  double max_density;
-  double low;
-  double high;
-  int i;
-  edge = esc_i_feather_clamp_edge(edge);
-  if (height <= 0 ||
-      !stp_check_float_parameter(v, "EscIFeatherMaxDensity", STP_PARAMETER_ACTIVE))
-    return edge;
-
-  max_density = stp_get_float_parameter(v, "EscIFeatherMaxDensity");
-  if (max_density <= 0.0)
-    return edge;
-  if (esc_i_feather_edge_is_safe(height, separation, period_rows, edge,
-				 max_density))
-    return edge;
-
-  low = edge;
-  high = 1.0;
-  if (!esc_i_feather_edge_is_safe(height, separation, period_rows, high,
-				  max_density))
-    return high;
-  for (i = 0; i < 32; i++)
-    {
-      double mid = (low + high) * 0.5;
-      if (esc_i_feather_edge_is_safe(height, separation, period_rows, mid,
-				     max_density))
-	high = mid;
-      else
-	low = mid;
-    }
-  return high;
-}
-
-static int
-esc_i_feather_nozzle_span_period_rows(const stpi_softweave_t *sw)
-{
-  int period;
-  if (!sw || sw->jets <= 0 || sw->separation <= 0)
-    return 0;
-  period = sw->jets * sw->separation;
-  if (period < 1)
-    period = 1;
-  return period;
+  stpi_softweave_t *sw = get_sw(v);
+  if (sw && channel >= 0 && channel < sw->ncolors)
+    sw->feather_edges[channel] = esc_i_feather_clamp_edge(edge);
 }
 
 unsigned
 stp_weave_esc_i_feather_phase_count(const stp_vars_t *v)
 {
   stpi_softweave_t *sw = get_sw(v);
-  int h_passes;
-  if (!sw)
-    return 1;
-  h_passes = sw->horizontal_weave * sw->vertical_subpasses;
-  if (h_passes <= 0)
-    return 1;
-  if (h_passes > STP_MAX_WEAVE)
-    return STP_MAX_WEAVE;
-  return (unsigned) h_passes;
+  return sw ? sw->horizontal_weave * sw->vertical_subpasses : 1;
 }
 
 void
 stp_weave_esc_i_feather_profile(const stp_vars_t *v, int printed_row,
-				int channel, double edge,
-				double *factors, unsigned factor_count)
+                              int channel, double edge,
+                              double *factors, unsigned factor_count)
 {
+  static const double pi = 3.14159265358979323846;
   stpi_softweave_t *sw = get_sw(v);
-  stp_weave_t w;
-  int h_passes;
-  int horizontal_weave;
-  int cpass;
-  int row;
-  int row_in_esc_i;
-  int height;
-  int i;
-  int use_periodic;
-  unsigned phase;
-  int period_rows = 0;
-  double safe_edge;
-  int debug_row = (printed_row < 100 || (printed_row % 128) == 0);
-  if (!factors || factor_count == 0)
+  int h, pass, h_passes, cpass;
+  unsigned i;
+  (void) printed_row;
+  if (!factors)
     return;
-  for (phase = 0; phase < factor_count; phase++)
-    factors[phase] = 1.0;
-
-  if (!sw || !sw->head_offset || channel < 0 || channel >= sw->ncolors ||
-      sw->virtual_jets <= 0)
-    {
-      stp_dprintf(STP_DBG_ROWS, v,
-		  "esc-i feather fallback row %d channel %d ncolors %d virtual_jets %d\n",
-		  printed_row, channel, sw ? sw->ncolors : 0,
-		  sw ? sw->virtual_jets : 0);
-      return;
-    }
-
-  horizontal_weave = sw->horizontal_weave;
-  if (horizontal_weave <= 0)
-    horizontal_weave = 1;
+  for (i = 0; i < factor_count; i++)
+    factors[i] = 1.0;
+  if (!sw || channel < 0 || channel >= sw->ncolors || sw->jets <= 1 ||
+      sw->vertical_subpasses <= 1)
+    return;
   h_passes = sw->horizontal_weave * sw->vertical_subpasses;
-  if (h_passes <= 0)
+  if (factor_count < (unsigned) h_passes || h_passes > STP_MAX_WEAVE)
     return;
-
-  edge = esc_i_feather_clamp_edge(edge);
-
-  row = sw->lineno + sw->head_offset[channel];
   cpass = sw->current_vertical_subpass * h_passes;
-  weave_parameters_by_row(v, sw, row, cpass, &w);
-  height = esc_i_feather_effective_height(sw, &w);
-  if (height <= 0)
-    height = sw->virtual_jets;
-  use_periodic = horizontal_weave > 1;
-  if (use_periodic)
-    period_rows = esc_i_feather_nozzle_span_period_rows(sw);
-  safe_edge = esc_i_feather_safe_edge(v, height, sw->separation,
-				      period_rows, edge);
-  for (phase = 0; phase < factor_count; phase++)
+  edge = esc_i_feather_clamp_edge(edge);
+  for (h = 0; h < sw->horizontal_weave; h++)
     {
-      int pass_phase;
-      int pass_step;
-      int pass_count = 0;
-      double factor_sum = 0.0;
-      if (factor_count == 1)
-	{
-	  pass_phase = h_passes / 2;
-	  pass_step = h_passes;
-	}
-      else if (factor_count >= (unsigned) h_passes)
-	{
-	  pass_phase = (int) (phase % (unsigned) h_passes);
-	  pass_step = h_passes;
-	}
-      else
-	{
-	  pass_phase = (int) (phase % (unsigned) horizontal_weave);
-	  pass_step = horizontal_weave;
-	}
-      for (i = pass_phase; i < h_passes; i += pass_step)
-	{
-	  stp_weave_t pass_w;
-	  double pass_factor;
-	  weave_parameters_by_row(v, sw, row, cpass + i, &pass_w);
-	  row_in_esc_i =
-	    esc_i_feather_next_effective_row(sw, &pass_w, channel);
-	  if (row_in_esc_i >= height)
-	    row_in_esc_i = height - 1;
-	  if (use_periodic)
-	    pass_factor =
-	      esc_i_feather_periodic_weight(row_in_esc_i, height,
-					    sw->separation, period_rows,
-					    safe_edge);
-	  else
-	    pass_factor = esc_i_feather_weight(row_in_esc_i, height,
-					       safe_edge);
-	  factor_sum += pass_factor;
-	  pass_count++;
-	  if (phase == 0 && i == pass_phase)
-	    w = pass_w;
-	}
-      if (pass_count > 0)
-	factors[phase] = factor_sum / (double) pass_count;
+      double sum = 0.0;
+      for (pass = h; pass < h_passes; pass += sw->horizontal_weave)
+        {
+          stp_weave_t w;
+          weave_parameters_by_row(v, sw, sw->lineno + sw->head_offset[channel],
+                                  cpass + pass, &w);
+          /* w.jet includes leading blank nozzle rows.  Resetting phase at the
+           * first ink row incorrectly treats a center nozzle as an edge. */
+          factors[pass] = edge + (1.0 - edge) *
+            0.5 * (1.0 - cos(2.0 * pi * (w.jet + 0.5) / sw->jets));
+          sum += factors[pass];
+        }
+      /* Only vertical subpasses share the same X landing position.  These
+       * are routing weights, never multipliers for pre-dither sample values. */
+      for (pass = h; pass < h_passes; pass += sw->horizontal_weave)
+        factors[pass] *= sw->vertical_subpasses / sum;
     }
-  row_in_esc_i = esc_i_feather_next_effective_row(sw, &w, channel);
-  if (row_in_esc_i >= height)
-    row_in_esc_i = height - 1;
-  if (debug_row)
-    stp_dprintf(STP_DBG_ROWS, v,
-		"esc-i feather row %d weave_row %d channel %d head_offset %d virtual_jets %d height %d pass %d jet %d effective_row %d profile_first %.6f profile_last %.6f phases %u\n",
-		printed_row, row, channel, sw->head_offset[channel],
-		sw->virtual_jets, height, w.pass, w.jet, row_in_esc_i,
-		factors[0], factors[factor_count - 1], factor_count);
 }
 
 double
 stp_weave_esc_i_feather_factor(const stp_vars_t *v, int printed_row,
-			       int channel, double edge)
+                             int channel, double edge)
 {
-  double factors[STP_MAX_WEAVE];
-  unsigned phase_count = stp_weave_esc_i_feather_phase_count(v);
-  unsigned i;
-  double sum = 0.0;
-  if (phase_count == 0)
-    phase_count = 1;
-  if (phase_count > STP_MAX_WEAVE)
-    phase_count = STP_MAX_WEAVE;
-  stp_weave_esc_i_feather_profile(v, printed_row, channel, edge,
-				  factors, phase_count);
-  for (i = 0; i < phase_count; i++)
-    sum += factors[i];
-  return sum / (double) phase_count;
+  /* The paper density is unchanged, including where only one pass exists. */
+  (void) v;
+  (void) printed_row;
+  (void) channel;
+  (void) edge;
+  return 1.0;
 }
 
 double
 stp_weave_esc_i_feather_overlap_strength(const stp_vars_t *v)
 {
   stpi_softweave_t *sw = get_sw(v);
-  int h_passes;
-  if (!sw)
-    return 0.0;
+  return sw && sw->vertical_subpasses > 1 ? 1.0 : 0.0;
+}
 
-  h_passes = sw->horizontal_weave * sw->vertical_subpasses;
-  if (h_passes > 1 || sw->oversample > 1)
+static uint32_t
+esc_i_feather_hash(uint32_t value)
+{
+  value ^= value >> 16;
+  value *= UINT32_C(0x7feb352d);
+  value ^= value >> 15;
+  value *= UINT32_C(0x846ca68b);
+  return value ^ (value >> 16);
+}
+
+static void
+esc_i_feather_split(stpi_softweave_t *sw, int length, int channel, int h,
+                    const double *factors)
+{
+  int byte, shift, p;
+  int count = sw->vertical_subpasses;
+  int stride = sw->horizontal_weave;
+  int bytes = length * sw->bitwidth;
+  double cumulative[STP_MAX_WEAVE];
+  uint32_t row_seed = esc_i_feather_hash((uint32_t) (sw->lineno - sw->firstline) ^
+                      esc_i_feather_hash((uint32_t) channel + UINT32_C(0x9e3779b9)));
+  cumulative[0] = factors[h];
+  for (p = 1; p < count; p++)
     {
-      if (sw->vertical_subpasses > 1 || sw->vertical_oversample > 1)
-	return 1.0;
-      if (sw->horizontal_weave > 1)
-	{
-	  if (sw->separation >= 32)
-	    return 0.9 / (double) sw->horizontal_weave;
-	  if (sw->separation >= 16)
-	    return 1.5 / (double) sw->horizontal_weave;
-	  return 1.0;
-	}
-      return 1.0;
+      cumulative[p] = cumulative[p - 1] + factors[h + p * stride];
+      memset(sw->s[h + p * stride], 0, bytes);
     }
-  return STP_ESC_I_FEATHER_SINGLE_PASS_STRENGTH;
+  for (byte = 0; byte < bytes; byte++)
+    {
+      unsigned char input = sw->s[h][byte];
+      sw->s[h][byte] = 0;
+      for (shift = 8 - sw->bitwidth; shift >= 0; shift -= sw->bitwidth)
+        {
+          unsigned char dot = input & (((1 << sw->bitwidth) - 1) << shift);
+          if (dot)
+            {
+              int x = (byte * 8 + 8 - sw->bitwidth - shift) / sw->bitwidth;
+              double choice = esc_i_feather_hash(row_seed ^
+                esc_i_feather_hash((uint32_t) (x * stride + h))) *
+                (cumulative[count - 1] / 4294967296.0);
+              for (p = 0; p < count - 1 && choice >= cumulative[p]; p++)
+                ;
+              /* Move the complete 1/2-bit drop code once.  No clipping,
+               * duplication, or movement to an adjacent horizontal pixel. */
+              sw->s[h + p * stride][byte] |= dot;
+            }
+        }
+    }
 }
 
 
@@ -1806,7 +1504,7 @@ stp_fill_tiff(stp_vars_t *v, int row, int subpass,
 	}
       if (leftover == 1)
 	{
-	  (bufs->v[color][2 * i]) = 1;
+	  (bufs->v[color][2 * i]) = 0;
 	  (bufs->v[color][2 * i + 1]) = 0;
 	  i++;
 	}
@@ -2117,9 +1815,17 @@ stp_write_weave(stp_vars_t *v, unsigned char *const cols[])
 	    stp_unpack(length, sw->bitwidth, sw->horizontal_weave, in, sw->s);
 	  if (sw->vertical_subpasses > 1)
 	    {
-	      for (idx = 0; idx < sw->horizontal_weave; idx++)
-		stp_split(length, sw->bitwidth, sw->vertical_subpasses,
-			  sw->s[idx], sw->horizontal_weave, &(sw->s[idx]));
+          double factors[STP_MAX_WEAVE];
+          int feather = sw->feather_edges[j] < 0.999;
+          if (feather)
+            stp_weave_esc_i_feather_profile(v, sw->lineno, j,
+                                          sw->feather_edges[j], factors, h_passes);
+          for (idx = 0; idx < sw->horizontal_weave; idx++)
+            if (feather)
+              esc_i_feather_split(sw, xlength, j, idx, factors);
+            else
+              stp_split(xlength, sw->bitwidth, sw->vertical_subpasses,
+                        sw->s[idx], sw->horizontal_weave, &(sw->s[idx]));
 	    }
 	  for (i = 0; i < h_passes; i++)
 	    {
